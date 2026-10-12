@@ -186,7 +186,7 @@ B = column "Current number", C = column "Average added per Month/Year". "Created
 | Row | Item | B (Current number) | C (Average added per month) | Remark |
 |---|---|---|---|---|
 | 3 | No of Company Codes | Active company codes: company codes (T001) with at least one FI document entered in the period (BKPF, CPUDT). Existence check per company code (one row is enough). | N/A | All company codes in the details. |
-| 4 | No. of Chart of Accounts | Distinct charts of accounts (T001-KTOPL) of the active company codes | N/A | SAP-delivered charts that are not assigned to an active company code are not counted. |
+| 4 | No. of Chart of Accounts | Distinct charts of accounts (T001-KTOPL) of the active company codes | N/A | SAP-delivered charts that are not assigned to an active company code are not counted. Country and group charts of accounts in the details (D28, D29). |
 | 5 | No. of G/L Accounts | G/L accounts at chart-of-accounts level (SKA1) for the charts of row 4, without deletion flag | SKA1 of the same charts created (ERDAT) ÷ months | Company-code level (SKB1) in the details. |
 | 6 | No. of Customers | Customers (KNA1) without central deletion flag (LOEVM) | KNA1 created (ERDAT) ÷ months | No restriction by account group. |
 | 7 | Active Customers | Distinct customers with a sales order created in the period (VBAK, VBTYP = C, ERDAT; sold-to party) **or** a customer line item entered in the period (BSID ∪ BSAD, CPUDT) | N/A | Union is built in ABAP. |
@@ -253,6 +253,8 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Users | Users per user type | USR02 valid today, grouped by USTYP (A dialog, B system, C communication, L reference, S service) |
 | Users | Valid dialog users regardless of logon | USTYP = A, valid today, not locked by an administrator |
 | Financials | FI documents entered | BKPF entered in the period (CPUDT), one sub row per document status (BSTAT; "-" = normal document), text from the domain fixed values |
+| G/L | Country charts of accounts | Distinct country charts (T001-KTOP2) of the active company codes; one sub row per chart: SKA1 without deletion flag (value), SKA1 created (ERDAT) in the period (total), text T004T |
+| G/L | Group charts of accounts | Distinct group charts (T004-KKTPL) of the operational charts of row 4; sub rows as for country charts |
 
 ---
 
@@ -754,6 +756,10 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E21 | REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method | REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zahlweg |
 | D27 | FI documents entered | Erfasste FI-Belege |
 | E27 | BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal) | BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal) |
+| D28 | Country charts of accounts | Landeskontenpläne |
+| E28 | T001-KTOP2 of the active company codes; per chart: SKA1 without deletion flag, created (ERDAT) | T001-KTOP2 der aktiven Buchungskreise; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT) |
+| D29 | Group charts of accounts | Konzernkontenpläne |
+| E29 | T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT) | T004-KKTPL der Kontenpläne aus Zeile 4; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT) |
 
 Detail numbering follows the order of section 8.2; IDs are fixed so that later blocks do not renumber:
 
@@ -777,8 +783,9 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D22–D24 | IDocs per direction and partner type / ALE IDocs / top 10 message types | G14 EDI | ORG |
 | D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
 | D27 | FI documents entered | G16 Financials | FI |
+| D28–D29 | Country charts of accounts / group charts of accounts | G02 G/L | MD |
 
-Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27).
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27, T004T for D28 and D29).
 
 Row 26 (WM warehouse numbers, T320) is collected in block MM together with the transfer orders (D16).
 

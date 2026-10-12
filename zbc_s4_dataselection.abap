@@ -247,8 +247,8 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 29 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 5  CHANGING ct_ids = lt_ids ).
 
@@ -468,6 +468,7 @@ CLASS lcl_collector DEFINITION FINAL.
              land1 TYPE t001-land1,
              waers TYPE t001-waers,
              ktopl TYPE t001-ktopl,
+             ktop2 TYPE t001-ktop2,
            END OF ty_t001,
            ty_t001_t TYPE SORTED TABLE OF ty_t001 WITH UNIQUE KEY bukrs,
            BEGIN OF ty_cust_item,
@@ -560,6 +561,10 @@ CLASS lcl_collector DEFINITION FINAL.
                 iv_text TYPE string.
     METHODS step_base_bukrs.
     METHODS step_md_gl.
+    METHODS step_md_coa.
+    METHODS set_coa_sub
+      IMPORTING iv_fkey  TYPE c
+                iv_ktopl TYPE ktopl.
     METHODS step_md_skb1.
     METHODS step_md_kna1.
     METHODS step_md_lfa1.
@@ -722,11 +727,14 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D25' iv_grp = 'G15' ).
     add_detail( iv_fkey = 'D26' iv_grp = 'G15' ).
     add_detail( iv_fkey = 'D27' iv_grp = 'G16' ).
+    add_detail( iv_fkey = 'D28' iv_grp = 'G02' ).
+    add_detail( iv_fkey = 'D29' iv_grp = 'G02' ).
 
 * Collection steps. One step per pass over a table (design 5); the keys are
 * the figures the step feeds. If the step fails, all of them show "error".
     add_step( iv_step = 'BASE_BUKRS' iv_block = 'BASE' iv_keys = 'Q03 D01' ).
     add_step( iv_step = 'MD_GL'      iv_block = 'MD'   iv_keys = 'Q04 Q05' ).
+    add_step( iv_step = 'MD_COA'     iv_block = 'MD'   iv_keys = 'D28 D29' ).
     add_step( iv_step = 'MD_SKB1'    iv_block = 'MD'   iv_keys = 'D02' ).
     add_step( iv_step = 'MD_KNA1'    iv_block = 'MD'   iv_keys = 'Q06' ).
     add_step( iv_step = 'MD_LFA1'    iv_block = 'MD'   iv_keys = 'Q08' ).
@@ -851,6 +859,8 @@ CLASS lcl_collector IMPLEMENTATION.
             step_base_bukrs( ).
           WHEN 'MD_GL'.
             step_md_gl( ).
+          WHEN 'MD_COA'.
+            step_md_coa( ).
           WHEN 'MD_SKB1'.
             step_md_skb1( ).
           WHEN 'MD_KNA1'.
@@ -1021,7 +1031,7 @@ CLASS lcl_collector IMPLEMENTATION.
           lv_flag  TYPE ty_num.
 
     CLEAR: mt_t001, mt_bukrs_act, mv_base_ok.
-    SELECT bukrs land1 waers ktopl FROM t001 INTO TABLE mt_t001.
+    SELECT bukrs land1 waers ktopl ktop2 FROM t001 INTO TABLE mt_t001.
     LOOP AT mt_t001 INTO ls_t001.
       lv_all = lv_all + 1.
       SELECT bukrs FROM bkpf UP TO 1 ROWS INTO lv_found
@@ -1081,6 +1091,75 @@ CLASS lcl_collector IMPLEMENTATION.
     set_b( iv_fkey = 'Q04' iv_val = lv_charts ).
     set_b( iv_fkey = 'Q05' iv_val = lv_stock ).
     set_c( iv_fkey = 'Q05' iv_total = lv_new ).
+  ENDMETHOD.
+
+* Details D28 and D29: country charts of accounts (T001-KTOP2) of the active
+* company codes and group charts of accounts (T004-KKTPL) of the operational
+* charts of row 4. Header = number of charts, one sub row per chart with its
+* G/L accounts (SKA1)
+  METHOD step_md_coa.
+    DATA: lt_ktopl TYPE SORTED TABLE OF ktopl WITH UNIQUE KEY table_line,
+          lt_ktop2 TYPE SORTED TABLE OF ktopl WITH UNIQUE KEY table_line,
+          lt_kktpl TYPE SORTED TABLE OF ktopl WITH UNIQUE KEY table_line,
+          ls_t001  TYPE ty_t001,
+          lv_ktopl TYPE ktopl,
+          lv_kktpl TYPE ktopl,
+          lv_cnt   TYPE ty_num.
+
+    IF mv_base_ok IS INITIAL.
+      RETURN.
+    ENDIF.
+    LOOP AT mt_t001 INTO ls_t001.
+      READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001-bukrs.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+      IF ls_t001-ktopl IS NOT INITIAL.
+        INSERT ls_t001-ktopl INTO TABLE lt_ktopl.
+      ENDIF.
+      IF ls_t001-ktop2 IS NOT INITIAL.
+        INSERT ls_t001-ktop2 INTO TABLE lt_ktop2.
+      ENDIF.
+    ENDLOOP.
+* Group chart is an attribute of the operational chart (few charts, one read each)
+    LOOP AT lt_ktopl INTO lv_ktopl.
+      CLEAR lv_kktpl.
+      SELECT SINGLE kktpl FROM t004 INTO lv_kktpl
+        WHERE ktopl = lv_ktopl.
+      IF sy-subrc = 0 AND lv_kktpl IS NOT INITIAL.
+        INSERT lv_kktpl INTO TABLE lt_kktpl.
+      ENDIF.
+    ENDLOOP.
+
+    LOOP AT lt_ktop2 INTO lv_ktopl.
+      set_coa_sub( iv_fkey = 'D28' iv_ktopl = lv_ktopl ).
+    ENDLOOP.
+    lv_cnt = lines( lt_ktop2 ).
+    set_b( iv_fkey = 'D28' iv_val = lv_cnt ).
+
+    LOOP AT lt_kktpl INTO lv_ktopl.
+      set_coa_sub( iv_fkey = 'D29' iv_ktopl = lv_ktopl ).
+    ENDLOOP.
+    lv_cnt = lines( lt_kktpl ).
+    set_b( iv_fkey = 'D29' iv_val = lv_cnt ).
+  ENDMETHOD.
+
+* Sub row of D28/D29: G/L accounts of one chart (SKA1) without deletion flag
+* (value) and created in the period (total)
+  METHOD set_coa_sub.
+    DATA: lv_cnt TYPE i,
+          lv_num TYPE ty_num.
+
+    SELECT COUNT( * ) FROM ska1 INTO lv_cnt
+      WHERE ktopl = iv_ktopl
+        AND xloev = space.
+    lv_num = lv_cnt.
+    set_b( iv_fkey = iv_fkey iv_sub = iv_ktopl iv_val = lv_num ).
+    SELECT COUNT( * ) FROM ska1 INTO lv_cnt
+      WHERE ktopl = iv_ktopl
+        AND erdat BETWEEN mv_datfr AND mv_datto.
+    lv_num = lv_cnt.
+    set_c( iv_fkey = iv_fkey iv_sub = iv_ktopl iv_total = lv_num ).
   ENDMETHOD.
 
 * Detail D02: G/L accounts at company-code level (SKB1) of the active
@@ -3429,6 +3508,8 @@ CLASS lcl_output IMPLEMENTATION.
           lv_land1 TYPE t042z-land1,
           lv_zlsch TYPE t042z-zlsch,
           lv_text1 TYPE t042z-text1,
+          lv_ktopl TYPE t004t-ktopl,
+          lv_ktplt TYPE t004t-ktplt,
           lv_value TYPE c LENGTH 1.
 
     CASE iv_fkey.
@@ -3455,6 +3536,12 @@ CLASS lcl_output IMPLEMENTATION.
         SELECT SINGLE butxt FROM t001 INTO lv_butxt
           WHERE bukrs = lv_bukrs.
         rv_text = lv_butxt.
+      WHEN 'D28' OR 'D29'.                        " sub key: chart of accounts
+        lv_ktopl = iv_sub.
+        SELECT SINGLE ktplt FROM t004t INTO lv_ktplt
+          WHERE spras = sy-langu
+            AND ktopl = lv_ktopl.
+        rv_text = lv_ktplt.
       WHEN 'D03'.
         lv_mtart = iv_sub.
         SELECT SINGLE mtbez FROM t134t INTO lv_mtbez

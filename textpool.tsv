@@ -263,6 +263,10 @@ I	D26	Valid dialog users regardless of logon	Gültige Dialogbenutzer unabhängig
 I	E26	USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128)	USTYP A, heute gültig, nicht vom Administrator gesperrt (UFLAG 0 oder 128)
 I	D27	FI documents entered	Erfasste FI-Belege
 I	E27	BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)	BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal)
+I	D28	Country charts of accounts	Landeskontenpläne
+I	E28	T001-KTOP2 of the active company codes; per chart: SKA1 without deletion flag, created (ERDAT)	T001-KTOP2 der aktiven Buchungskreise; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)
+I	D29	Group charts of accounts	Konzernkontenpläne
+I	E29	T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)	T004-KKTPL der Kontenpläne aus Zeile 4; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)
 I	D80	System ID	System-ID
 I	D81	Client	Mandant
 I	D82	SAP release	SAP-Release

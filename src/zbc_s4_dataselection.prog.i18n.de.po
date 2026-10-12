@@ -249,6 +249,10 @@ msgstr "Controlling"
 msgid "Counted in row 27"
 msgstr "Gezählt in Zeile 27"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D28 26, maxlen=26
+msgid "Country charts of accounts"
+msgstr "Landeskontenpläne"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N25 36, maxlen=36
 msgid "Created/month incl. service orders"
 msgstr "Angelegt/Monat inkl. Serviceaufträge"
@@ -401,6 +405,10 @@ msgstr "G7 Währungen"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H20 6, maxlen=6
 msgid "Group"
 msgstr "Gruppe"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D29 24, maxlen=24
+msgid "Group charts of accounts"
+msgstr "Konzernkontenpläne"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L29 68, maxlen=68
 msgid "HR data is not read (personal data, separate authorizations)"
@@ -950,9 +958,17 @@ msgstr "Systeme ohne WM: 0"
 msgid "T001 count; per company code: 1 = active, 0 = not active"
 msgstr "Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E28 97, maxlen=97
+msgid "T001-KTOP2 of the active company codes; per chart: SKA1 without deletion flag, created (ERDAT)"
+msgstr "T001-KTOP2 der aktiven Buchungskreise; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E17 37, maxlen=37
 msgid "T001L of the plants counted in row 27"
 msgstr "T001L der in Zeile 27 gezählten Werke"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E29 98, maxlen=98
+msgid "T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)"
+msgstr "T004-KKTPL der Kontenpläne aus Zeile 4; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E19 37, maxlen=37
 msgid "T012 rows of the active company codes"
