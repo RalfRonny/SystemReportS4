@@ -29,6 +29,10 @@ msgstr "- Anzahl Lockboxen"
 msgid "ALE IDocs (logical systems) and message types in the details"
 msgstr "ALE-IDocs (logische Systeme) und Nachrichtentypen in den Details"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D23 27, maxlen=27
+msgid "ALE IDocs (partner type LS)"
+msgstr "ALE-IDocs (Partnerart LS)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E06 53, maxlen=53
 msgid "ANLA with sub-number other than 0000, not deactivated"
 msgstr "ANLA mit Unternummer ungleich 0000, nicht deaktiviert"
@@ -329,9 +333,25 @@ msgstr "Sparten"
 msgid "Documents, not line items; no posting key hard-coded"
 msgstr "Belege, nicht Positionen; kein Buchungsschlüssel fest codiert"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G14 3, maxlen=3
+msgid "EDI"
+msgstr "EDI"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT Q23 17, maxlen=17
 msgid "EDI Transactions"
 msgstr "EDI-Transaktionen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E22 101, maxlen=101
+msgid "EDIDC created in the period (CREDAT); sub key direction/partner type, 1 = outbound, 2 = inbound"
+msgstr "EDIDC im Zeitraum angelegt (CREDAT); Unterschlüssel Richtung/Partnerart, 1 = ausgehend, 2 = eingehend"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E24 80, maxlen=80
+msgid "EDIDC created in the period per message type, the 10 largest; header = all IDocs"
+msgstr "EDIDC im Zeitraum angelegt je Nachrichtentyp, die 10 größten; Kopf = alle IDocs"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E23 66, maxlen=66
+msgid "EDIDC created in the period whose partner is a logical system"
+msgstr "EDIDC im Zeitraum angelegt, deren Partner ein logisches System ist"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E10 76, maxlen=76
 msgid "EKKO created in the period (AEDAT), per purchasing document category (BSTYP)"
@@ -401,6 +421,10 @@ msgstr "IDocs"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H33 17, maxlen=17
 msgid "IDocs in period"
 msgstr "IDocs im Zeitraum"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D22 36, maxlen=36
+msgid "IDocs per direction and partner type"
+msgstr "IDocs je Richtung und Partnerart"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT G00 4, maxlen=4
 msgid "INFO"
@@ -874,6 +898,10 @@ msgstr "Softwarekomponente"
 msgid "Split by order category in the details"
 msgstr "Aufteilung nach Auftragstyp in den Details"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D17 17, maxlen=17
+msgid "Storage locations"
+msgstr "Lagerorte"
+
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_STORE, maxlen=30
 msgid "Store result"
 msgstr "Ergebnis speichern"
@@ -910,6 +938,10 @@ msgstr "Systeme ohne WM: 0"
 msgid "T001 count; per company code: 1 = active, 0 = not active"
 msgstr "Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E17 37, maxlen=37
+msgid "T001L of the plants counted in row 27"
+msgstr "T001L der in Zeile 27 gezählten Werke"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E19 37, maxlen=37
 msgid "T012 rows of the active company codes"
 msgstr "T012-Sätze der aktiven Buchungskreise"
@@ -921,6 +953,10 @@ msgstr "T012K-Sätze der aktiven Buchungskreise"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT M11 35, maxlen=35
 msgid "Text IDs missing in logon language:"
 msgstr "Text-IDs fehlen in Anmeldesprache:"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D24 23, maxlen=23
+msgid "Top 10 message types"
+msgstr "Top 10 Nachrichtentypen"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H06 17, maxlen=17
 msgid "Total in period"
@@ -938,6 +974,14 @@ msgstr "Angelegte Transportaufträge"
 msgid "Type"
 msgstr "Typ"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E25 56, maxlen=56
+msgid "USR02 valid today (GLTGV/GLTGB), per user type (USTYP)"
+msgstr "USR02 heute gültig (GLTGV/GLTGB), je Benutzertyp (USTYP)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E26 74, maxlen=74
+msgid "USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128)"
+msgstr "USTYP A, heute gültig, nicht vom Administrator gesperrt (UFLAG 0 oder 128)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R07 35, maxlen=35
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R09 35, maxlen=35
 msgid "Union of both sources built in ABAP"
@@ -951,6 +995,14 @@ msgstr "Im Zeitraum genutzt"
 msgid "User"
 msgstr "Benutzer"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G15 8, maxlen=8
+msgid "Users"
+msgstr "Benutzer"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D25 38, maxlen=38
+msgid "Users per user type (valid today)"
+msgstr "Benutzer je Benutzertyp (heute gültig)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E07 68, maxlen=68
 msgid "VBAK created in the period (ERDAT), per SD document category (VBTYP)"
 msgstr "VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
@@ -958,6 +1010,10 @@ msgstr "VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E09 98, maxlen=98
 msgid "VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)"
 msgstr "VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D26 51, maxlen=51
+msgid "Valid dialog users regardless of logon"
+msgstr "Gültige Dialogbenutzer unabhängig von der Anmeldung"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N11 36, maxlen=36
 msgid "Valid today; C = first created/month"

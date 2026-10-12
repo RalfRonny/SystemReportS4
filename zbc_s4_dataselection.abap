@@ -13,7 +13,7 @@ REPORT zbc_s4_dataselection LINE-SIZE 255 NO STANDARD PAGE HEADING.
 * Constants and types
 *----------------------------------------------------------------------*
 CONSTANTS: gc_x          TYPE c LENGTH 1  VALUE 'X',
-           gc_version    TYPE c LENGTH 4  VALUE '0001',  " increase whenever a stored type changes
+           gc_version    TYPE c LENGTH 4  VALUE '0002',  " increase whenever a stored type changes
            gc_cluster_id TYPE c LENGTH 12 VALUE 'ZS4_RC_QUEST',
            gc_st_ok      TYPE c LENGTH 1  VALUE 'O',     " figure collected
            gc_st_err     TYPE c LENGTH 1  VALUE 'E'.     " figure failed; space = not collected
@@ -42,6 +42,9 @@ TYPES: BEGIN OF ty_meta,
          g5       TYPE string,       " countries, comma-separated
          g6       TYPE string,       " ISO languages, comma-separated
          g7       TYPE string,       " currencies, comma-separated
+         g5_st    TYPE ty_flag,      " status of G5 to G7 as for figures:
+         g6_st    TYPE ty_flag,      " O collected, E error, space not collected
+         g7_st    TYPE ty_flag,
        END OF ty_meta.
 
 TYPES: BEGIN OF ty_block,
@@ -84,6 +87,7 @@ TYPES: BEGIN OF ty_org,
          bukrs TYPE bukrs,
          cnt   TYPE ty_num,          " A: documents created in period
          used  TYPE ty_flag,
+         status TYPE ty_flag,        " O: "used" / count known; space: source block not collected; E: error
        END OF ty_org,
        ty_org_t TYPE STANDARD TABLE OF ty_org WITH DEFAULT KEY.
 
@@ -96,6 +100,14 @@ TYPES: BEGIN OF ty_intf,
        END OF ty_intf,
        ty_intf_t TYPE STANDARD TABLE OF ty_intf WITH DEFAULT KEY.
 
+* Failed collection steps, shown in the INFO part of view 4 (also for steps
+* that feed no questionnaire row, e.g. the organizational unit lists)
+TYPES: BEGIN OF ty_error,
+         step TYPE c LENGTH 20,
+         text TYPE c LENGTH 255,
+       END OF ty_error,
+       ty_error_t TYPE STANDARD TABLE OF ty_error WITH DEFAULT KEY.
+
 TYPES: BEGIN OF ty_result,
          meta   TYPE ty_meta,
          blocks TYPE ty_block_t,
@@ -103,6 +115,7 @@ TYPES: BEGIN OF ty_result,
          plants TYPE ty_plant_t,
          orgs   TYPE ty_org_t,
          intfs  TYPE ty_intf_t,
+         errors TYPE ty_error_t,
        END OF ty_result.
 
 TYPES: BEGIN OF ty_scope,
@@ -230,14 +243,9 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'L' iv_from = 18 iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 13 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 18 iv_to = 21 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 18 iv_to = 21 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 16 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 4  CHANGING ct_ids = lt_ids ).
 
@@ -386,6 +394,7 @@ CLASS lcl_store IMPLEMENTATION.
            plants  = is_result-plants
            orgs    = is_result-orgs
            intfs   = is_result-intfs
+           errors  = is_result-errors
       TO DATABASE indx(zq) FROM ls_indx ID gc_cluster_id.
     COMMIT WORK.                              " releases the lock held by EXPORT
   ENDMETHOD.
@@ -411,6 +420,7 @@ CLASS lcl_store IMPLEMENTATION.
                plants = es_result-plants
                orgs   = es_result-orgs
                intfs  = es_result-intfs
+               errors = es_result-errors
           FROM DATABASE indx(zq) ID gc_cluster_id.
       CATCH cx_sy_import_mismatch_error.      " superclass, also covers CX_SY_IMPORT_FORMAT_ERROR
         CLEAR es_result.
@@ -578,7 +588,22 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_pp_qals.
     METHODS step_pp_crhd.
     METHODS counted_plants.
+    METHODS step_org_plants.
+    METHODS step_org_edi.
+    METHODS step_org_users.
+    METHODS step_org_units.
     METHODS step_derv_active.
+    METHODS step_derv_g567.
+    METHODS add_to_list
+      IMPORTING iv_value TYPE c
+      CHANGING  cv_list  TYPE string.
+    METHODS src_status
+      IMPORTING iv_steps         TYPE c
+      RETURNING value(rv_status) TYPE ty_flag.
+    METHODS step_derv_usage.
+    METHODS add_usage
+      IMPORTING iv_area TYPE c
+                iv_fkey TYPE c.
 ENDCLASS.
 
 CLASS lcl_collector IMPLEMENTATION.
@@ -679,10 +704,16 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D14' iv_grp = 'G10' ).
     add_detail( iv_fkey = 'D15' iv_grp = 'G11' ).
     add_detail( iv_fkey = 'D16' iv_grp = 'G12' ).
+    add_detail( iv_fkey = 'D17' iv_grp = 'G12' ).
     add_detail( iv_fkey = 'D18' iv_grp = 'G09' ).
     add_detail( iv_fkey = 'D19' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D20' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D21' iv_grp = 'G13' ).
+    add_detail( iv_fkey = 'D22' iv_grp = 'G14' ).
+    add_detail( iv_fkey = 'D23' iv_grp = 'G14' ).
+    add_detail( iv_fkey = 'D24' iv_grp = 'G14' ).
+    add_detail( iv_fkey = 'D25' iv_grp = 'G15' ).
+    add_detail( iv_fkey = 'D26' iv_grp = 'G15' ).
     add_detail( iv_fkey = 'D27' iv_grp = 'G16' ).
 
 * Collection steps. One step per pass over a table (design 5); the keys are
@@ -715,7 +746,14 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'PP_AUFK'    iv_block = 'PP'   iv_keys = 'Q24 Q25 D13 D14' ).
     add_step( iv_step = 'PP_QALS'    iv_block = 'PP'   iv_keys = 'D15' ).
     add_step( iv_step = 'PP_CRHD'    iv_block = 'PP'   iv_keys = 'D18' ).
+    add_step( iv_step = 'ORG_PLANTS' iv_block = 'ORG'  iv_keys = 'Q27 D17' ).
+    add_step( iv_step = 'ORG_EDI'    iv_block = 'ORG'  iv_keys = 'Q23 D22 D23 D24' ).
+    add_step( iv_step = 'ORG_USERS'  iv_block = 'ORG'  iv_keys = 'Q28 D25 D26' ).
+* No figure keys: a failure shows up in the INFO part of view 4 (ms_res-errors)
+    add_step( iv_step = 'ORG_UNITS'  iv_block = 'ORG'  iv_keys = '' ).
     add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
+    add_step( iv_step = 'DERV_G567'  iv_block = 'DERV' iv_keys = '' ).
+    add_step( iv_step = 'DERV_USAGE' iv_block = 'DERV' iv_keys = '' ).
   ENDMETHOD.
 
   METHOD add_step.
@@ -791,9 +829,10 @@ CLASS lcl_collector IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD run_step.
-    DATA: lx_root TYPE REF TO cx_root,
-          lv_text TYPE string,
-          lv_msg  TYPE string.
+    DATA: lx_root  TYPE REF TO cx_root,
+          lv_text  TYPE string,
+          lv_msg   TYPE string,
+          ls_error TYPE ty_error.
 
     TRY.
         CASE is_step-step.
@@ -853,12 +892,27 @@ CLASS lcl_collector IMPLEMENTATION.
             step_pp_qals( ).
           WHEN 'PP_CRHD'.
             step_pp_crhd( ).
+          WHEN 'ORG_PLANTS'.
+            step_org_plants( ).
+          WHEN 'ORG_EDI'.
+            step_org_edi( ).
+          WHEN 'ORG_USERS'.
+            step_org_users( ).
+          WHEN 'ORG_UNITS'.
+            step_org_units( ).
           WHEN 'DERV_ACTIVE'.
             step_derv_active( ).
+          WHEN 'DERV_G567'.
+            step_derv_g567( ).
+          WHEN 'DERV_USAGE'.
+            step_derv_usage( ).
         ENDCASE.
       CATCH cx_root INTO lx_root.
         lv_text = lx_root->get_text( ).
         set_error( iv_keys = is_step-keys iv_text = lv_text ).
+        ls_error-step = is_step-step.
+        ls_error-text = lv_text.
+        APPEND ls_error TO ms_res-errors.
         IF sy-batch = gc_x.
           lv_msg = lcl_text=>get( 'M08' ).
           CONCATENATE lv_msg is_step-keys lv_text INTO lv_msg SEPARATED BY space.
@@ -1927,6 +1981,587 @@ CLASS lcl_collector IMPLEMENTATION.
     mv_werks_cnt_ok = gc_x.
   ENDMETHOD.
 
+* Row 27, detail D17 and the plant view (design 10): all plants with name,
+* country, city and the company code of their valuation area. Counted = plant
+* of an active company code (row 27). Manufacturing = production or process
+* orders created for the plant in the period (blank if block PP was skipped)
+  METHOD step_org_plants.
+    TYPES: BEGIN OF lty_t001w,
+             werks TYPE t001w-werks,
+             name1 TYPE t001w-name1,
+             land1 TYPE t001w-land1,
+             ort01 TYPE t001w-ort01,
+             bwkey TYPE t001w-bwkey,
+           END OF lty_t001w,
+           BEGIN OF lty_t001k,
+             bwkey TYPE t001k-bwkey,
+             bukrs TYPE t001k-bukrs,
+           END OF lty_t001k,
+           BEGIN OF lty_t001l,
+             werks TYPE t001l-werks,
+             lgort TYPE t001l-lgort,
+           END OF lty_t001l.
+    DATA: lt_t001w  TYPE STANDARD TABLE OF lty_t001w,
+          ls_t001w  TYPE lty_t001w,
+          lt_t001k  TYPE SORTED TABLE OF lty_t001k WITH UNIQUE KEY bwkey,
+          ls_t001k  TYPE lty_t001k,
+          lt_t001l  TYPE STANDARD TABLE OF lty_t001l,
+          ls_t001l  TYPE lty_t001l,
+          ls_plant  TYPE ty_plant,
+          lv_plants TYPE ty_num,
+          lv_slocs  TYPE ty_num.
+
+    IF mv_base_ok IS INITIAL.
+      RETURN.
+    ENDIF.
+    counted_plants( ).
+    CLEAR ms_res-plants.
+    SELECT werks name1 land1 ort01 bwkey FROM t001w INTO TABLE lt_t001w.
+    SELECT bwkey bukrs FROM t001k INTO TABLE lt_t001k.
+    SORT lt_t001w BY werks.
+    LOOP AT lt_t001w INTO ls_t001w.
+      CLEAR: ls_plant, ls_t001k.
+      ls_plant-werks = ls_t001w-werks.
+      ls_plant-name1 = ls_t001w-name1.
+      ls_plant-land1 = ls_t001w-land1.
+      ls_plant-ort01 = ls_t001w-ort01.
+      READ TABLE lt_t001k INTO ls_t001k WITH TABLE KEY bwkey = ls_t001w-bwkey.
+      ls_plant-bukrs = ls_t001k-bukrs.
+      READ TABLE mt_werks_cnt TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001w-werks.
+      IF sy-subrc = 0.
+        ls_plant-counted = gc_x.
+        lv_plants = lv_plants + 1.
+      ENDIF.
+      IF mv_pp_manuf_ok = gc_x.
+        READ TABLE mt_werks_manuf TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001w-werks.
+        IF sy-subrc = 0.
+          ls_plant-manuf = gc_x.
+        ENDIF.
+      ENDIF.
+      APPEND ls_plant TO ms_res-plants.
+    ENDLOOP.
+
+    SELECT werks lgort FROM t001l INTO TABLE lt_t001l.
+    LOOP AT lt_t001l INTO ls_t001l.
+      READ TABLE mt_werks_cnt TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001l-werks.
+      IF sy-subrc = 0.
+        lv_slocs = lv_slocs + 1.
+      ENDIF.
+    ENDLOOP.
+
+    set_b( iv_fkey = 'Q27' iv_val = lv_plants ).
+    set_b( iv_fkey = 'D17' iv_val = lv_slocs ).
+  ENDMETHOD.
+
+* Row 23 and details D22-D24. B = configured EDI message flows with business
+* partners: partner profile message lines outbound (EDP13) and inbound (EDP21)
+* without logical systems (partner type LS, SAP-defined). C and details: IDocs
+* created in the period (EDIDC-CREDAT), one aggregated pass; the partner is the
+* receiver for outbound (direction 1) and the sender for inbound (direction 2)
+  METHOD step_org_edi.
+    TYPES: BEGIN OF lty_grp,
+             direct TYPE edidc-direct,
+             rcvprt TYPE edidc-rcvprt,
+             sndprt TYPE edidc-sndprt,
+             mestyp TYPE edidc-mestyp,
+             cnt    TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_part,
+             direct TYPE edidc-direct,
+             prt    TYPE edidc-rcvprt,
+             cnt    TYPE ty_num,
+           END OF lty_part,
+           BEGIN OF lty_mes,
+             mestyp TYPE edidc-mestyp,
+             cnt    TYPE ty_num,
+           END OF lty_mes.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lt_part  TYPE SORTED TABLE OF lty_part WITH UNIQUE KEY direct prt,
+          ls_part  TYPE lty_part,
+          lt_mes   TYPE SORTED TABLE OF lty_mes WITH UNIQUE KEY mestyp,
+          lt_top   TYPE STANDARD TABLE OF lty_mes,
+          ls_mes   TYPE lty_mes,
+          lv_cnt   TYPE i,
+          lv_sub   TYPE c LENGTH 30,
+          lv_prof  TYPE ty_num,
+          lv_edi   TYPE ty_num,
+          lv_ale   TYPE ty_num,
+          lv_total TYPE ty_num.
+
+    SELECT COUNT( * ) FROM edp13 INTO lv_cnt
+      WHERE rcvprt <> 'LS'.
+    lv_prof = lv_cnt.
+    SELECT COUNT( * ) FROM edp21 INTO lv_cnt
+      WHERE sndprt <> 'LS'.
+    lv_prof = lv_prof + lv_cnt.
+
+    SELECT direct rcvprt sndprt mestyp COUNT( * ) FROM edidc INTO TABLE lt_grp
+      WHERE credat BETWEEN mv_datfr AND mv_datto
+      GROUP BY direct rcvprt sndprt mestyp.
+    LOOP AT lt_grp INTO ls_grp.
+      CLEAR ls_part.
+      ls_part-direct = ls_grp-direct.
+      IF ls_grp-direct = '1'.
+        ls_part-prt = ls_grp-rcvprt.
+      ELSE.
+        ls_part-prt = ls_grp-sndprt.
+      ENDIF.
+      ls_part-cnt = ls_grp-cnt.
+      COLLECT ls_part INTO lt_part.
+      lv_total = lv_total + ls_part-cnt.
+      IF ls_part-prt = 'LS'.
+        lv_ale = lv_ale + ls_part-cnt.
+      ELSE.
+        lv_edi = lv_edi + ls_part-cnt.
+      ENDIF.
+      ls_mes-mestyp = ls_grp-mestyp.
+      ls_mes-cnt    = ls_grp-cnt.
+      COLLECT ls_mes INTO lt_mes.
+    ENDLOOP.
+
+    LOOP AT lt_part INTO ls_part.
+      CONCATENATE ls_part-direct '/' ls_part-prt INTO lv_sub.
+      set_c( iv_fkey = 'D22' iv_sub = lv_sub iv_total = ls_part-cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'D22' iv_total = lv_total ).
+    set_c( iv_fkey = 'D23' iv_total = lv_ale ).
+
+* Top 10 message types by number of IDocs; the header holds all IDocs
+    lt_top = lt_mes.
+    SORT lt_top BY cnt DESCENDING mestyp ASCENDING.
+    LOOP AT lt_top INTO ls_mes.
+      IF sy-tabix > 10.
+        EXIT.
+      ENDIF.
+      lv_sub = ls_mes-mestyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.
+      ENDIF.
+      set_c( iv_fkey = 'D24' iv_sub = lv_sub iv_total = ls_mes-cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'D24' iv_total = lv_total ).
+
+    set_b( iv_fkey = 'Q23' iv_val = lv_prof ).
+    set_c( iv_fkey = 'Q23' iv_total = lv_edi ).
+  ENDMETHOD.
+
+* Row 28 and details D25/D26 from the logon data (USR02), without user names
+* (design 2 #13). Valid today: GLTGV/GLTGB initial or around today. Not locked
+* by an administrator: UFLAG 0, or only the failed-logon lock 128. User types
+* and lock values are SAP-defined
+  METHOD step_org_users.
+    TYPES: BEGIN OF lty_usr,
+             ustyp TYPE usr02-ustyp,
+             uflag TYPE usr02-uflag,
+             gltgv TYPE usr02-gltgv,
+             gltgb TYPE usr02-gltgb,
+             trdat TYPE usr02-trdat,
+             erdat TYPE usr02-erdat,
+           END OF lty_usr,
+           BEGIN OF lty_typ,
+             ustyp TYPE usr02-ustyp,
+             cnt   TYPE ty_num,
+           END OF lty_typ.
+    DATA: lt_usr    TYPE STANDARD TABLE OF lty_usr,
+          ls_usr    TYPE lty_usr,
+          lt_typ    TYPE SORTED TABLE OF lty_typ WITH UNIQUE KEY ustyp,
+          ls_typ    TYPE lty_typ,
+          lv_valid  TYPE ty_flag,
+          lv_sub    TYPE c LENGTH 30,
+          lv_active TYPE ty_num,
+          lv_new    TYPE ty_num,
+          lv_dialog TYPE ty_num,
+          lv_total  TYPE ty_num.
+
+    SELECT ustyp uflag gltgv gltgb trdat erdat FROM usr02 INTO TABLE lt_usr.
+    LOOP AT lt_usr INTO ls_usr.
+      lv_valid = gc_x.
+      IF ls_usr-gltgv IS NOT INITIAL AND ls_usr-gltgv > sy-datum.
+        CLEAR lv_valid.
+      ENDIF.
+      IF ls_usr-gltgb IS NOT INITIAL AND ls_usr-gltgb < sy-datum.
+        CLEAR lv_valid.
+      ENDIF.
+      IF lv_valid = gc_x.
+        lv_total     = lv_total + 1.
+        ls_typ-ustyp = ls_usr-ustyp.
+        ls_typ-cnt   = 1.
+        COLLECT ls_typ INTO lt_typ.
+        IF ls_usr-ustyp = 'A' AND ( ls_usr-uflag = 0 OR ls_usr-uflag = 128 ).
+          lv_dialog = lv_dialog + 1.
+          IF ls_usr-trdat >= mv_datfr.
+            lv_active = lv_active + 1.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+      IF ls_usr-ustyp = 'A' AND ls_usr-erdat BETWEEN mv_datfr AND mv_datto.
+        lv_new = lv_new + 1.
+      ENDIF.
+    ENDLOOP.
+
+    LOOP AT lt_typ INTO ls_typ.
+      lv_sub = ls_typ-ustyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.
+      ENDIF.
+      set_b( iv_fkey = 'D25' iv_sub = lv_sub iv_val = ls_typ-cnt ).
+    ENDLOOP.
+    set_b( iv_fkey = 'D25' iv_val = lv_total ).
+    set_b( iv_fkey = 'D26' iv_val = lv_dialog ).
+    set_b( iv_fkey = 'Q28' iv_val = lv_active ).
+    set_c( iv_fkey = 'Q28' iv_total = lv_new ).
+  ENDMETHOD.
+
+* Organization view (design 9): purchasing organizations (T024E), sales
+* organizations (TVKO), distribution channels (TVTW) and divisions (TSPA) with
+* their texts in the logon language of the collection run. "Used" comes from the
+* purchase orders (block MM) and sales orders (block SD) created in the period.
+* If that source is missing, the rows show "error" when its step failed and
+* "not collected" when its block was skipped
+  METHOD step_org_units.
+    TYPES: BEGIN OF lty_t024e,
+             ekorg TYPE t024e-ekorg,
+             ekotx TYPE t024e-ekotx,
+             bukrs TYPE t024e-bukrs,
+           END OF lty_t024e,
+           BEGIN OF lty_tvko,
+             vkorg TYPE tvko-vkorg,
+             bukrs TYPE tvko-bukrs,
+           END OF lty_tvko,
+           BEGIN OF lty_tvkot,
+             vkorg TYPE tvkot-vkorg,
+             vtext TYPE tvkot-vtext,
+           END OF lty_tvkot,
+           BEGIN OF lty_tvtwt,
+             vtweg TYPE tvtwt-vtweg,
+             vtext TYPE tvtwt-vtext,
+           END OF lty_tvtwt,
+           BEGIN OF lty_tspat,
+             spart TYPE tspat-spart,
+             vtext TYPE tspat-vtext,
+           END OF lty_tspat.
+    DATA: lt_t024e TYPE STANDARD TABLE OF lty_t024e,
+          ls_t024e TYPE lty_t024e,
+          lt_tvko  TYPE STANDARD TABLE OF lty_tvko,
+          ls_tvko  TYPE lty_tvko,
+          lt_tvkot TYPE SORTED TABLE OF lty_tvkot WITH UNIQUE KEY vkorg,
+          ls_tvkot TYPE lty_tvkot,
+          lt_vtweg TYPE STANDARD TABLE OF vtweg,
+          lv_vtweg TYPE vtweg,
+          lt_tvtwt TYPE SORTED TABLE OF lty_tvtwt WITH UNIQUE KEY vtweg,
+          ls_tvtwt TYPE lty_tvtwt,
+          lt_spart TYPE STANDARD TABLE OF spart,
+          lv_spart TYPE spart,
+          lt_tspat TYPE SORTED TABLE OF lty_tspat WITH UNIQUE KEY spart,
+          ls_tspat TYPE lty_tspat,
+          ls_org   TYPE ty_org,
+          lv_st_mm TYPE ty_flag,
+          lv_st_sd TYPE ty_flag.
+
+    DELETE ms_res-orgs WHERE grp <> 'A'.
+    lv_st_mm = src_status( 'MM_EKKO' ).
+    lv_st_sd = src_status( 'SD_VBAK' ).
+
+    SELECT ekorg ekotx bukrs FROM t024e INTO TABLE lt_t024e.
+    SORT lt_t024e BY ekorg.
+    LOOP AT lt_t024e INTO ls_t024e.
+      CLEAR ls_org.
+      ls_org-grp   = 'P'.
+      ls_org-okey  = ls_t024e-ekorg.
+      ls_org-otext = ls_t024e-ekotx.
+      ls_org-bukrs = ls_t024e-bukrs.
+      IF mv_mm_vend_ok = gc_x.
+        ls_org-status = gc_st_ok.
+        READ TABLE mt_ekorg_used TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t024e-ekorg.
+        IF sy-subrc = 0.
+          ls_org-used = gc_x.
+        ENDIF.
+      ELSE.
+        ls_org-status = lv_st_mm.
+      ENDIF.
+      APPEND ls_org TO ms_res-orgs.
+    ENDLOOP.
+
+    SELECT vkorg bukrs FROM tvko INTO TABLE lt_tvko.
+    SELECT vkorg vtext FROM tvkot INTO TABLE lt_tvkot
+      WHERE spras = sy-langu.
+    SORT lt_tvko BY vkorg.
+    LOOP AT lt_tvko INTO ls_tvko.
+      CLEAR: ls_org, ls_tvkot.
+      ls_org-grp   = 'S'.
+      ls_org-okey  = ls_tvko-vkorg.
+      READ TABLE lt_tvkot INTO ls_tvkot WITH TABLE KEY vkorg = ls_tvko-vkorg.
+      ls_org-otext = ls_tvkot-vtext.
+      ls_org-bukrs = ls_tvko-bukrs.
+      IF mv_sd_cust_ok = gc_x.
+        ls_org-status = gc_st_ok.
+        READ TABLE mt_vkorg_used TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_tvko-vkorg.
+        IF sy-subrc = 0.
+          ls_org-used = gc_x.
+        ENDIF.
+      ELSE.
+        ls_org-status = lv_st_sd.
+      ENDIF.
+      APPEND ls_org TO ms_res-orgs.
+    ENDLOOP.
+
+    SELECT vtweg FROM tvtw INTO TABLE lt_vtweg.
+    SELECT vtweg vtext FROM tvtwt INTO TABLE lt_tvtwt
+      WHERE spras = sy-langu.
+    SORT lt_vtweg.
+    LOOP AT lt_vtweg INTO lv_vtweg.
+      CLEAR: ls_org, ls_tvtwt.
+      ls_org-grp  = 'D'.
+      ls_org-okey = lv_vtweg.
+      READ TABLE lt_tvtwt INTO ls_tvtwt WITH TABLE KEY vtweg = lv_vtweg.
+      ls_org-otext = ls_tvtwt-vtext.
+      IF mv_sd_cust_ok = gc_x.
+        ls_org-status = gc_st_ok.
+        READ TABLE mt_vtweg_used TRANSPORTING NO FIELDS WITH TABLE KEY table_line = lv_vtweg.
+        IF sy-subrc = 0.
+          ls_org-used = gc_x.
+        ENDIF.
+      ELSE.
+        ls_org-status = lv_st_sd.
+      ENDIF.
+      APPEND ls_org TO ms_res-orgs.
+    ENDLOOP.
+
+    SELECT spart FROM tspa INTO TABLE lt_spart.
+    SELECT spart vtext FROM tspat INTO TABLE lt_tspat
+      WHERE spras = sy-langu.
+    SORT lt_spart.
+    LOOP AT lt_spart INTO lv_spart.
+      CLEAR: ls_org, ls_tspat.
+      ls_org-grp  = 'V'.
+      ls_org-okey = lv_spart.
+      READ TABLE lt_tspat INTO ls_tspat WITH TABLE KEY spart = lv_spart.
+      ls_org-otext = ls_tspat-vtext.
+      IF mv_sd_cust_ok = gc_x.
+        ls_org-status = gc_st_ok.
+        READ TABLE mt_spart_used TRANSPORTING NO FIELDS WITH TABLE KEY table_line = lv_spart.
+        IF sy-subrc = 0.
+          ls_org-used = gc_x.
+        ENDIF.
+      ELSE.
+        ls_org-status = lv_st_sd.
+      ENDIF.
+      APPEND ls_org TO ms_res-orgs.
+    ENDLOOP.
+  ENDMETHOD.
+
+* G5 to G7 (design 9). Each line is set to "error" first, so that a failure in
+* the middle of the step leaves an error and not a partial list. A line whose
+* source is missing shows "error" if a source step failed and "not collected"
+* if a source block was skipped
+  METHOD step_derv_g567.
+    TYPES: BEGIN OF lty_t001w,
+             werks TYPE t001w-werks,
+             land1 TYPE t001w-land1,
+           END OF lty_t001w,
+           BEGIN OF lty_t002,
+             spras TYPE t002-spras,
+             laiso TYPE t002-laiso,
+           END OF lty_t002.
+    DATA: lt_land  TYPE SORTED TABLE OF land1 WITH UNIQUE KEY table_line,
+          lt_t001w TYPE STANDARD TABLE OF lty_t001w,
+          ls_t001w TYPE lty_t001w,
+          ls_t001  TYPE ty_t001,
+          lt_kunnr TYPE STANDARD TABLE OF kunnr,
+          lv_kunnr TYPE kunnr,
+          lt_lifnr TYPE STANDARD TABLE OF lifnr,
+          lv_lifnr TYPE lifnr,
+          lt_spras TYPE STANDARD TABLE OF spras,
+          lv_spras TYPE spras,
+          lt_lang  TYPE SORTED TABLE OF spras WITH UNIQUE KEY table_line,
+          lt_t002  TYPE SORTED TABLE OF lty_t002 WITH UNIQUE KEY spras,
+          ls_t002  TYPE lty_t002,
+          lt_iso   TYPE SORTED TABLE OF laiso WITH UNIQUE KEY table_line,
+          lt_waers TYPE SORTED TABLE OF waers WITH UNIQUE KEY table_line,
+          lv_waers TYPE waers,
+          lv_land1 TYPE land1,
+          lv_laiso TYPE laiso.
+
+    ms_res-meta-g5_st = gc_st_err.
+    ms_res-meta-g6_st = gc_st_err.
+    ms_res-meta-g7_st = gc_st_err.
+    CLEAR: ms_res-meta-g5, ms_res-meta-g6, ms_res-meta-g7.
+
+* G5: countries of the active company codes and of the plants counted in row 27
+    IF mv_base_ok = gc_x.
+      counted_plants( ).
+      LOOP AT mt_t001 INTO ls_t001.
+        READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001-bukrs.
+        IF sy-subrc = 0 AND ls_t001-land1 IS NOT INITIAL.
+          INSERT ls_t001-land1 INTO TABLE lt_land.
+        ENDIF.
+      ENDLOOP.
+      SELECT werks land1 FROM t001w INTO TABLE lt_t001w.
+      LOOP AT lt_t001w INTO ls_t001w.
+        READ TABLE mt_werks_cnt TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001w-werks.
+        IF sy-subrc = 0 AND ls_t001w-land1 IS NOT INITIAL.
+          INSERT ls_t001w-land1 INTO TABLE lt_land.
+        ENDIF.
+      ENDLOOP.
+      LOOP AT lt_land INTO lv_land1.
+        add_to_list( EXPORTING iv_value = lv_land1 CHANGING cv_list = ms_res-meta-g5 ).
+      ENDLOOP.
+      ms_res-meta-g5_st = gc_st_ok.
+    ELSE.
+      ms_res-meta-g5_st = src_status( 'BASE_BUKRS' ).
+    ENDIF.
+
+* G6: correspondence languages of the active customers and vendors (rows 7 and
+* 9) as ISO codes. FOR ALL ENTRIES returns each language once
+    IF mv_fi_cust_ok = gc_x AND mv_sd_cust_ok = gc_x
+      AND mv_fi_vend_ok = gc_x AND mv_mm_vend_ok = gc_x.
+      LOOP AT mt_kunnr_fi INTO lv_kunnr.
+        APPEND lv_kunnr TO lt_kunnr.
+      ENDLOOP.
+      LOOP AT mt_kunnr_sd INTO lv_kunnr.
+        APPEND lv_kunnr TO lt_kunnr.
+      ENDLOOP.
+      SORT lt_kunnr.
+      DELETE ADJACENT DUPLICATES FROM lt_kunnr.
+      IF lt_kunnr IS NOT INITIAL.
+        SELECT spras FROM kna1 INTO TABLE lt_spras
+          FOR ALL ENTRIES IN lt_kunnr
+          WHERE kunnr = lt_kunnr-table_line.
+        LOOP AT lt_spras INTO lv_spras.
+          INSERT lv_spras INTO TABLE lt_lang.
+        ENDLOOP.
+      ENDIF.
+      LOOP AT mt_lifnr_fi INTO lv_lifnr.
+        APPEND lv_lifnr TO lt_lifnr.
+      ENDLOOP.
+      LOOP AT mt_lifnr_mm INTO lv_lifnr.
+        APPEND lv_lifnr TO lt_lifnr.
+      ENDLOOP.
+      SORT lt_lifnr.
+      DELETE ADJACENT DUPLICATES FROM lt_lifnr.
+      IF lt_lifnr IS NOT INITIAL.
+        SELECT spras FROM lfa1 INTO TABLE lt_spras
+          FOR ALL ENTRIES IN lt_lifnr
+          WHERE lifnr = lt_lifnr-table_line.
+        LOOP AT lt_spras INTO lv_spras.
+          INSERT lv_spras INTO TABLE lt_lang.
+        ENDLOOP.
+      ENDIF.
+      SELECT spras laiso FROM t002 INTO TABLE lt_t002.
+      LOOP AT lt_lang INTO lv_spras.
+        READ TABLE lt_t002 INTO ls_t002 WITH TABLE KEY spras = lv_spras.
+        IF sy-subrc = 0 AND ls_t002-laiso IS NOT INITIAL.
+          INSERT ls_t002-laiso INTO TABLE lt_iso.
+        ENDIF.
+      ENDLOOP.
+      LOOP AT lt_iso INTO lv_laiso.
+        add_to_list( EXPORTING iv_value = lv_laiso CHANGING cv_list = ms_res-meta-g6 ).
+      ENDLOOP.
+      ms_res-meta-g6_st = gc_st_ok.
+    ELSE.
+      ms_res-meta-g6_st = src_status( 'FI_CUST FI_VEND SD_VBAK MM_EKKO' ).
+    ENDIF.
+
+* G7: local currencies of the active company codes plus the document currencies
+* of the sales orders and purchase orders created in the period
+    IF mv_base_ok = gc_x AND mv_sd_cust_ok = gc_x AND mv_mm_vend_ok = gc_x.
+      LOOP AT mt_t001 INTO ls_t001.
+        READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001-bukrs.
+        IF sy-subrc = 0 AND ls_t001-waers IS NOT INITIAL.
+          INSERT ls_t001-waers INTO TABLE lt_waers.
+        ENDIF.
+      ENDLOOP.
+      LOOP AT mt_waers_sd INTO lv_waers.
+        IF lv_waers IS NOT INITIAL.
+          INSERT lv_waers INTO TABLE lt_waers.
+        ENDIF.
+      ENDLOOP.
+      LOOP AT mt_waers_mm INTO lv_waers.
+        IF lv_waers IS NOT INITIAL.
+          INSERT lv_waers INTO TABLE lt_waers.
+        ENDIF.
+      ENDLOOP.
+      LOOP AT lt_waers INTO lv_waers.
+        add_to_list( EXPORTING iv_value = lv_waers CHANGING cv_list = ms_res-meta-g7 ).
+      ENDLOOP.
+      ms_res-meta-g7_st = gc_st_ok.
+    ELSE.
+      ms_res-meta-g7_st = src_status( 'BASE_BUKRS SD_VBAK MM_EKKO' ).
+    ENDIF.
+  ENDMETHOD.
+
+* "a, b, c" without depending on how CONCATENATE treats trailing blanks of a
+* separator literal
+  METHOD add_to_list.
+    DATA lv_value TYPE string.
+
+    lv_value = iv_value.
+    IF cv_list IS INITIAL.
+      cv_list = lv_value.
+    ELSE.
+      CONCATENATE cv_list ',' INTO cv_list.
+      CONCATENATE cv_list lv_value INTO cv_list SEPARATED BY space.
+    ENDIF.
+  ENDMETHOD.
+
+* Status of a derived value whose source flag is not set: "error" if one of the
+* source steps (blank-separated names) ran and failed, otherwise space ("not
+* collected", the block was skipped). All source steps run before ORG and DERV
+  METHOD src_status.
+    DATA: lt_step TYPE STANDARD TABLE OF string,
+          lv_step TYPE string,
+          lv_name TYPE c LENGTH 20.
+
+    SPLIT iv_steps AT space INTO TABLE lt_step.
+    LOOP AT lt_step INTO lv_step.
+      lv_name = lv_step.
+      READ TABLE ms_res-errors TRANSPORTING NO FIELDS WITH KEY step = lv_name.
+      IF sy-subrc = 0.
+        rv_status = gc_st_err.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+* Application usage in the organization view (design 9): documents created in
+* the period per area, taken from the figures that the blocks collected. Status
+* and count follow the source figure
+  METHOD step_derv_usage.
+    DELETE ms_res-orgs WHERE grp = 'A'.
+    add_usage( iv_area = 'O11' iv_fkey = 'D27' ).
+    add_usage( iv_area = 'O12' iv_fkey = 'Q13' ).
+    add_usage( iv_area = 'O13' iv_fkey = 'D08' ).
+    add_usage( iv_area = 'O14' iv_fkey = 'D09' ).
+    add_usage( iv_area = 'O15' iv_fkey = 'Q15' ).
+    add_usage( iv_area = 'O16' iv_fkey = 'D12' ).
+    add_usage( iv_area = 'O17' iv_fkey = 'D11' ).
+    add_usage( iv_area = 'O18' iv_fkey = 'Q24' ).
+    add_usage( iv_area = 'O19' iv_fkey = 'Q25' ).
+    add_usage( iv_area = 'O20' iv_fkey = 'D15' ).
+    add_usage( iv_area = 'O21' iv_fkey = 'D16' ).
+    add_usage( iv_area = 'O22' iv_fkey = 'D22' ).
+  ENDMETHOD.
+
+  METHOD add_usage.
+    DATA: ls_fig  TYPE ty_fig,
+          ls_org  TYPE ty_org,
+          lv_fkey TYPE ty_textid.
+
+    lv_fkey = iv_fkey.
+    READ TABLE ms_res-figs INTO ls_fig WITH TABLE KEY fkey = lv_fkey sub = space.
+    ls_org-grp    = 'A'.
+    ls_org-okey   = iv_area.
+    ls_org-status = ls_fig-status.
+    IF ls_fig-status = gc_st_ok.
+      ls_org-cnt = ls_fig-c_total.
+      IF ls_org-cnt > 0.
+        ls_org-used = gc_x.
+      ENDIF.
+    ENDIF.
+    APPEND ls_org TO ms_res-orgs.
+  ENDMETHOD.
+
 * Rows 7 and 9: union of the FI set with the SD set (sold-to parties of sales
 * orders) and the MM set (vendors of purchase orders). Built only if both
 * source steps succeeded; otherwise the row stays "not collected" or "error"
@@ -2006,7 +2641,7 @@ CLASS lcl_output DEFINITION FINAL.
              okey   TYPE c LENGTH 10,
              otext  TYPE c LENGTH 40,
              ovalue TYPE c LENGTH 255,
-             used   TYPE c LENGTH 1,
+             used   TYPE c LENGTH 20,           " X, or "not collected" / "error"
            END OF ty_v3,
            ty_v3_t TYPE STANDARD TABLE OF ty_v3 WITH DEFAULT KEY,
            BEGIN OF ty_v4,
@@ -2062,6 +2697,13 @@ CLASS lcl_output DEFINITION FINAL.
     METHODS rollname_text
       IMPORTING iv_rollname    TYPE c
                 iv_value       TYPE c
+      RETURNING value(rv_text) TYPE string.
+    METHODS add_g_line
+      IMPORTING iv_id     TYPE c
+                iv_value  TYPE string
+                iv_status TYPE c.
+    METHODS status_text
+      IMPORTING iv_status      TYPE c
       RETURNING value(rv_text) TYPE string.
     METHODS cell
       IMPORTING iv_na          TYPE c
@@ -2157,7 +2799,7 @@ CLASS lcl_output IMPLEMENTATION.
         add_col( EXPORTING iv_fname = 'OKEY'   iv_head = 'H21' iv_width = 10  CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'OTEXT'  iv_head = 'H22' iv_width = 40  CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'OVALUE' iv_head = 'H23' iv_width = 120 CHANGING ct_cols = et_cols ).
-        add_col( EXPORTING iv_fname = 'USED'   iv_head = 'H24' iv_width = 14  CHANGING ct_cols = et_cols ).
+        add_col( EXPORTING iv_fname = 'USED'   iv_head = 'H24' iv_width = 20  CHANGING ct_cols = et_cols ).
       WHEN 4.
         build_v4( ).
         GET REFERENCE OF mt_v4 INTO er_table.
@@ -2262,18 +2904,10 @@ CLASS lcl_output IMPLEMENTATION.
           lv_id  TYPE ty_textid.
 
     CLEAR mt_v3.
-* G5 to G7: one line each, because the target cells are merged single cells
-    ls_row-grp    = lcl_text=>get( 'O01' ).
-    ls_row-ovalue = ms_res-meta-g5.
-    APPEND ls_row TO mt_v3.
-    CLEAR ls_row.
-    ls_row-grp    = lcl_text=>get( 'O02' ).
-    ls_row-ovalue = ms_res-meta-g6.
-    APPEND ls_row TO mt_v3.
-    CLEAR ls_row.
-    ls_row-grp    = lcl_text=>get( 'O03' ).
-    ls_row-ovalue = ms_res-meta-g7.
-    APPEND ls_row TO mt_v3.
+* G5 to G7: one list each for one merged target cell (long lists wrap)
+    add_g_line( iv_id = 'O01' iv_value = ms_res-meta-g5 iv_status = ms_res-meta-g5_st ).
+    add_g_line( iv_id = 'O02' iv_value = ms_res-meta-g6 iv_status = ms_res-meta-g6_st ).
+    add_g_line( iv_id = 'O03' iv_value = ms_res-meta-g7 iv_status = ms_res-meta-g7_st ).
 
     LOOP AT ms_res-orgs INTO ls_org.
       CLEAR ls_row.
@@ -2291,16 +2925,80 @@ CLASS lcl_output IMPLEMENTATION.
       ENDCASE.
       ls_row-grp = lcl_text=>get( lv_id ).
       IF ls_org-grp = 'A'.
-        ls_row-otext  = lcl_text=>get( ls_org-okey ).
-        ls_row-ovalue = num( ls_org-cnt ).
+        ls_row-otext = lcl_text=>get( ls_org-okey ).
+        IF ls_org-status = gc_st_ok.
+          ls_row-ovalue = num( ls_org-cnt ).
+        ELSE.
+          ls_row-ovalue = status_text( ls_org-status ).
+        ENDIF.
       ELSE.
         ls_row-okey   = ls_org-okey.
         ls_row-otext  = ls_org-otext.
         ls_row-ovalue = ls_org-bukrs.
       ENDIF.
-      ls_row-used = ls_org-used.
+* "Used" is only known if the block that reads the documents was collected
+      IF ls_org-status = gc_st_ok.
+        ls_row-used = ls_org-used.
+      ELSE.
+        ls_row-used = status_text( ls_org-status ).
+      ENDIF.
       APPEND ls_row TO mt_v3.
     ENDLOOP.
+  ENDMETHOD.
+
+* A list longer than one row continues in further rows of the same group. Each
+* row has at most 120 characters including its closing comma, so that it fits
+* the spool column (120) and an ALV grid cell (128). The key column of the first
+* row holds the number of entries, so a pasted list can be checked
+  METHOD add_g_line.
+    CONSTANTS lc_max TYPE i VALUE 120.
+    DATA: ls_row  TYPE ty_v3,
+          lt_item TYPE STANDARD TABLE OF string,
+          lv_item TYPE string,
+          lv_line TYPE string,
+          lv_len  TYPE i,
+          lv_cnt  TYPE i,
+          lv_num  TYPE ty_num.
+
+    ls_row-grp = lcl_text=>get( iv_id ).
+    IF iv_status <> gc_st_ok.
+      ls_row-ovalue = status_text( iv_status ).
+      APPEND ls_row TO mt_v3.
+      RETURN.
+    ENDIF.
+
+    IF iv_value IS NOT INITIAL.
+      SPLIT iv_value AT ',' INTO TABLE lt_item.
+    ENDIF.
+    DESCRIBE TABLE lt_item LINES lv_cnt.
+    lv_num = lv_cnt.
+    ls_row-okey = num( lv_num ).
+    LOOP AT lt_item INTO lv_item.
+      CONDENSE lv_item.
+      lv_len = strlen( lv_line ) + strlen( lv_item ) + 3.
+      IF lv_line IS NOT INITIAL AND lv_len > lc_max.
+        CONCATENATE lv_line ',' INTO ls_row-ovalue.
+        APPEND ls_row TO mt_v3.
+        CLEAR: ls_row-okey, ls_row-ovalue, lv_line.
+      ENDIF.
+      IF lv_line IS INITIAL.
+        lv_line = lv_item.
+      ELSE.
+        CONCATENATE lv_line ',' INTO lv_line.
+        CONCATENATE lv_line lv_item INTO lv_line SEPARATED BY space.
+      ENDIF.
+    ENDLOOP.
+    ls_row-ovalue = lv_line.
+    APPEND ls_row TO mt_v3.
+  ENDMETHOD.
+
+* Text for a value that is not available: "error" or "not collected"
+  METHOD status_text.
+    IF iv_status = gc_st_err.
+      rv_text = lcl_text=>get( 'S03' ).
+    ELSE.
+      rv_text = lcl_text=>get( 'S02' ).
+    ENDIF.
   ENDMETHOD.
 
 * View 4: INFO (run metadata, design 8.1), then the supporting figures (8.2)
@@ -2308,6 +3006,7 @@ CLASS lcl_output IMPLEMENTATION.
     DATA: ls_row   TYPE ty_v4,
           ls_fig   TYPE ty_fig,
           ls_block TYPE ty_block,
+          ls_error TYPE ty_error,
           lv_id    TYPE ty_textid,
           lv_info  TYPE string,
           lv_date1 TYPE c LENGTH 10,
@@ -2362,6 +3061,16 @@ CLASS lcl_output IMPLEMENTATION.
       ELSE.
         ls_row-value = lcl_text=>get( 'S02' ).
       ENDIF.
+      APPEND ls_row TO mt_v4.
+    ENDLOOP.
+* Failed steps with the exception text
+    LOOP AT ms_res-errors INTO ls_error.
+      CLEAR ls_row.
+      ls_row-grp = lcl_text=>get( 'G00' ).
+      lv_info = lcl_text=>get( 'M08' ).
+      CONCATENATE lv_info ls_error-step INTO ls_row-item SEPARATED BY space.
+      ls_row-value  = lcl_text=>get( 'S03' ).
+      ls_row-remark = ls_error-text.
       APPEND ls_row TO mt_v4.
     ENDLOOP.
 
@@ -2445,6 +3154,8 @@ CLASS lcl_output IMPLEMENTATION.
         rv_text = rollname_text( iv_rollname = 'EBSTYP' iv_value = iv_sub ).
       WHEN 'D13'.                                 " sub key: order category
         rv_text = rollname_text( iv_rollname = 'AUFTYP' iv_value = iv_sub ).
+      WHEN 'D25'.                                 " sub key: user type
+        rv_text = rollname_text( iv_rollname = 'XUUSTYP' iv_value = iv_sub ).
       WHEN 'D07' OR 'D08' OR 'D09'.               " sub key: SD document category ("M X" = cancelled)
         lv_value = iv_sub.
         rv_text = domain_text( iv_domain = 'VBTYP' iv_value = lv_value ).

@@ -108,6 +108,12 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D17</KEY>
+     <ENTRY>Storage locations</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D18</KEY>
      <ENTRY>Work centers</ENTRY>
      <LENGTH>13</LENGTH>
@@ -129,6 +135,36 @@
      <KEY>D21</KEY>
      <ENTRY>Payments per payment method</ENTRY>
      <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D22</KEY>
+     <ENTRY>IDocs per direction and partner type</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D23</KEY>
+     <ENTRY>ALE IDocs (partner type LS)</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D24</KEY>
+     <ENTRY>Top 10 message types</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D25</KEY>
+     <ENTRY>Users per user type (valid today)</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D26</KEY>
+     <ENTRY>Valid dialog users regardless of logon</ENTRY>
+     <LENGTH>51</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -300,6 +336,12 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E17</KEY>
+     <ENTRY>T001L of the plants counted in row 27</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>E18</KEY>
      <ENTRY>CRHD object type A (work center) of the plants counted in row 27</ENTRY>
      <LENGTH>64</LENGTH>
@@ -321,6 +363,36 @@
      <KEY>E21</KEY>
      <ENTRY>REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method</ENTRY>
      <LENGTH>87</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E22</KEY>
+     <ENTRY>EDIDC created in the period (CREDAT); sub key direction/partner type, 1 = outbound, 2 = inbound</ENTRY>
+     <LENGTH>101</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E23</KEY>
+     <ENTRY>EDIDC created in the period whose partner is a logical system</ENTRY>
+     <LENGTH>66</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E24</KEY>
+     <ENTRY>EDIDC created in the period per message type, the 10 largest; header = all IDocs</ENTRY>
+     <LENGTH>80</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E25</KEY>
+     <ENTRY>USR02 valid today (GLTGV/GLTGB), per user type (USTYP)</ENTRY>
+     <LENGTH>56</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E26</KEY>
+     <ENTRY>USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128)</ENTRY>
+     <LENGTH>74</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -411,6 +483,18 @@
      <KEY>G13</KEY>
      <ENTRY>Banking</ENTRY>
      <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G14</KEY>
+     <ENTRY>EDI</ENTRY>
+     <LENGTH>3</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G15</KEY>
+     <ENTRY>Users</ENTRY>
+     <LENGTH>8</LENGTH>
     </item>
     <item>
      <ID>I</ID>

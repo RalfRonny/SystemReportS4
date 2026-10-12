@@ -12,7 +12,7 @@
 |---|---|---|
 | Rows 3–29, columns B ("Current number") and C ("Average added per Month/Year") | All rows. Values where derivable, otherwise "N/A" with a remark | – |
 | Column D (free note per row) | Short basis note per row (optional paste) | – |
-| G5 countries, G6 languages, G7 currencies | One comma-separated line each | – |
+| G5 countries, G6 languages, G7 currencies | One comma-separated list each (long lists wrap into further rows) | – |
 | Ownership structure, "US Based" | – | Manual |
 | Business functions (centralized / de-centralized) | Usage indicator per application area (documents in the period), to support "Not Applicable" | Centralized / de-centralized, comments |
 | Plant table (Name of the Plant, Location, Approx Revenue, On SAP, On Legacy System) | Name, location, On SAP | Approx revenue, legacy flag |
@@ -103,7 +103,7 @@ END-OF-SELECTION
 Blocks:
 - **BASE** is always collected: active company codes (row 3). Rows 4, 18 and 27 and the G5 countries depend on it.
 - **MD … INTF** follow the scope checkboxes.
-- **DERV** is always run last. It derives figures that combine several blocks (rows 7 and 9, G5–G7). A derived figure stays "not collected" if one of its source blocks was skipped.
+- **DERV** is always run last. It derives figures that combine several blocks (rows 7 and 9, G5–G7). A derived figure stays "not collected" if one of its source blocks was skipped, and shows "error" if one of its source steps failed.
 
 A **step** is one pass over a table (see the rules below). Each step declares the figures it feeds.
 
@@ -157,16 +157,16 @@ All plants are listed. The relevant rows are filtered with the "Counted in row 2
 
 | Group | Key | Description | Value | Used in period |
 |---|---|---|---|---|
-| G5 Countries | – | – | comma-separated country keys | – |
-| G6 Languages | – | – | comma-separated ISO language codes | – |
-| G7 Currencies | – | – | comma-separated currency keys | – |
+| G5 Countries | number of entries | – | comma-separated country keys | – |
+| G6 Languages | number of entries | – | comma-separated ISO language codes | – |
+| G7 Currencies | number of entries | – | comma-separated currency keys | – |
 | Purchasing organizations | EKORG | text | company code | X / space |
 | Sales organizations | VKORG | text | company code | X / space |
 | Distribution channels | VTWEG | text | – | X / space |
 | Divisions | SPART | text | – | X / space |
 | Application usage | area | text | documents created in period | X if > 0 |
 
-G5–G7 are single lines, because the target cells are single (merged) cells.
+G5–G7 are one list each, because the target cells are single (merged) cells. A list longer than 120 characters continues in further rows of the same group; each row except the last ends with a comma (spool column 120, ALV grid cell 128 characters). The key column of the first row shows the number of entries, so the pasted list can be checked. Each of G5–G7 and each "used" cell shows "not collected" if a source block was skipped (G5: BASE; G6: FI, SD and MM; G7: BASE, SD and MM; used: MM for purchasing organizations, SD for sales organizations, distribution channels and divisions; application usage: the block of the source figure) and "error" if a source step failed (taken from the failed-step list; "error" wins if one source was skipped and another failed).
 
 ### 6.4 View 4 – Details and definitions
 
@@ -221,7 +221,7 @@ N/A cells by design: B14, B16, C16, B19, B20, B21, C21, B22, C22, B25, B29, C29,
 
 ### 8.1 INFO
 
-System ID, client, SAP release, database system, logon language of the run, analysis period, months, run start and end, runtime per block, user, blocks collected or skipped, stored-result timestamp.
+System ID, client, SAP release, database system, logon language of the run, analysis period, months, run start and end, runtime per block, user, blocks collected or skipped, stored-result timestamp, and one line per failed collection step with its exception text (also for steps without a questionnaire row, e.g. the organizational unit lists or G5–G7).
 
 ### 8.2 Supporting figures
 
@@ -276,6 +276,8 @@ System ID, client, SAP release, database system, logon language of the run, anal
 Source T001W (WERKS, NAME1, LAND1, ORT01, BWKEY). Company code via T001K (BWKEY → BUKRS). "Manufacturing" is set when at least one order with order category 10 or 40 was created for the plant in the period. The plant name is output as "WERKS - NAME1" in one column.
 
 Approx revenue is not derived. A revenue figure would need an agreed revenue definition and a currency conversion, and both would differ between instances.
+
+The plant list and row 27 come from block ORG; "Manufacturing" comes from the order pass of block PP and stays blank if PP was skipped.
 
 ---
 
@@ -382,7 +384,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 - After collection the result is stored as a data cluster in the standard cluster table INDX (EXPORT … TO DATABASE). Fixed 2-character area and short fixed ID (≤ 12 characters), current client, followed by COMMIT WORK (the export holds a database lock until the commit).
 - Each run overwrites the previous result. Mode "Delete stored result" removes it.
 - The cluster carries a format version (constant in the program, increased whenever a stored structure changes). IMPORT checks the version first and is wrapped in TRY … CATCH CX_SY_IMPORT_MISMATCH_ERROR (superclass, also covers CX_SY_IMPORT_FORMAT_ERROR; naming both in one TRY is a syntax error). A version mismatch or a caught exception shows message M13 instead of a dump; the user then runs a new collection or deletes the stored result.
-- Stored content: run metadata, figure table (key, B, C, total, status, exception text), list tables (plants, organizational units, details, interfaces). No texts except master-data names.
+- Stored content: run metadata (incl. G5–G7 and their status), figure table (key, B, C, total, status, exception text), list tables (plants, organizational units with status, details, interfaces), failed steps. No texts except master-data names. Format version 0002 since the organization block (status fields and failed steps added).
 - INDX is a shared standard table that is meant for short-lived data only. Here it holds one small cluster per client for a few days. An own INDX-like table would avoid the shared table, but it would require a Dictionary object on every instance.
 
 ### 13.6 Background list
@@ -425,7 +427,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 2. After the job: start the report in dialog, mode "Display stored result", select the view.
 3. View 1: select B3 … C29 (or … D29) in the ALV, copy, paste into the questionnaire at B3.
 4. View 2: copy the five columns F–J of the counted plants, paste at the first plant row.
-5. View 3: copy G5 / G6 / G7 lines into the merged cells.
+5. View 3: copy the value of G5 / G6 / G7 into the merged cell. If a list continues in further rows, paste the rows one after another into the cell in edit mode (F2), so that Excel keeps the text in one cell. Compare with the number of entries in the key column.
 6. Submit view 4 (definitions) together with the questionnaire.
 7. Optionally delete the stored result.
 
@@ -481,9 +483,9 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | PAYR | ZALDT, VOIDR – resolved: VOIDR is NUMC 2, compared with a typed initial value |
 | REGUH | LAUFD, proposal indicator, payment document number, payment method, paying company code – resolved: XVORL, VBLNR, ZBUKR; payment method used is RZAWE (no ZLSCH in REGUH); LAUFI 6th character 'P' = HR payroll DME pre-program |
 | T012, T012K | BANKS, BANKL |
-| EDP21, EDIDC | Inbound partner profile lines; RCVPRT / SNDPRT |
+| EDP21, EDIDC | Inbound partner profile lines; RCVPRT / SNDPRT – resolved: EDP13 (RCVPRT), EDP21 (SNDPRT), EDIDC (DIRECT 1 = outbound / 2 = inbound, RCVPRT, SNDPRT, MESTYP, CREDAT); partner type LS = logical system |
 | QALS, CRHD | Creation date of the inspection lot; object type of work centers – resolved: QALS-ENSTEHDAT (date of lot creation); CRHD-OBJTY 'A' = work center |
-| TVKO/TVKOT, TVTW/TVTWT, TSPA/TSPAT, T002 | Keys, texts, ISO language field |
+| TVKO/TVKOT, TVTW/TVTWT, TSPA/TSPAT, T002 | Keys, texts, ISO language field – resolved: text field VTEXT in TVKOT/TVTWT/TSPAT (key SPRAS + org key); T024E-EKOTX (no text table); T002-LAISO (2 characters, T002 client-independent) |
 | RFCDES, TBDLS/TBDLST, CVERS | Only if the interfaces block is built |
 | INDX | Length of the ID field (≥ 12 characters) |
 | SALV | Lengths of the short / medium / long column headings |
@@ -722,6 +724,20 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E15 | QALS with lot creation date (ENSTEHDAT) in the period | QALS mit Anlagedatum des Loses (ENSTEHDAT) im Zeitraum |
 | D18 | Work centers | Arbeitsplätze |
 | E18 | CRHD object type A (work center) of the plants counted in row 27 | CRHD Objekttyp A (Arbeitsplatz) der in Zeile 27 gezählten Werke |
+| G14 | EDI | EDI |
+| G15 | Users | Benutzer |
+| D17 | Storage locations | Lagerorte |
+| E17 | T001L of the plants counted in row 27 | T001L der in Zeile 27 gezählten Werke |
+| D22 | IDocs per direction and partner type | IDocs je Richtung und Partnerart |
+| E22 | EDIDC created in the period (CREDAT); sub key direction/partner type, 1 = outbound, 2 = inbound | EDIDC im Zeitraum angelegt (CREDAT); Unterschlüssel Richtung/Partnerart, 1 = ausgehend, 2 = eingehend |
+| D23 | ALE IDocs (partner type LS) | ALE-IDocs (Partnerart LS) |
+| E23 | EDIDC created in the period whose partner is a logical system | EDIDC im Zeitraum angelegt, deren Partner ein logisches System ist |
+| D24 | Top 10 message types | Top 10 Nachrichtentypen |
+| E24 | EDIDC created in the period per message type, the 10 largest; header = all IDocs | EDIDC im Zeitraum angelegt je Nachrichtentyp, die 10 größten; Kopf = alle IDocs |
+| D25 | Users per user type (valid today) | Benutzer je Benutzertyp (heute gültig) |
+| E25 | USR02 valid today (GLTGV/GLTGB), per user type (USTYP) | USR02 heute gültig (GLTGV/GLTGB), je Benutzertyp (USTYP) |
+| D26 | Valid dialog users regardless of logon | Gültige Dialogbenutzer unabhängig von der Anmeldung |
+| E26 | USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128) | USTYP A, heute gültig, nicht vom Administrator gesperrt (UFLAG 0 oder 128) |
 | G13 | Banking | Bankverkehr |
 | G16 | Financials | Finanzwesen |
 | D19 | House banks of the active company codes | Hausbanken der aktiven Buchungskreise |

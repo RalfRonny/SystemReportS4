@@ -204,6 +204,8 @@ I	G10	Maintenance	Instandhaltung
 I	G11	Quality	Qualitätsmanagement
 I	G12	Warehouse	Lagerverwaltung
 I	G13	Banking	Bankverkehr
+I	G14	EDI	EDI
+I	G15	Users	Benutzer
 I	G16	Financials	Finanzwesen
 I	D01	All company codes	Alle Buchungskreise
 I	E01	T001 count; per company code: 1 = active, 0 = not active	Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv
@@ -237,6 +239,8 @@ I	D15	Inspection lots created	Angelegte Prüflose
 I	E15	QALS with lot creation date (ENSTEHDAT) in the period	QALS mit Anlagedatum des Loses (ENSTEHDAT) im Zeitraum
 I	D16	Transfer orders created	Angelegte Transportaufträge
 I	E16	LTAK with creation date (BDATU) in the period	LTAK mit Anlagedatum (BDATU) im Zeitraum
+I	D17	Storage locations	Lagerorte
+I	E17	T001L of the plants counted in row 27	T001L der in Zeile 27 gezählten Werke
 I	D18	Work centers	Arbeitsplätze
 I	E18	CRHD object type A (work center) of the plants counted in row 27	CRHD Objekttyp A (Arbeitsplatz) der in Zeile 27 gezählten Werke
 I	D19	House banks of the active company codes	Hausbanken der aktiven Buchungskreise
@@ -245,6 +249,16 @@ I	D20	House bank accounts of the active company codes	Hausbankkonten der aktiven
 I	E20	T012K rows of the active company codes	T012K-Sätze der aktiven Buchungskreise
 I	D21	Payments per payment method	Zahlungen je Zahlweg
 I	E21	REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method	REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zahlweg
+I	D22	IDocs per direction and partner type	IDocs je Richtung und Partnerart
+I	E22	EDIDC created in the period (CREDAT); sub key direction/partner type, 1 = outbound, 2 = inbound	EDIDC im Zeitraum angelegt (CREDAT); Unterschlüssel Richtung/Partnerart, 1 = ausgehend, 2 = eingehend
+I	D23	ALE IDocs (partner type LS)	ALE-IDocs (Partnerart LS)
+I	E23	EDIDC created in the period whose partner is a logical system	EDIDC im Zeitraum angelegt, deren Partner ein logisches System ist
+I	D24	Top 10 message types	Top 10 Nachrichtentypen
+I	E24	EDIDC created in the period per message type, the 10 largest; header = all IDocs	EDIDC im Zeitraum angelegt je Nachrichtentyp, die 10 größten; Kopf = alle IDocs
+I	D25	Users per user type (valid today)	Benutzer je Benutzertyp (heute gültig)
+I	E25	USR02 valid today (GLTGV/GLTGB), per user type (USTYP)	USR02 heute gültig (GLTGV/GLTGB), je Benutzertyp (USTYP)
+I	D26	Valid dialog users regardless of logon	Gültige Dialogbenutzer unabhängig von der Anmeldung
+I	E26	USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128)	USTYP A, heute gültig, nicht vom Administrator gesperrt (UFLAG 0 oder 128)
 I	D27	FI documents entered	Erfasste FI-Belege
 I	E27	BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)	BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal)
 I	D80	System ID	System-ID
