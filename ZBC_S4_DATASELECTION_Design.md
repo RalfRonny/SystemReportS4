@@ -175,7 +175,7 @@ The groups are INFO (run metadata, see 8.1) and all supporting figures (see 8.2)
 
 ### 6.5 View 5 – Interfaces (optional)
 
-Columns: Object type | Name | Type | Description | IDocs in period. See 11.
+Columns: Object type | Name | Type | Description | Release | SP level | IDocs in period. See 11. Rows are grouped by object type in the order of section 11. An object type whose step failed shows one row "error"; if the block was skipped, each object type shows one row "not collected".
 
 ---
 
@@ -287,12 +287,16 @@ Candidate list for the "Applications" sheet (column System, Instances). Technica
 
 | Object type | Source | Content |
 |---|---|---|
-| RFC destinations | RFCDES | Destination name and connection type only. Connection options (host, user) are not output. |
-| Logical systems | TBDLS / TBDLST | Logical system and text |
-| Partner profiles | EDPP1 | Partner number, partner type, IDocs in period per partner (from EDIDC) |
-| Software components | CVERS | Component, release, support package level |
+| RFC destinations | RFCDES | Destination name and connection type (RFCTYPE, with the text of its domain fixed value in the display language) only. Connection options (host, user) and the destination description are not read. |
+| Logical systems | TBDLS / TBDLST | Logical system and text in the logon language of the run |
+| Partner profiles | EDPP1, EDIDC | Partner number, partner type, IDocs created in the period per partner (EDIDC-CREDAT, one aggregated pass; partner = receiver for outbound, sender for inbound IDocs, as in row 23). Logical systems (type LS) get the TBDLST text. Partners with IDocs in the period but without a partner profile are listed too, marked "(no partner profile)". |
+| Software components | CVERS / CVERS_REF | Component, release, support package level (EXTRELEASE, as in System > Status), text in the logon language of the run, else English |
 
 Default off. Some organizations treat RFC destination lists as security-relevant.
+
+RFC destinations, logical systems and software components are system-wide (client-independent tables); partner profiles and IDocs belong to the client of the run. CVERS can differ from System > Status for HR sub-components after an upgrade (SAP KBA 2464887).
+
+Steps: INTF_RFC, INTF_LOGSYS, INTF_PARTNER, INTF_CVERS, one per object type. Each collects into a local table and appends it at the end, so a failure leaves no partial list. Failures are also listed under INFO in view 4.
 
 ---
 
@@ -384,7 +388,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 - After collection the result is stored as a data cluster in the standard cluster table INDX (EXPORT … TO DATABASE). Fixed 2-character area and short fixed ID (≤ 12 characters), current client, followed by COMMIT WORK (the export holds a database lock until the commit).
 - Each run overwrites the previous result. Mode "Delete stored result" removes it.
 - The cluster carries a format version (constant in the program, increased whenever a stored structure changes). IMPORT checks the version first and is wrapped in TRY … CATCH CX_SY_IMPORT_MISMATCH_ERROR (superclass, also covers CX_SY_IMPORT_FORMAT_ERROR; naming both in one TRY is a syntax error). A version mismatch or a caught exception shows message M13 instead of a dump; the user then runs a new collection or deletes the stored result.
-- Stored content: run metadata (incl. G5–G7 and their status), figure table (key, B, C, total, status, exception text), list tables (plants, organizational units with status, details, interfaces), failed steps. No texts except master-data names. Format version 0002 since the organization block (status fields and failed steps added).
+- Stored content: run metadata (incl. G5–G7 and their status), figure table (key, B, C, total, status, exception text), list tables (plants, organizational units with status, details, interfaces), failed steps. No texts except master-data names. Format version 0003 since the interfaces block (release, SP level and "no partner profile" flag added to the interface list; 0002: status fields and failed steps).
 - INDX is a shared standard table that is meant for short-lived data only. Here it holds one small cluster per client for a few days. An own INDX-like table would avoid the shared table, but it would require a Dictionary object on every instance.
 
 ### 13.6 Background list
@@ -486,7 +490,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | EDP21, EDIDC | Inbound partner profile lines; RCVPRT / SNDPRT – resolved: EDP13 (RCVPRT), EDP21 (SNDPRT), EDIDC (DIRECT 1 = outbound / 2 = inbound, RCVPRT, SNDPRT, MESTYP, CREDAT); partner type LS = logical system |
 | QALS, CRHD | Creation date of the inspection lot; object type of work centers – resolved: QALS-ENSTEHDAT (date of lot creation); CRHD-OBJTY 'A' = work center |
 | TVKO/TVKOT, TVTW/TVTWT, TSPA/TSPAT, T002 | Keys, texts, ISO language field – resolved: text field VTEXT in TVKOT/TVTWT/TSPAT (key SPRAS + org key); T024E-EKOTX (no text table); T002-LAISO (2 characters, T002 client-independent) |
-| RFCDES, TBDLS/TBDLST, CVERS | Only if the interfaces block is built |
+| RFCDES, TBDLS/TBDLST, EDPP1, CVERS/CVERS_REF | Resolved: RFCDES-RFCDEST (CHAR 32), RFCTYPE (data element RFCTYPE_D, domain RFCTYPE with fixed-value texts); TBDLST-LANGU/LOGSYS/STEXT (CHAR 40); EDPP1-PARNUM (CHAR 10, ALPHA, internal format as in EDIDC-RCVPRN/SNDPRN), PARTYP (CHAR 2); CVERS-COMPONENT/RELEASE/EXTRELEASE (support package level); CVERS_REF-COMPONENT/LANGU/DESC_TEXT (CHAR 80, key not documented – read into a standard table). RFCDES, TBDLS/TBDLST, CVERS and CVERS_REF are client-independent, EDPP1 and EDIDC client-dependent |
 | INDX | Length of the ID field (≥ 12 characters) |
 | SALV | Lengths of the short / medium / long column headings |
 | Text elements | Maximum length of text symbols and selection texts |
@@ -495,7 +499,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 
 1. Result storage: standard INDX (as designed) or an own INDX-like table per instance.
 2. Row 23, column B: partner profile lines as "current number" (as designed) or N/A.
-3. Optional interfaces block: build now or later.
+3. ~~Optional interfaces block: build now or later~~ – decided: built (default off).
 4. Lowest SAP_BASIS release of all ICL ECC instances, and availability of CL_SALV_TABLE there.
 5. Transport route per landscape (external transport import by local Basis).
 6. Authorization group for the program.
@@ -577,6 +581,8 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | H31 | Name | Name |
 | H32 | Type | Typ |
 | H33 | IDocs in period | IDocs im Zeitraum |
+| H34 | Release | Release |
+| H35 | SP level | SP-Stand |
 
 ### A.5 Messages
 
@@ -802,3 +808,4 @@ The runtime rows use M12 followed by the block name (BASE, MD, FI, SD, MM, PP, O
 | I02 | Logical system | Logisches System |
 | I03 | Partner profile | Partnervereinbarung |
 | I04 | Software component | Softwarekomponente |
+| I05 | (no partner profile) | (keine Partnervereinbarung) |

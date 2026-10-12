@@ -13,7 +13,7 @@ REPORT zbc_s4_dataselection LINE-SIZE 255 NO STANDARD PAGE HEADING.
 * Constants and types
 *----------------------------------------------------------------------*
 CONSTANTS: gc_x          TYPE c LENGTH 1  VALUE 'X',
-           gc_version    TYPE c LENGTH 4  VALUE '0002',  " increase whenever a stored type changes
+           gc_version    TYPE c LENGTH 4  VALUE '0003',  " increase whenever a stored type changes
            gc_cluster_id TYPE c LENGTH 12 VALUE 'ZS4_RC_QUEST',
            gc_st_ok      TYPE c LENGTH 1  VALUE 'O',     " figure collected
            gc_st_err     TYPE c LENGTH 1  VALUE 'E'.     " figure failed; space = not collected
@@ -92,11 +92,14 @@ TYPES: BEGIN OF ty_org,
        ty_org_t TYPE STANDARD TABLE OF ty_org WITH DEFAULT KEY.
 
 TYPES: BEGIN OF ty_intf,
-         otype TYPE ty_flag,         " R RFC destination, L logical system, P partner profile, C software component
-         name  TYPE c LENGTH 40,
-         itype TYPE c LENGTH 20,
-         descr TYPE c LENGTH 60,
-         idocs TYPE ty_num,
+         otype  TYPE ty_flag,        " R RFC destination, L logical system, P partner profile, C software component
+         name   TYPE c LENGTH 40,
+         itype  TYPE c LENGTH 20,    " R connection type, P partner type
+         descr  TYPE c LENGTH 80,    " L/P(LS) logical system text, C component text; R: type text at display
+         rel    TYPE c LENGTH 10,    " C release
+         splev  TYPE c LENGTH 10,    " C support package level
+         idocs  TYPE ty_num,         " P IDocs created in period
+         noprof TYPE ty_flag,        " P: X = IDocs in period, but no partner profile
        END OF ty_intf,
        ty_intf_t TYPE STANDARD TABLE OF ty_intf WITH DEFAULT KEY.
 
@@ -233,7 +236,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'H' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 10 iv_to = 18 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 20 iv_to = 24 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 33 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 35 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 13 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'S' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'Q' iv_from = 3  iv_to = 29 CHANGING ct_ids = lt_ids ).
@@ -247,7 +250,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 4  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 5  CHANGING ct_ids = lt_ids ).
 
     LOOP AT lt_ids INTO lv_id.
       lv_key = lv_id.
@@ -592,6 +595,10 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_org_edi.
     METHODS step_org_users.
     METHODS step_org_units.
+    METHODS step_intf_rfc.
+    METHODS step_intf_logsys.
+    METHODS step_intf_partner.
+    METHODS step_intf_cvers.
     METHODS step_derv_active.
     METHODS step_derv_g567.
     METHODS add_to_list
@@ -751,6 +758,10 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'ORG_USERS'  iv_block = 'ORG'  iv_keys = 'Q28 D25 D26' ).
 * No figure keys: a failure shows up in the INFO part of view 4 (ms_res-errors)
     add_step( iv_step = 'ORG_UNITS'  iv_block = 'ORG'  iv_keys = '' ).
+    add_step( iv_step = 'INTF_RFC'     iv_block = 'INTF' iv_keys = '' ).
+    add_step( iv_step = 'INTF_LOGSYS'  iv_block = 'INTF' iv_keys = '' ).
+    add_step( iv_step = 'INTF_PARTNER' iv_block = 'INTF' iv_keys = '' ).
+    add_step( iv_step = 'INTF_CVERS'   iv_block = 'INTF' iv_keys = '' ).
     add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
     add_step( iv_step = 'DERV_G567'  iv_block = 'DERV' iv_keys = '' ).
     add_step( iv_step = 'DERV_USAGE' iv_block = 'DERV' iv_keys = '' ).
@@ -900,6 +911,14 @@ CLASS lcl_collector IMPLEMENTATION.
             step_org_users( ).
           WHEN 'ORG_UNITS'.
             step_org_units( ).
+          WHEN 'INTF_RFC'.
+            step_intf_rfc( ).
+          WHEN 'INTF_LOGSYS'.
+            step_intf_logsys( ).
+          WHEN 'INTF_PARTNER'.
+            step_intf_partner( ).
+          WHEN 'INTF_CVERS'.
+            step_intf_cvers( ).
           WHEN 'DERV_ACTIVE'.
             step_derv_active( ).
           WHEN 'DERV_G567'.
@@ -2351,6 +2370,200 @@ CLASS lcl_collector IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+* Interfaces view (design 11): RFC destinations with name and connection type
+* only; connection options (host, user) are not read. Each INTF step collects
+* into a local table and appends it at the end, so a failure leaves no partial
+* list (view 5 then shows "error" for the object type)
+  METHOD step_intf_rfc.
+    TYPES: BEGIN OF lty_rfc,
+             rfcdest TYPE rfcdes-rfcdest,
+             rfctype TYPE rfcdes-rfctype,
+           END OF lty_rfc.
+    DATA: lt_rfc  TYPE STANDARD TABLE OF lty_rfc,
+          ls_rfc  TYPE lty_rfc,
+          lt_intf TYPE ty_intf_t,
+          ls_intf TYPE ty_intf.
+
+    SELECT rfcdest rfctype FROM rfcdes INTO TABLE lt_rfc.
+    SORT lt_rfc BY rfcdest.
+    LOOP AT lt_rfc INTO ls_rfc.
+      CLEAR ls_intf.
+      ls_intf-otype = 'R'.
+      ls_intf-name  = ls_rfc-rfcdest.
+      ls_intf-itype = ls_rfc-rfctype.
+      APPEND ls_intf TO lt_intf.
+    ENDLOOP.
+    APPEND LINES OF lt_intf TO ms_res-intfs.
+  ENDMETHOD.
+
+* Logical systems (TBDLS) with their text in the logon language of the run
+  METHOD step_intf_logsys.
+    TYPES: BEGIN OF lty_text,
+             logsys TYPE tbdlst-logsys,
+             stext  TYPE tbdlst-stext,
+           END OF lty_text.
+    DATA: lt_logsys TYPE STANDARD TABLE OF logsys,
+          lv_logsys TYPE logsys,
+          lt_text   TYPE SORTED TABLE OF lty_text WITH UNIQUE KEY logsys,
+          ls_text   TYPE lty_text,
+          lt_intf   TYPE ty_intf_t,
+          ls_intf   TYPE ty_intf.
+
+    SELECT logsys FROM tbdls INTO TABLE lt_logsys.
+    SELECT logsys stext FROM tbdlst INTO TABLE lt_text
+      WHERE langu = sy-langu.
+    SORT lt_logsys.
+    LOOP AT lt_logsys INTO lv_logsys.
+      CLEAR: ls_intf, ls_text.
+      ls_intf-otype = 'L'.
+      ls_intf-name  = lv_logsys.
+      READ TABLE lt_text INTO ls_text WITH TABLE KEY logsys = lv_logsys.
+      ls_intf-descr = ls_text-stext.
+      APPEND ls_intf TO lt_intf.
+    ENDLOOP.
+    APPEND LINES OF lt_intf TO ms_res-intfs.
+  ENDMETHOD.
+
+* Partner profiles (EDPP1) with the IDocs created in the period per partner
+* (EDIDC-CREDAT, one aggregated pass). The partner is the receiver for outbound
+* (direction 1) and the sender for inbound IDocs (direction 2), as in row 23.
+* Partners with IDocs but without a partner profile are listed as well
+  METHOD step_intf_partner.
+    TYPES: BEGIN OF lty_prof,
+             parnum TYPE edpp1-parnum,
+             partyp TYPE edpp1-partyp,
+           END OF lty_prof,
+           BEGIN OF lty_grp,
+             direct TYPE edidc-direct,
+             rcvprn TYPE edidc-rcvprn,
+             rcvprt TYPE edidc-rcvprt,
+             sndprn TYPE edidc-sndprn,
+             sndprt TYPE edidc-sndprt,
+             cnt    TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_cnt,
+             prt TYPE edidc-rcvprt,
+             prn TYPE edidc-rcvprn,
+             cnt TYPE ty_num,
+           END OF lty_cnt,
+           BEGIN OF lty_text,
+             logsys TYPE tbdlst-logsys,
+             stext  TYPE tbdlst-stext,
+           END OF lty_text.
+    DATA: lt_prof   TYPE STANDARD TABLE OF lty_prof,
+          ls_prof   TYPE lty_prof,
+          lt_grp    TYPE STANDARD TABLE OF lty_grp,
+          ls_grp    TYPE lty_grp,
+          lt_cnt    TYPE SORTED TABLE OF lty_cnt WITH UNIQUE KEY prt prn,
+          ls_cnt    TYPE lty_cnt,
+          lt_text   TYPE SORTED TABLE OF lty_text WITH UNIQUE KEY logsys,
+          ls_text   TYPE lty_text,
+          lv_logsys TYPE tbdlst-logsys,
+          lt_intf   TYPE ty_intf_t,
+          ls_intf   TYPE ty_intf.
+
+    SELECT direct rcvprn rcvprt sndprn sndprt COUNT( * ) FROM edidc INTO TABLE lt_grp
+      WHERE credat BETWEEN mv_datfr AND mv_datto
+      GROUP BY direct rcvprn rcvprt sndprn sndprt.
+    LOOP AT lt_grp INTO ls_grp.
+      CLEAR ls_cnt.
+      IF ls_grp-direct = '1'.
+        ls_cnt-prt = ls_grp-rcvprt.
+        ls_cnt-prn = ls_grp-rcvprn.
+      ELSE.
+        ls_cnt-prt = ls_grp-sndprt.
+        ls_cnt-prn = ls_grp-sndprn.
+      ENDIF.
+      ls_cnt-cnt = ls_grp-cnt.
+      COLLECT ls_cnt INTO lt_cnt.
+    ENDLOOP.
+
+    SELECT parnum partyp FROM edpp1 INTO TABLE lt_prof.
+    SELECT logsys stext FROM tbdlst INTO TABLE lt_text
+      WHERE langu = sy-langu.
+    LOOP AT lt_prof INTO ls_prof.
+      CLEAR: ls_intf, ls_cnt.
+      ls_intf-otype = 'P'.
+      ls_intf-name  = ls_prof-parnum.
+      ls_intf-itype = ls_prof-partyp.
+      READ TABLE lt_cnt INTO ls_cnt WITH TABLE KEY prt = ls_prof-partyp prn = ls_prof-parnum.
+      IF sy-subrc = 0.
+        ls_intf-idocs = ls_cnt-cnt.
+        DELETE TABLE lt_cnt WITH TABLE KEY prt = ls_prof-partyp prn = ls_prof-parnum.
+      ENDIF.
+      APPEND ls_intf TO lt_intf.
+    ENDLOOP.
+* Remaining counts: IDocs of partners without a partner profile
+    LOOP AT lt_cnt INTO ls_cnt.
+      CLEAR ls_intf.
+      ls_intf-otype  = 'P'.
+      ls_intf-name   = ls_cnt-prn.
+      ls_intf-itype  = ls_cnt-prt.
+      ls_intf-idocs  = ls_cnt-cnt.
+      ls_intf-noprof = gc_x.
+      APPEND ls_intf TO lt_intf.
+    ENDLOOP.
+
+* Text of logical systems (partner type LS, SAP-defined)
+    LOOP AT lt_intf INTO ls_intf WHERE itype = 'LS'.
+      CLEAR ls_text.
+      lv_logsys = ls_intf-name.
+      READ TABLE lt_text INTO ls_text WITH TABLE KEY logsys = lv_logsys.
+      IF sy-subrc = 0.
+        ls_intf-descr = ls_text-stext.
+        MODIFY lt_intf FROM ls_intf TRANSPORTING descr.
+      ENDIF.
+    ENDLOOP.
+    SORT lt_intf BY itype name.
+    APPEND LINES OF lt_intf TO ms_res-intfs.
+  ENDMETHOD.
+
+* Installed software components (CVERS, System > Status) with release, support
+* package level and text in the logon language of the run, else in English
+  METHOD step_intf_cvers.
+    TYPES: BEGIN OF lty_cvers,
+             comp  TYPE cvers-component,
+             rel   TYPE cvers-release,
+             splev TYPE cvers-extrelease,
+           END OF lty_cvers,
+           BEGIN OF lty_ref,
+             comp  TYPE cvers_ref-component,
+             langu TYPE cvers_ref-langu,
+             text  TYPE cvers_ref-desc_text,
+           END OF lty_ref.
+    DATA: lt_cvers TYPE STANDARD TABLE OF lty_cvers,
+          ls_cvers TYPE lty_cvers,
+          lt_ref   TYPE STANDARD TABLE OF lty_ref,
+          ls_ref   TYPE lty_ref,
+          lt_intf  TYPE ty_intf_t,
+          ls_intf  TYPE ty_intf.
+
+    SELECT component release extrelease FROM cvers INTO TABLE lt_cvers.
+    SELECT component langu desc_text FROM cvers_ref INTO TABLE lt_ref
+      WHERE langu = sy-langu
+         OR langu = 'E'.
+* Standard table: the key of CVERS_REF is not documented, duplicates are removed
+    SORT lt_ref BY comp langu.
+    DELETE ADJACENT DUPLICATES FROM lt_ref COMPARING comp langu.
+    SORT lt_cvers BY comp.
+    LOOP AT lt_cvers INTO ls_cvers.
+      CLEAR ls_intf.
+      ls_intf-otype = 'C'.
+      ls_intf-name  = ls_cvers-comp.
+      ls_intf-rel   = ls_cvers-rel.
+      ls_intf-splev = ls_cvers-splev.
+      READ TABLE lt_ref INTO ls_ref WITH KEY comp = ls_cvers-comp langu = sy-langu BINARY SEARCH.
+      IF sy-subrc <> 0.
+        READ TABLE lt_ref INTO ls_ref WITH KEY comp = ls_cvers-comp langu = 'E' BINARY SEARCH.
+      ENDIF.
+      IF sy-subrc = 0.
+        ls_intf-descr = ls_ref-text.
+      ENDIF.
+      APPEND ls_intf TO lt_intf.
+    ENDLOOP.
+    APPEND LINES OF lt_intf TO ms_res-intfs.
+  ENDMETHOD.
+
 * G5 to G7 (design 9). Each line is set to "error" first, so that a failure in
 * the middle of the step leaves an error and not a partial list. A line whose
 * source is missing shows "error" if a source step failed and "not collected"
@@ -2658,7 +2871,9 @@ CLASS lcl_output DEFINITION FINAL.
              otype TYPE c LENGTH 30,
              name  TYPE c LENGTH 40,
              itype TYPE c LENGTH 20,
-             descr TYPE c LENGTH 60,
+             descr TYPE c LENGTH 120,
+             rel   TYPE c LENGTH 10,
+             splev TYPE c LENGTH 10,
              idocs TYPE c LENGTH 20,
            END OF ty_v5,
            ty_v5_t TYPE STANDARD TABLE OF ty_v5 WITH DEFAULT KEY.
@@ -2818,7 +3033,9 @@ CLASS lcl_output IMPLEMENTATION.
         add_col( EXPORTING iv_fname = 'OTYPE' iv_head = 'H30' iv_width = 20 CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'NAME'  iv_head = 'H31' iv_width = 40 CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'ITYPE' iv_head = 'H32' iv_width = 10 CHANGING ct_cols = et_cols ).
-        add_col( EXPORTING iv_fname = 'DESCR' iv_head = 'H22' iv_width = 60 CHANGING ct_cols = et_cols ).
+        add_col( EXPORTING iv_fname = 'DESCR' iv_head = 'H22' iv_width = 120 CHANGING ct_cols = et_cols ).
+        add_col( EXPORTING iv_fname = 'REL'   iv_head = 'H34' iv_width = 10 CHANGING ct_cols = et_cols ).
+        add_col( EXPORTING iv_fname = 'SPLEV' iv_head = 'H35' iv_width = 10 CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'IDOCS' iv_head = 'H33' iv_width = 15 CHANGING ct_cols = et_cols ).
     ENDCASE.
   ENDMETHOD.
@@ -3109,33 +3326,98 @@ CLASS lcl_output IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+* View 5 (design 11) in the order RFC destinations, logical systems, partner
+* profiles, software components. An object type whose step failed shows one
+* "error" row; if block INTF was skipped, each type shows "not collected"
   METHOD build_v5.
-    DATA: ls_intf TYPE ty_intf,
-          ls_row  TYPE ty_v5,
-          lv_id   TYPE ty_textid.
+    TYPES: BEGIN OF lty_rtext,
+             itype TYPE c LENGTH 20,
+             text  TYPE string,
+           END OF lty_rtext.
+    DATA: ls_intf   TYPE ty_intf,
+          ls_row    TYPE ty_v5,
+          ls_block  TYPE ty_block,
+          lt_rtext  TYPE SORTED TABLE OF lty_rtext WITH UNIQUE KEY itype,
+          ls_rtext  TYPE lty_rtext,
+          lv_otype  TYPE ty_flag,
+          lv_id     TYPE ty_textid,
+          lv_step   TYPE c LENGTH 20,
+          lv_type   TYPE string,
+          lv_noprof TYPE string.
 
     CLEAR mt_v5.
-    LOOP AT ms_res-intfs INTO ls_intf.
-      CLEAR ls_row.
-      CASE ls_intf-otype.
-        WHEN 'R'.
-          lv_id = 'I01'.
-        WHEN 'L'.
-          lv_id = 'I02'.
-        WHEN 'P'.
-          lv_id = 'I03'.
+    READ TABLE ms_res-blocks INTO ls_block WITH KEY block = 'INTF'.
+    lv_noprof = lcl_text=>get( 'I05' ).
+
+    DO 4 TIMES.
+      CASE sy-index.
+        WHEN 1.
+          lv_otype = 'R'.
+          lv_id    = 'I01'.
+          lv_step  = 'INTF_RFC'.
+        WHEN 2.
+          lv_otype = 'L'.
+          lv_id    = 'I02'.
+          lv_step  = 'INTF_LOGSYS'.
+        WHEN 3.
+          lv_otype = 'P'.
+          lv_id    = 'I03'.
+          lv_step  = 'INTF_PARTNER'.
         WHEN OTHERS.
-          lv_id = 'I04'.
+          lv_otype = 'C'.
+          lv_id    = 'I04'.
+          lv_step  = 'INTF_CVERS'.
       ENDCASE.
-      ls_row-otype = lcl_text=>get( lv_id ).
-      ls_row-name  = ls_intf-name.
-      ls_row-itype = ls_intf-itype.
-      ls_row-descr = ls_intf-descr.
-      IF ls_intf-otype = 'P'.
-        ls_row-idocs = num( ls_intf-idocs ).
+      lv_type = lcl_text=>get( lv_id ).
+
+      IF ls_block-active IS INITIAL.
+        CLEAR ls_row.
+        ls_row-otype = lv_type.
+        ls_row-name  = status_text( space ).
+        APPEND ls_row TO mt_v5.
+        CONTINUE.
       ENDIF.
-      APPEND ls_row TO mt_v5.
-    ENDLOOP.
+      READ TABLE ms_res-errors TRANSPORTING NO FIELDS WITH KEY step = lv_step.
+      IF sy-subrc = 0.
+        CLEAR ls_row.
+        ls_row-otype = lv_type.
+        ls_row-name  = status_text( gc_st_err ).
+        APPEND ls_row TO mt_v5.
+        CONTINUE.
+      ENDIF.
+
+      LOOP AT ms_res-intfs INTO ls_intf WHERE otype = lv_otype.
+        CLEAR ls_row.
+        ls_row-otype = lv_type.
+        ls_row-name  = ls_intf-name.
+        ls_row-itype = ls_intf-itype.
+        ls_row-descr = ls_intf-descr.
+        ls_row-rel   = ls_intf-rel.
+        ls_row-splev = ls_intf-splev.
+* Connection type text from the domain fixed values, in the display language
+        IF lv_otype = 'R'.
+          READ TABLE lt_rtext INTO ls_rtext WITH TABLE KEY itype = ls_intf-itype.
+          IF sy-subrc <> 0.
+            CLEAR ls_rtext.
+            ls_rtext-itype = ls_intf-itype.
+            ls_rtext-text  = rollname_text( iv_rollname = 'RFCTYPE_D' iv_value = ls_intf-itype ).
+            INSERT ls_rtext INTO TABLE lt_rtext.
+          ENDIF.
+          ls_row-descr = ls_rtext-text.
+        ENDIF.
+        IF lv_otype = 'P'.
+          ls_row-idocs = num( ls_intf-idocs ).
+          IF ls_intf-noprof = gc_x.
+            IF ls_row-descr IS INITIAL.
+              ls_row-descr = lv_noprof.
+            ELSE.
+              CONCATENATE ls_row-descr lv_noprof INTO ls_row-descr SEPARATED BY space.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+        APPEND ls_row TO mt_v5.
+      ENDLOOP.
+    ENDDO.
   ENDMETHOD.
 
 * Texts of detail sub keys, read at display time in the display language

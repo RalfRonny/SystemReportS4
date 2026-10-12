@@ -660,6 +660,18 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>H34</KEY>
+     <ENTRY>Release</ENTRY>
+     <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H35</KEY>
+     <ENTRY>SP level</ENTRY>
+     <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>I01</KEY>
      <ENTRY>RFC destination</ENTRY>
      <LENGTH>15</LENGTH>
@@ -681,6 +693,12 @@
      <KEY>I04</KEY>
      <ENTRY>Software component</ENTRY>
      <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>I05</KEY>
+     <ENTRY>(no partner profile)</ENTRY>
+     <LENGTH>27</LENGTH>
     </item>
     <item>
      <ID>I</ID>

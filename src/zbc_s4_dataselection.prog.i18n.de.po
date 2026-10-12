@@ -5,6 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I05 27, maxlen=27
+msgid "(no partner profile)"
+msgstr "(keine Partnervereinbarung)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT Q21 19, maxlen=19
 msgid "- Checks Received"
 msgstr "- Erhaltene Schecks"
@@ -826,6 +830,10 @@ msgstr "REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zah
 msgid "RFC destination"
 msgstr "RFC-Destination"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H34 7, maxlen=7
+msgid "Release"
+msgstr "Release"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H08 9, maxlen=9
 msgid "Remark"
 msgstr "Bemerkung"
@@ -865,6 +873,10 @@ msgstr "SAP-Release"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E02 72, maxlen=72
 msgid "SKB1 of the active company codes without deletion flag and posting block"
 msgstr "SKB1 der aktiven Buchungskreise ohne Löschvormerkung und Buchungssperre"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H35 8, maxlen=8
+msgid "SP level"
+msgstr "SP-Stand"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT G06 8, maxlen=8
 msgid "Sales"

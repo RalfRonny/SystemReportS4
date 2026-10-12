@@ -53,6 +53,8 @@ I	H30	Object type	Objekttyp
 I	H31	Name	Name
 I	H32	Type	Typ
 I	H33	IDocs in period	IDocs im Zeitraum
+I	H34	Release	Release
+I	H35	SP level	SP-Stand
 I	M01	Period start must be the first day of a month	Zeitraumbeginn muss ein Monatserster sein
 I	M02	Period end must be the last day of a month	Zeitraumende muss ein Monatsletzter sein
 I	M03	Period must end before the current month	Zeitraum muss vor dem laufenden Monat enden
@@ -276,3 +278,4 @@ I	I01	RFC destination	RFC-Destination
 I	I02	Logical system	Logisches System
 I	I03	Partner profile	Partnervereinbarung
 I	I04	Software component	Softwarekomponente
+I	I05	(no partner profile)	(keine Partnervereinbarung)
