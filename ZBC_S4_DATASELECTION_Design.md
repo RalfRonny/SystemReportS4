@@ -235,7 +235,7 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Assets | Asset sub-numbers | ANLA with sub-number ≠ 0000, not deactivated |
 | Sales | Sales documents per category | VBAK created in the period, grouped by VBTYP (A inquiry, B quotation, C order, E scheduling agreement, G contract, H returns, I free-of-charge order) |
 | Sales | Deliveries per category | LIKP created in the period, grouped by VBTYP (J outbound delivery, T returns delivery, 7 inbound delivery) |
-| Sales | Billing documents per category | VBRK created in the period, grouped by VBTYP; cancelled documents (FKSTO) separately |
+| Sales | Billing documents per category | VBRK created in the period, grouped by VBTYP; cancelled documents (FKSTO) separately (sub key "<VBTYP> X") |
 | Purchasing | Purchasing documents per category | EKKO created in the period, grouped by BSTYP (A RFQ, F purchase order, K contract, L scheduling agreement) |
 | Purchasing | Vendor invoices (logistics invoice verification) | RBKP entered in the period (CPUDT), posted status only |
 | Inventory | Material documents | MKPF entered in the period |
@@ -366,7 +366,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 
 ### 13.3 Error handling
 
-- Each step (one pass over a table, see 5): TRY … CATCH CX_ROOT. This covers CX_SY_OPEN_SQL_DB, the dynamic SQL exceptions of the optional block, and arithmetic and conversion errors. All figures fed by the failed step show status "error", the exception text goes to the remark. In background, message M08 with the figure keys goes to the job log.
+- Each step (one pass over a table, see 5): TRY … CATCH CX_ROOT. This covers CX_SY_OPEN_SQL_DB, the dynamic SQL exceptions of the optional block, and arithmetic and conversion errors. All figures fed by the failed step show status "error", the exception text goes to the remark. A figure fed by several steps (e.g. row 13: B from VBUK, C from VBAK) keeps "error" even if another of its steps succeeds. In background, message M08 with the figure keys goes to the job log.
 - Runtime limits and memory errors cannot be caught. Hence background processing for the official run (dialog work processes end at the profile runtime limit) and PACKAGE SIZE for large scans.
 
 ### 13.4 SALV
@@ -473,7 +473,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | BSIK, BSAK | LIFNR, CPUDT |
 | CSKS, CEPC | DATAB, DATBI, ERSDA |
 | ANLA | ANLN2 = 0000 for main numbers, DEAKT, ERDAT |
-| VBUK | GBSTK value "C" = completely processed |
+| VBUK | GBSTK value "C" = completely processed – resolved: VBUK has VBTYP (SD document category); LIKP-VBTYP, VBRK-VBTYP/FKSTO exist |
 | EKPO | ELIKZ / LOEKZ values for "open" |
 | AUFK, JEST | AUTYP values 10 / 30 / 40, ERDAT, OBJNR, WERKS; JEST STAT, INACT; system status IDs for DLV, TECO, CLSD, DLFL |
 | TBSL | Fields for account type, debit/credit and payment-transaction flag |
@@ -691,6 +691,13 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E05 | CEPC records valid today (DATAB <= today <= DATBI) | Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI) |
 | D06 | Asset sub-numbers | Anlagenunternummern |
 | E06 | ANLA with sub-number other than 0000, not deactivated | ANLA mit Unternummer ungleich 0000, nicht deaktiviert |
+| G06 | Sales | Vertrieb |
+| D07 | Sales documents per category | Verkaufsbelege je Belegtyp |
+| E07 | VBAK created in the period (ERDAT), per SD document category (VBTYP) | VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP) |
+| D08 | Deliveries per category | Lieferungen je Belegtyp |
+| E08 | LIKP created in the period (ERDAT), per SD document category (VBTYP) | LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP) |
+| D09 | Billing documents per category | Fakturen je Belegtyp |
+| E09 | VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO) | VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO) |
 | G13 | Banking | Bankverkehr |
 | G16 | Financials | Finanzwesen |
 | D19 | House banks of the active company codes | Hausbanken der aktiven Buchungskreise |
@@ -725,7 +732,7 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
 | D27 | FI documents entered | G16 Financials | FI |
 
-Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, T042Z for D21, domain fixed values of BSTAT for D27).
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, T042Z for D21, domain fixed values of BSTAT for D27).
 
 ### C.3 INFO labels (D80–D90)
 

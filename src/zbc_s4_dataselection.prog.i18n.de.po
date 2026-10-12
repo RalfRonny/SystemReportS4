@@ -149,6 +149,10 @@ msgstr "Basis"
 msgid "Billing documents"
 msgstr "Fakturen"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D09 30, maxlen=30
+msgid "Billing documents per category"
+msgstr "Fakturen je Belegtyp"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L19 87, maxlen=87
 msgid "C: checks in the check register (PAYR) with payment date in period, not voided / months"
 msgstr "C: Schecks im Scheckregister (PAYR) mit Zahldatum im Zeitraum, nicht entwertet / Monate"
@@ -256,6 +260,10 @@ msgstr "Ergebnis löschen"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O13 11, maxlen=11
 msgid "Deliveries"
 msgstr "Lieferungen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D08 23, maxlen=23
+msgid "Deliveries per category"
+msgstr "Lieferungen je Belegtyp"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H22 11, maxlen=11
 msgid "Description"
@@ -397,6 +405,10 @@ msgstr "Position"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H21 9, maxlen=9
 msgid "Key"
 msgstr "Schlüssel"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E08 68, maxlen=68
+msgid "LIKP created in the period (ERDAT), per SD document category (VBTYP)"
+msgstr "LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H11 8, maxlen=8
 msgid "Location"
@@ -753,9 +765,17 @@ msgstr "SAP-Release"
 msgid "SKB1 of the active company codes without deletion flag and posting block"
 msgstr "SKB1 der aktiven Buchungskreise ohne Löschvormerkung und Buchungssperre"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G06 8, maxlen=8
+msgid "Sales"
+msgstr "Vertrieb"
+
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_SD, maxlen=30
 msgid "Sales and distribution"
 msgstr "Vertrieb"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D07 28, maxlen=28
+msgid "Sales documents per category"
+msgstr "Verkaufsbelege je Belegtyp"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O12 14, maxlen=14
 msgid "Sales orders"
@@ -849,6 +869,14 @@ msgstr "Im Zeitraum genutzt"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D89 8, maxlen=8
 msgid "User"
 msgstr "Benutzer"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E07 68, maxlen=68
+msgid "VBAK created in the period (ERDAT), per SD document category (VBTYP)"
+msgstr "VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E09 98, maxlen=98
+msgid "VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)"
+msgstr "VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N11 36, maxlen=36
 msgid "Valid today; C = first created/month"

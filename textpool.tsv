@@ -196,6 +196,7 @@ I	G02	G/L accounts	Sachkonten
 I	G03	Materials	Materialien
 I	G04	Controlling	Controlling
 I	G05	Assets	Anlagen
+I	G06	Sales	Vertrieb
 I	G13	Banking	Bankverkehr
 I	G16	Financials	Finanzwesen
 I	D01	All company codes	Alle Buchungskreise
@@ -208,6 +209,12 @@ I	D05	Profit centers valid today	Heute gültige Profitcenter
 I	E05	CEPC records valid today (DATAB <= today <= DATBI)	Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI)
 I	D06	Asset sub-numbers	Anlagenunternummern
 I	E06	ANLA with sub-number other than 0000, not deactivated	ANLA mit Unternummer ungleich 0000, nicht deaktiviert
+I	D07	Sales documents per category	Verkaufsbelege je Belegtyp
+I	E07	VBAK created in the period (ERDAT), per SD document category (VBTYP)	VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)
+I	D08	Deliveries per category	Lieferungen je Belegtyp
+I	E08	LIKP created in the period (ERDAT), per SD document category (VBTYP)	LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)
+I	D09	Billing documents per category	Fakturen je Belegtyp
+I	E09	VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)	VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO)
 I	D19	House banks of the active company codes	Hausbanken der aktiven Buchungskreise
 I	E19	T012 rows of the active company codes	T012-Sätze der aktiven Buchungskreise
 I	D20	House bank accounts of the active company codes	Hausbankkonten der aktiven Buchungskreise

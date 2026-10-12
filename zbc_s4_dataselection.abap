@@ -230,15 +230,15 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'L' iv_from = 18 iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 5  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 6  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 13 iv_to = 13 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 5  iv_to = 6  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 5  iv_to = 9  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 5  iv_to = 6  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 5  iv_to = 9  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
@@ -476,7 +476,11 @@ CLASS lcl_collector DEFINITION FINAL.
            ty_doc_t   TYPE HASHED TABLE OF ty_doc WITH UNIQUE KEY bukrs belnr gjahr,
            ty_bschl_t TYPE HASHED TABLE OF bschl WITH UNIQUE KEY table_line,
            ty_kunnr_t TYPE HASHED TABLE OF kunnr WITH UNIQUE KEY table_line,
-           ty_lifnr_t TYPE HASHED TABLE OF lifnr WITH UNIQUE KEY table_line.
+           ty_lifnr_t TYPE HASHED TABLE OF lifnr WITH UNIQUE KEY table_line,
+           ty_vkorg_t TYPE HASHED TABLE OF vkorg WITH UNIQUE KEY table_line,
+           ty_vtweg_t TYPE HASHED TABLE OF vtweg WITH UNIQUE KEY table_line,
+           ty_spart_t TYPE HASHED TABLE OF spart WITH UNIQUE KEY table_line,
+           ty_waers_t TYPE HASHED TABLE OF waers WITH UNIQUE KEY table_line.
     DATA: ms_res       TYPE ty_result,
           mv_datfr     TYPE d,
           mv_datto     TYPE d,
@@ -492,8 +496,14 @@ CLASS lcl_collector DEFINITION FINAL.
           mt_lifnr_mm  TYPE ty_lifnr_t,       " vendors of purchase orders created in the period
           mv_fi_cust_ok TYPE ty_flag,
           mv_fi_vend_ok TYPE ty_flag,
-          mv_sd_cust_ok TYPE ty_flag,
-          mv_mm_vend_ok TYPE ty_flag.
+          mv_sd_cust_ok TYPE ty_flag,         " also: the SD sets below are complete
+          mv_mm_vend_ok TYPE ty_flag,
+* Used organizational units and document currencies of the sales orders
+* created in the period, for the organization view and G7 (design 9)
+          mt_vkorg_used TYPE ty_vkorg_t,
+          mt_vtweg_used TYPE ty_vtweg_t,
+          mt_spart_used TYPE ty_spart_t,
+          mt_waers_sd   TYPE ty_waers_t.
     METHODS register.
     METHODS add_step
       IMPORTING iv_step  TYPE c
@@ -545,6 +555,10 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_fi_payr.
     METHODS step_fi_reguh.
     METHODS step_fi_bkpf.
+    METHODS step_sd_vbak.
+    METHODS step_sd_vbuk.
+    METHODS step_sd_likp.
+    METHODS step_sd_vbrk.
     METHODS step_derv_active.
 ENDCLASS.
 
@@ -635,6 +649,9 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D03' iv_grp = 'G03' ).
     add_detail( iv_fkey = 'D05' iv_grp = 'G04' ).
     add_detail( iv_fkey = 'D06' iv_grp = 'G05' ).
+    add_detail( iv_fkey = 'D07' iv_grp = 'G06' ).
+    add_detail( iv_fkey = 'D08' iv_grp = 'G06' ).
+    add_detail( iv_fkey = 'D09' iv_grp = 'G06' ).
     add_detail( iv_fkey = 'D19' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D20' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D21' iv_grp = 'G13' ).
@@ -657,6 +674,10 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'FI_PAYR'    iv_block = 'FI'   iv_keys = 'Q19' ).
     add_step( iv_step = 'FI_REGUH'   iv_block = 'FI'   iv_keys = 'Q20 D21' ).
     add_step( iv_step = 'FI_BKPF'    iv_block = 'FI'   iv_keys = 'D27' ).
+    add_step( iv_step = 'SD_VBAK'    iv_block = 'SD'   iv_keys = 'Q13 D07 Q07' ).
+    add_step( iv_step = 'SD_VBUK'    iv_block = 'SD'   iv_keys = 'Q13' ).
+    add_step( iv_step = 'SD_LIKP'    iv_block = 'SD'   iv_keys = 'D08' ).
+    add_step( iv_step = 'SD_VBRK'    iv_block = 'SD'   iv_keys = 'D09' ).
     add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
   ENDMETHOD.
 
@@ -769,6 +790,14 @@ CLASS lcl_collector IMPLEMENTATION.
             step_fi_reguh( ).
           WHEN 'FI_BKPF'.
             step_fi_bkpf( ).
+          WHEN 'SD_VBAK'.
+            step_sd_vbak( ).
+          WHEN 'SD_VBUK'.
+            step_sd_vbuk( ).
+          WHEN 'SD_LIKP'.
+            step_sd_likp( ).
+          WHEN 'SD_VBRK'.
+            step_sd_vbrk( ).
           WHEN 'DERV_ACTIVE'.
             step_derv_active( ).
         ENDCASE.
@@ -811,7 +840,9 @@ CLASS lcl_collector IMPLEMENTATION.
     ls_fig = prepare_fig( iv_fkey = iv_fkey iv_sub = iv_sub ).
     ls_fig-b_val  = iv_val.
     CLEAR ls_fig-b_na.
-    ls_fig-status = gc_st_ok.
+    IF ls_fig-status <> gc_st_err.              " a figure fed by several steps keeps a failure
+      ls_fig-status = gc_st_ok.
+    ENDIF.
     store_fig( ls_fig ).
   ENDMETHOD.
 
@@ -821,7 +852,9 @@ CLASS lcl_collector IMPLEMENTATION.
     ls_fig = prepare_fig( iv_fkey = iv_fkey iv_sub = iv_sub ).
     ls_fig-c_total = iv_total.
     CLEAR ls_fig-c_na.
-    ls_fig-status  = gc_st_ok.
+    IF ls_fig-status <> gc_st_err.
+      ls_fig-status = gc_st_ok.
+    ENDIF.
     store_fig( ls_fig ).
   ENDMETHOD.
 
@@ -829,7 +862,9 @@ CLASS lcl_collector IMPLEMENTATION.
     DATA ls_fig TYPE ty_fig.
 
     ls_fig = prepare_fig( iv_fkey = iv_fkey iv_sub = space ).
-    ls_fig-status = gc_st_ok.
+    IF ls_fig-status <> gc_st_err.
+      ls_fig-status = gc_st_ok.
+    ENDIF.
     store_fig( ls_fig ).
   ENDMETHOD.
 
@@ -1384,6 +1419,144 @@ CLASS lcl_collector IMPLEMENTATION.
     set_c( iv_fkey = 'D27' iv_total = lv_total ).
   ENDMETHOD.
 
+* Row 13 C, detail D07 and the SD part of row 7: one aggregated pass over the
+* sales documents created in the period (VBAK-ERDAT). Sales orders are SD
+* document category C (SAP-defined). The same pass collects the sales
+* organizations, distribution channels, divisions and document currencies of
+* the sales orders for the organization view (design 5: one pass per table)
+  METHOD step_sd_vbak.
+    TYPES: BEGIN OF lty_grp,
+             vbtyp TYPE vbak-vbtyp,
+             kunnr TYPE vbak-kunnr,
+             vkorg TYPE vbak-vkorg,
+             vtweg TYPE vbak-vtweg,
+             spart TYPE vbak-spart,
+             waerk TYPE vbak-waerk,
+             cnt   TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_cat,
+             vbtyp TYPE vbak-vbtyp,
+             cnt   TYPE ty_num,
+           END OF lty_cat.
+    DATA: lt_grp    TYPE STANDARD TABLE OF lty_grp,
+          ls_grp    TYPE lty_grp,
+          lt_cat    TYPE SORTED TABLE OF lty_cat WITH UNIQUE KEY vbtyp,
+          ls_cat    TYPE lty_cat,
+          lv_sub    TYPE c LENGTH 30,
+          lv_orders TYPE ty_num,
+          lv_total  TYPE ty_num.
+
+    CLEAR: mt_kunnr_sd, mt_vkorg_used, mt_vtweg_used, mt_spart_used, mt_waers_sd, mv_sd_cust_ok.
+    SELECT vbtyp kunnr vkorg vtweg spart waerk COUNT( * ) FROM vbak INTO TABLE lt_grp
+      PACKAGE SIZE 50000
+      WHERE erdat BETWEEN mv_datfr AND mv_datto
+      GROUP BY vbtyp kunnr vkorg vtweg spart waerk.
+      LOOP AT lt_grp INTO ls_grp.
+        ls_cat-vbtyp = ls_grp-vbtyp.
+        ls_cat-cnt   = ls_grp-cnt.
+        COLLECT ls_cat INTO lt_cat.
+        IF ls_grp-vbtyp = 'C'.
+          IF ls_grp-kunnr IS NOT INITIAL.
+            INSERT ls_grp-kunnr INTO TABLE mt_kunnr_sd.
+          ENDIF.
+          INSERT ls_grp-vkorg INTO TABLE mt_vkorg_used.
+          INSERT ls_grp-vtweg INTO TABLE mt_vtweg_used.
+          INSERT ls_grp-spart INTO TABLE mt_spart_used.
+          INSERT ls_grp-waerk INTO TABLE mt_waers_sd.
+        ENDIF.
+      ENDLOOP.
+    ENDSELECT.
+
+    LOOP AT lt_cat INTO ls_cat.
+      lv_total = lv_total + ls_cat-cnt.
+      IF ls_cat-vbtyp = 'C'.
+        lv_orders = ls_cat-cnt.
+      ENDIF.
+      lv_sub = ls_cat-vbtyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.                           " sub key space is the header row
+      ENDIF.
+      set_c( iv_fkey = 'D07' iv_sub = lv_sub iv_total = ls_cat-cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'Q13' iv_total = lv_orders ).
+    set_c( iv_fkey = 'D07' iv_total = lv_total ).
+    mv_sd_cust_ok = gc_x.
+  ENDMETHOD.
+
+* Row 13 B: open sales orders today, from the header status table: SD document
+* category C and overall processing status not C (completely processed)
+  METHOD step_sd_vbuk.
+    DATA: lv_cnt  TYPE i,
+          lv_open TYPE ty_num.
+
+    SELECT COUNT( * ) FROM vbuk INTO lv_cnt
+      WHERE vbtyp = 'C'
+        AND gbstk <> 'C'.
+    lv_open = lv_cnt.
+    set_b( iv_fkey = 'Q13' iv_val = lv_open ).
+  ENDMETHOD.
+
+* Detail D08: deliveries created in the period (LIKP-ERDAT) per SD document
+* category, one aggregated pass
+  METHOD step_sd_likp.
+    TYPES: BEGIN OF lty_grp,
+             vbtyp TYPE likp-vbtyp,
+             cnt   TYPE i,
+           END OF lty_grp.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lv_sub   TYPE c LENGTH 30,
+          lv_cnt   TYPE ty_num,
+          lv_total TYPE ty_num.
+
+    SELECT vbtyp COUNT( * ) FROM likp INTO TABLE lt_grp
+      WHERE erdat BETWEEN mv_datfr AND mv_datto
+      GROUP BY vbtyp.
+    LOOP AT lt_grp INTO ls_grp.
+      lv_cnt   = ls_grp-cnt.
+      lv_total = lv_total + lv_cnt.
+      lv_sub   = ls_grp-vbtyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.
+      ENDIF.
+      set_c( iv_fkey = 'D08' iv_sub = lv_sub iv_total = lv_cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'D08' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Detail D09: billing documents created in the period (VBRK-ERDAT) per SD
+* document category; cancelled documents (FKSTO) get their own sub row,
+* sub key "<category> X"
+  METHOD step_sd_vbrk.
+    TYPES: BEGIN OF lty_grp,
+             vbtyp TYPE vbrk-vbtyp,
+             fksto TYPE vbrk-fksto,
+             cnt   TYPE i,
+           END OF lty_grp.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lv_sub   TYPE c LENGTH 30,
+          lv_cnt   TYPE ty_num,
+          lv_total TYPE ty_num.
+
+    SELECT vbtyp fksto COUNT( * ) FROM vbrk INTO TABLE lt_grp
+      WHERE erdat BETWEEN mv_datfr AND mv_datto
+      GROUP BY vbtyp fksto.
+    LOOP AT lt_grp INTO ls_grp.
+      lv_cnt   = ls_grp-cnt.
+      lv_total = lv_total + lv_cnt.
+      lv_sub   = ls_grp-vbtyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.
+      ENDIF.
+      IF ls_grp-fksto IS NOT INITIAL.
+        CONCATENATE lv_sub ls_grp-fksto INTO lv_sub SEPARATED BY space.
+      ENDIF.
+      set_c( iv_fkey = 'D09' iv_sub = lv_sub iv_total = lv_cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'D09' iv_total = lv_total ).
+  ENDMETHOD.
+
 * Rows 7 and 9: union of the FI set with the SD set (sold-to parties of sales
 * orders) and the MM set (vendors of purchase orders). Built only if both
 * source steps succeeded; otherwise the row stays "not collected" or "error"
@@ -1511,6 +1684,10 @@ CLASS lcl_output DEFINITION FINAL.
     METHODS sub_text
       IMPORTING iv_fkey        TYPE c
                 iv_sub         TYPE c
+      RETURNING value(rv_text) TYPE string.
+    METHODS domain_text
+      IMPORTING iv_domain      TYPE c
+                iv_value       TYPE c
       RETURNING value(rv_text) TYPE string.
     METHODS cell
       IMPORTING iv_na          TYPE c
@@ -1887,28 +2064,21 @@ CLASS lcl_output IMPLEMENTATION.
           lv_land1 TYPE t042z-land1,
           lv_zlsch TYPE t042z-zlsch,
           lv_text1 TYPE t042z-text1,
-          lv_bstat TYPE bkpf-bstat,
-          lv_ddtxt TYPE dd07t-ddtext.
+          lv_value TYPE c LENGTH 1.
 
     CASE iv_fkey.
+      WHEN 'D07' OR 'D08' OR 'D09'.               " sub key: SD document category ("M X" = cancelled)
+        lv_value = iv_sub.
+        rv_text = domain_text( iv_domain = 'VBTYP' iv_value = lv_value ).
       WHEN 'D21'.                                 " sub key: country/payment method
         SPLIT iv_sub AT '/' INTO lv_land1 lv_zlsch.
         SELECT SINGLE text1 FROM t042z INTO lv_text1
           WHERE land1 = lv_land1
             AND zlsch = lv_zlsch.
         rv_text = lv_text1.
-      WHEN 'D27'.                                 " sub key: document status, '-' = normal
-        lv_bstat = iv_sub.
-        IF lv_bstat = '-'.
-          CLEAR lv_bstat.
-        ENDIF.
-        SELECT ddtext FROM dd07t UP TO 1 ROWS INTO lv_ddtxt
-          WHERE domname    = 'BSTAT'
-            AND ddlanguage = sy-langu
-            AND as4local   = 'A'
-            AND domvalue_l = lv_bstat.
-        ENDSELECT.
-        rv_text = lv_ddtxt.
+      WHEN 'D27'.                                 " sub key: document status
+        lv_value = iv_sub.
+        rv_text = domain_text( iv_domain = 'BSTAT' iv_value = lv_value ).
       WHEN 'D01'.
         lv_bukrs = iv_sub.
         SELECT SINGLE butxt FROM t001 INTO lv_butxt
@@ -1921,6 +2091,27 @@ CLASS lcl_output IMPLEMENTATION.
             AND mtart = lv_mtart.
         rv_text = lv_mtbez.
     ENDCASE.
+  ENDMETHOD.
+
+* Fixed value text of a domain in the display language; sub key '-' stands
+* for the value space
+  METHOD domain_text.
+    DATA: lv_domname TYPE dd07t-domname,
+          lv_value   TYPE dd07t-domvalue_l,
+          lv_ddtext  TYPE dd07t-ddtext.
+
+    lv_domname = iv_domain.
+    lv_value   = iv_value.
+    IF lv_value = '-'.
+      CLEAR lv_value.
+    ENDIF.
+    SELECT ddtext FROM dd07t UP TO 1 ROWS INTO lv_ddtext
+      WHERE domname    = lv_domname
+        AND ddlanguage = sy-langu
+        AND as4local   = 'A'
+        AND domvalue_l = lv_value.
+    ENDSELECT.
+    rv_text = lv_ddtext.
   ENDMETHOD.
 
   METHOD add_info.

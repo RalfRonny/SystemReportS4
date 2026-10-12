@@ -42,6 +42,24 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D07</KEY>
+     <ENTRY>Sales documents per category</ENTRY>
+     <LENGTH>28</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D08</KEY>
+     <ENTRY>Deliveries per category</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D09</KEY>
+     <ENTRY>Billing documents per category</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D19</KEY>
      <ENTRY>House banks of the active company codes</ENTRY>
      <LENGTH>39</LENGTH>
@@ -162,6 +180,24 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E07</KEY>
+     <ENTRY>VBAK created in the period (ERDAT), per SD document category (VBTYP)</ENTRY>
+     <LENGTH>68</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E08</KEY>
+     <ENTRY>LIKP created in the period (ERDAT), per SD document category (VBTYP)</ENTRY>
+     <LENGTH>68</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E09</KEY>
+     <ENTRY>VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)</ENTRY>
+     <LENGTH>98</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>E19</KEY>
      <ENTRY>T012 rows of the active company codes</ENTRY>
      <LENGTH>37</LENGTH>
@@ -219,6 +255,12 @@
      <KEY>G05</KEY>
      <ENTRY>Assets</ENTRY>
      <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G06</KEY>
+     <ENTRY>Sales</ENTRY>
+     <LENGTH>8</LENGTH>
     </item>
     <item>
      <ID>I</ID>
