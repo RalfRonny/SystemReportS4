@@ -201,8 +201,8 @@ B = column "Current number", C = column "Average added per Month/Year". "Created
 | 16 | No. of P-Card Transactions | N/A | N/A | Not derivable generically. |
 | 17 | Banking | – | – | Header row, left empty. |
 | 18 | – No. of Banks used | Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes | N/A | House banks have no creation date. House bank and account counts in the details. |
-| 19 | – Checks Sent | N/A | Checks in the check register (PAYR) with payment date (ZALDT) in the period and not voided (VOIDR initial) ÷ months | Covers checks from payment runs and manual checks. |
-| 20 | – EFT | N/A | Payments of productive payment runs (REGUH: run date LAUFD in the period, not a proposal run, payment document created) whose payment method is classified as **bank transfer** in the payment method definition (T042Z, country of the paying company code) ÷ months | Manual payments outside payment runs are not included. Distribution per payment method in the details. |
+| 19 | – Checks Sent | N/A | Checks in the check register (PAYR) with payment date (ZALDT) in the period and not voided (VOIDR initial; VOIDR is NUMC 2, initial = '00') ÷ months | Covers checks from payment runs and manual checks. |
+| 20 | – EFT | N/A | Payments of productive payment runs (REGUH: run date LAUFD in the period, not a proposal run (XVORL initial), payment document created (VBLNR filled), not an HR payroll run (6th character of LAUFI ≠ 'P', SAP convention)) whose payment method used (REGUH-RZAWE; REGUH has no ZLSCH) is an **outgoing bank transfer** in the payment method definition (T042Z, country of the paying company code): XEINZ initial and none of the check / bill of exchange classification indicators XSCHK, XWECH, XWANF, XWECS, XSWEC set ÷ months | T042Z has no own "bank transfer" field; the FBZP classification is stored as these indicators. Payment with printout (F-58, run ID ending in '*') is included; incoming methods (direct debit), HR payroll runs and manual payments without payment medium are not. All payment methods in the details. |
 | 21 | – Checks Received | N/A | N/A | Not derivable generically. |
 | 22 | – No. of Lock Boxes | N/A | N/A | Not derivable generically. |
 | 23 | EDI Transactions | Configured EDI message flows with business partners: partner profile message lines outbound (EDP13) and inbound (EDP21) for all partner types except logical systems (LS) | IDocs created (EDIDC, CREDAT) in the period whose partner is not a logical system ÷ months. Partner = receiver for outbound, sender for inbound | ALE IDocs (logical systems), direction split and top message types in the details. |
@@ -246,13 +246,13 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Warehouse | Storage locations | T001L of the plants counted in row 27 |
 | Production | Work centers | CRHD, object type work center, of the plants counted in row 27 |
 | Banking | House banks / house bank accounts | T012 / T012K rows of active company codes |
-| Banking | Payments per payment method | REGUH (as row 20, without classification filter) grouped by paying company code country + payment method, text T042Z |
+| Banking | Payments per payment method | REGUH (as row 20, without classification and direction filter) grouped by paying company code country + payment method, text T042Z |
 | EDI | IDocs per direction and partner type | EDIDC created in the period, grouped by DIRECT and partner type |
 | EDI | ALE IDocs | As above, partner type logical system |
 | EDI | Top 10 message types | EDIDC created in the period, grouped by MESTYP |
 | Users | Users per user type | USR02 valid today, grouped by USTYP (A dialog, B system, C communication, L reference, S service) |
 | Users | Valid dialog users regardless of logon | USTYP = A, valid today, not locked by an administrator |
-| Financials | FI documents entered | BKPF entered in the period (CPUDT) |
+| Financials | FI documents entered | BKPF entered in the period (CPUDT), one sub row per document status (BSTAT; "-" = normal document), text from the domain fixed values |
 
 ---
 
@@ -477,9 +477,9 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | EKPO | ELIKZ / LOEKZ values for "open" |
 | AUFK, JEST | AUTYP values 10 / 30 / 40, ERDAT, OBJNR, WERKS; JEST STAT, INACT; system status IDs for DLV, TECO, CLSD, DLFL |
 | TBSL | Fields for account type, debit/credit and payment-transaction flag |
-| T042Z | Field for the classification "bank transfer"; key country + payment method |
-| PAYR | ZALDT, VOIDR |
-| REGUH | LAUFD, proposal indicator, payment document number, payment method, paying company code |
+| T042Z | ~~Field for the classification "bank transfer"~~ – resolved: no own field; classification = indicators XSCHK, XWECH, XWANF, XWECS, XSWEC (all initial = bank transfer), direction XEINZ (see row 20) |
+| PAYR | ZALDT, VOIDR – resolved: VOIDR is NUMC 2, compared with a typed initial value |
+| REGUH | LAUFD, proposal indicator, payment document number, payment method, paying company code – resolved: XVORL, VBLNR, ZBUKR; payment method used is RZAWE (no ZLSCH in REGUH); LAUFI 6th character 'P' = HR payroll DME pre-program |
 | T012, T012K | BANKS, BANKL |
 | EDP21, EDIDC | Inbound partner profile lines; RCVPRT / SNDPRT |
 | QALS, CRHD | Creation date of the inspection lot; object type of work centers |
@@ -691,8 +691,41 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E05 | CEPC records valid today (DATAB <= today <= DATBI) | Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI) |
 | D06 | Asset sub-numbers | Anlagenunternummern |
 | E06 | ANLA with sub-number other than 0000, not deactivated | ANLA mit Unternummer ungleich 0000, nicht deaktiviert |
+| G13 | Banking | Bankverkehr |
+| G16 | Financials | Finanzwesen |
+| D19 | House banks of the active company codes | Hausbanken der aktiven Buchungskreise |
+| E19 | T012 rows of the active company codes | T012-Sätze der aktiven Buchungskreise |
+| D20 | House bank accounts of the active company codes | Hausbankkonten der aktiven Buchungskreise |
+| E20 | T012K rows of the active company codes | T012K-Sätze der aktiven Buchungskreise |
+| D21 | Payments per payment method | Zahlungen je Zahlweg |
+| E21 | REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method | REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zahlweg |
+| D27 | FI documents entered | Erfasste FI-Belege |
+| E27 | BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal) | BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal) |
 
-Detail numbering follows the order of section 8.2. D04 (materials with goods movements) is reserved for the MM block, which reads MKPF/MSEG. Sub rows (e.g. one per material type) carry the key; its text is read at display time (T134T for D03).
+Detail numbering follows the order of section 8.2; IDs are fixed so that later blocks do not renumber:
+
+| ID | Detail | Group | Block |
+|---|---|---|---|
+| D01 | All company codes | G01 Company codes | BASE |
+| D02 | G/L accounts at company-code level | G02 G/L | MD |
+| D03 | Materials per material type | G03 Materials | MD |
+| D04 | Materials with goods movements | G03 Materials | MM |
+| D05 | Profit centers | G04 Controlling | MD |
+| D06 | Asset sub-numbers | G05 Assets | MD |
+| D07–D09 | Sales documents / deliveries / billing documents per category | G06 Sales | SD |
+| D10–D11 | Purchasing documents per category / vendor invoices | G07 Purchasing | MM |
+| D12 | Material documents | G08 Inventory | MM |
+| D13 | Production / process orders | G09 Production | PP |
+| D14 | Open maintenance orders | G10 Maintenance | PP |
+| D15 | Inspection lots | G11 Quality | PP |
+| D16–D17 | Transfer orders / storage locations | G12 Warehouse | MM / ORG |
+| D18 | Work centers | G09 Production | PP |
+| D19–D21 | House banks / house bank accounts / payments per payment method | G13 Banking | FI |
+| D22–D24 | IDocs per direction and partner type / ALE IDocs / top 10 message types | G14 EDI | ORG |
+| D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
+| D27 | FI documents entered | G16 Financials | FI |
+
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, T042Z for D21, domain fixed values of BSTAT for D27).
 
 ### C.3 INFO labels (D80–D90)
 

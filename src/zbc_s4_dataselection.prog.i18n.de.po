@@ -132,7 +132,12 @@ msgstr "B: Partnervereinbarungszeilen (EDP13/EDP21) ohne log. Systeme; C: solche
 msgid "B: vendors (LFA1) without central deletion flag; C: LFA1 created (ERDAT) / months"
 msgstr "B: Lieferanten (LFA1) ohne zentrale Löschvormerkung; C: LFA1 angelegt (ERDAT) / Monate"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E27 75, maxlen=75
+msgid "BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)"
+msgstr "BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT Q17 11, maxlen=11
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G13 11, maxlen=11
 msgid "Banking"
 msgstr "Bankverkehr"
 
@@ -156,9 +161,9 @@ msgstr "C: eindeutige FI-Belege (BSID/BSAD, CPUDT) mit Kunden-Habenposition Zahl
 msgid "C: orders of order category 30 (maintenance and service) created (AUFK-ERDAT) / months"
 msgstr "C: Aufträge mit Auftragstyp 30 (Instandhaltung und Service) angelegt (AUFK-ERDAT) / Monate"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT L20 99, maxlen=99
-msgid "C: payments of productive payment runs (REGUH) with a bank transfer payment method (T042Z) / months"
-msgstr "C: Zahlungen produktiver Zahlläufe (REGUH) mit Zahlweg Überweisung (T042Z) / Monate"
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L20 115, maxlen=115
+msgid "C: outgoing payments of productive payment runs (REGUH), method neither check nor bill of exchange (T042Z) / months"
+msgstr "C: ausgehende Zahlungen produktiver Zahlläufe (REGUH), Zahlweg weder Scheck noch Wechsel (T042Z) / Monate"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E05 50, maxlen=50
 msgid "CEPC records valid today (DATAB <= today <= DATBI)"
@@ -308,11 +313,16 @@ msgstr "EDI-Transaktionen"
 msgid "FI documents"
 msgstr "FI-Belege"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D27 20, maxlen=20
+msgid "FI documents entered"
+msgstr "Erfasste FI-Belege"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT M08 31, maxlen=31
 msgid "Figure could not be determined:"
 msgstr "Kennzahl nicht ermittelbar:"
 
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_FI, maxlen=30
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G16 11, maxlen=11
 msgid "Financials"
 msgstr "Finanzwesen"
 
@@ -344,9 +354,17 @@ msgstr "Gruppe"
 msgid "HR data is not read (personal data, separate authorizations)"
 msgstr "HR-Daten werden nicht gelesen (Personaldaten, eigene Berechtigungen)"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D20 47, maxlen=47
+msgid "House bank accounts of the active company codes"
+msgstr "Hausbankkonten der aktiven Buchungskreise"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R18 33, maxlen=33
 msgid "House banks have no creation date"
 msgstr "Hausbanken haben kein Anlagedatum"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D19 39, maxlen=39
+msgid "House banks of the active company codes"
+msgstr "Hausbanken der aktiven Buchungskreise"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O22 5, maxlen=5
 msgid "IDocs"
@@ -403,10 +421,6 @@ msgstr "Hauptnummern, nicht deaktiviert"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O19 32, maxlen=32
 msgid "Maintenance/service orders"
 msgstr "Instandhaltungs-/Serviceaufträge"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT R20 59, maxlen=59
-msgid "Manual payments outside payment runs are not included"
-msgstr "Manuelle Zahlungen außerhalb von Zahlläufen nicht enthalten"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H18 13, maxlen=13
 msgid "Manufacturing"
@@ -595,6 +609,10 @@ msgstr "Organisation und Technik"
 msgid "Other sales document categories in the details"
 msgstr "Andere Vertriebsbelegtypen in den Details"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R20 82, maxlen=82
+msgid "Outgoing only; incl. payment with printout (F-58); HR payroll runs not included"
+msgstr "Nur ausgehend; inkl. Zahlung mit Druck (F-58); HR-Abrechnungsläufe nicht enthalten"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT T04 7, maxlen=7
 msgid "Output"
 msgstr "Ausgabe"
@@ -614,6 +632,10 @@ msgstr "Zahlungsbelege angelegt/Monat"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N20 35, maxlen=35
 msgid "Payment runs, bank transfer methods"
 msgstr "Zahllauf, Zahlwege Überweisung"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D21 27, maxlen=27
+msgid "Payments per payment method"
+msgstr "Zahlungen je Zahlweg"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R10 67, maxlen=67
 msgid "Per material type and materials with goods movements in the details"
@@ -682,6 +704,10 @@ msgstr "Einkauf und Bestandsführung"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O04 24, maxlen=24
 msgid "Purchasing organizations"
 msgstr "Einkaufsorganisationen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E21 87, maxlen=87
+msgid "REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method"
+msgstr "REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zahlweg"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT I01 15, maxlen=15
 msgid "RFC destination"
@@ -786,6 +812,14 @@ msgstr "Systeme ohne WM: 0"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E01 57, maxlen=57
 msgid "T001 count; per company code: 1 = active, 0 = not active"
 msgstr "Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E19 37, maxlen=37
+msgid "T012 rows of the active company codes"
+msgstr "T012-Sätze der aktiven Buchungskreise"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E20 38, maxlen=38
+msgid "T012K rows of the active company codes"
+msgstr "T012K-Sätze der aktiven Buchungskreise"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT M11 35, maxlen=35
 msgid "Text IDs missing in logon language:"

@@ -231,10 +231,16 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 5  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 13 iv_to = 13 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 5  iv_to = 6  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 5  iv_to = 6  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 4  CHANGING ct_ids = lt_ids ).
 
@@ -453,7 +459,24 @@ CLASS lcl_collector DEFINITION FINAL.
              waers TYPE t001-waers,
              ktopl TYPE t001-ktopl,
            END OF ty_t001,
-           ty_t001_t TYPE SORTED TABLE OF ty_t001 WITH UNIQUE KEY bukrs.
+           ty_t001_t TYPE SORTED TABLE OF ty_t001 WITH UNIQUE KEY bukrs,
+           BEGIN OF ty_cust_item,
+             kunnr TYPE bsid-kunnr,
+             bukrs TYPE bsid-bukrs,
+             belnr TYPE bsid-belnr,
+             gjahr TYPE bsid-gjahr,
+             bschl TYPE bsid-bschl,
+           END OF ty_cust_item,
+           ty_cust_item_t TYPE STANDARD TABLE OF ty_cust_item WITH DEFAULT KEY,
+           BEGIN OF ty_doc,
+             bukrs TYPE bkpf-bukrs,
+             belnr TYPE bkpf-belnr,
+             gjahr TYPE bkpf-gjahr,
+           END OF ty_doc,
+           ty_doc_t   TYPE HASHED TABLE OF ty_doc WITH UNIQUE KEY bukrs belnr gjahr,
+           ty_bschl_t TYPE HASHED TABLE OF bschl WITH UNIQUE KEY table_line,
+           ty_kunnr_t TYPE HASHED TABLE OF kunnr WITH UNIQUE KEY table_line,
+           ty_lifnr_t TYPE HASHED TABLE OF lifnr WITH UNIQUE KEY table_line.
     DATA: ms_res       TYPE ty_result,
           mv_datfr     TYPE d,
           mv_datto     TYPE d,
@@ -461,7 +484,16 @@ CLASS lcl_collector DEFINITION FINAL.
           mt_detreg    TYPE ty_detreg_t,
           mt_t001      TYPE ty_t001_t,        " all company codes, read once in BASE
           mt_bukrs_act TYPE ty_bukrs_t,       " active company codes (row 3), base of rows 4, 18, 27
-          mv_base_ok   TYPE ty_flag.          " BASE succeeded; dependent steps stay "not collected" otherwise
+          mv_base_ok   TYPE ty_flag,          " BASE succeeded; dependent steps stay "not collected" otherwise
+* Distinct partner sets for rows 7 and 9, merged in DERV (design 5: no UNION)
+          mt_kunnr_fi  TYPE ty_kunnr_t,       " customers with a line item entered in the period
+          mt_kunnr_sd  TYPE ty_kunnr_t,       " sold-to parties of sales orders created in the period
+          mt_lifnr_fi  TYPE ty_lifnr_t,       " vendors with a line item entered in the period
+          mt_lifnr_mm  TYPE ty_lifnr_t,       " vendors of purchase orders created in the period
+          mv_fi_cust_ok TYPE ty_flag,
+          mv_fi_vend_ok TYPE ty_flag,
+          mv_sd_cust_ok TYPE ty_flag,
+          mv_mm_vend_ok TYPE ty_flag.
     METHODS register.
     METHODS add_step
       IMPORTING iv_step  TYPE c
@@ -503,6 +535,17 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_md_csks.
     METHODS step_md_cepc.
     METHODS step_md_anla.
+    METHODS step_fi_cust.
+    METHODS add_cust_items
+      IMPORTING it_item TYPE ty_cust_item_t
+                it_pay  TYPE ty_bschl_t
+      CHANGING  ct_doc  TYPE ty_doc_t.
+    METHODS step_fi_vend.
+    METHODS step_fi_banks.
+    METHODS step_fi_payr.
+    METHODS step_fi_reguh.
+    METHODS step_fi_bkpf.
+    METHODS step_derv_active.
 ENDCLASS.
 
 CLASS lcl_collector IMPLEMENTATION.
@@ -592,6 +635,10 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D03' iv_grp = 'G03' ).
     add_detail( iv_fkey = 'D05' iv_grp = 'G04' ).
     add_detail( iv_fkey = 'D06' iv_grp = 'G05' ).
+    add_detail( iv_fkey = 'D19' iv_grp = 'G13' ).
+    add_detail( iv_fkey = 'D20' iv_grp = 'G13' ).
+    add_detail( iv_fkey = 'D21' iv_grp = 'G13' ).
+    add_detail( iv_fkey = 'D27' iv_grp = 'G16' ).
 
 * Collection steps. One step per pass over a table (design 5); the keys are
 * the figures the step feeds. If the step fails, all of them show "error".
@@ -604,6 +651,13 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'MD_CSKS'    iv_block = 'MD'   iv_keys = 'Q11' ).
     add_step( iv_step = 'MD_CEPC'    iv_block = 'MD'   iv_keys = 'D05' ).
     add_step( iv_step = 'MD_ANLA'    iv_block = 'MD'   iv_keys = 'Q12 D06' ).
+    add_step( iv_step = 'FI_CUST'    iv_block = 'FI'   iv_keys = 'Q14 Q07' ).
+    add_step( iv_step = 'FI_VEND'    iv_block = 'FI'   iv_keys = 'Q09' ).
+    add_step( iv_step = 'FI_BANKS'   iv_block = 'FI'   iv_keys = 'Q18 D19 D20' ).
+    add_step( iv_step = 'FI_PAYR'    iv_block = 'FI'   iv_keys = 'Q19' ).
+    add_step( iv_step = 'FI_REGUH'   iv_block = 'FI'   iv_keys = 'Q20 D21' ).
+    add_step( iv_step = 'FI_BKPF'    iv_block = 'FI'   iv_keys = 'D27' ).
+    add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
   ENDMETHOD.
 
   METHOD add_step.
@@ -703,6 +757,20 @@ CLASS lcl_collector IMPLEMENTATION.
             step_md_cepc( ).
           WHEN 'MD_ANLA'.
             step_md_anla( ).
+          WHEN 'FI_CUST'.
+            step_fi_cust( ).
+          WHEN 'FI_VEND'.
+            step_fi_vend( ).
+          WHEN 'FI_BANKS'.
+            step_fi_banks( ).
+          WHEN 'FI_PAYR'.
+            step_fi_payr( ).
+          WHEN 'FI_REGUH'.
+            step_fi_reguh( ).
+          WHEN 'FI_BKPF'.
+            step_fi_bkpf( ).
+          WHEN 'DERV_ACTIVE'.
+            step_derv_active( ).
         ENDCASE.
       CATCH cx_root INTO lx_root.
         lv_text = lx_root->get_text( ).
@@ -1043,6 +1111,308 @@ CLASS lcl_collector IMPLEMENTATION.
     set_b( iv_fkey = 'Q12' iv_val = lv_main ).
     set_c( iv_fkey = 'Q12' iv_total = lv_new ).
     set_b( iv_fkey = 'D06' iv_val = lv_subs ).
+  ENDMETHOD.
+
+* Row 14 and the FI part of row 7: one pass over BSID and one over BSAD
+* (open and cleared customer items), only items entered in the period.
+* Row 14 counts documents, not line items (design 2 #7)
+  METHOD step_fi_cust.
+    TYPES: BEGIN OF lty_tbsl,
+             bschl TYPE tbsl-bschl,
+             koart TYPE tbsl-koart,
+             shkzg TYPE tbsl-shkzg,
+             xzahl TYPE tbsl-xzahl,
+           END OF lty_tbsl.
+    DATA: lt_tbsl TYPE STANDARD TABLE OF lty_tbsl,
+          ls_tbsl TYPE lty_tbsl,
+          lt_pay  TYPE ty_bschl_t,
+          lt_item TYPE ty_cust_item_t,
+          lt_doc  TYPE ty_doc_t,
+          lv_cnt  TYPE i,
+          lv_docs TYPE ty_num.
+
+    CLEAR: mt_kunnr_fi, mv_fi_cust_ok.
+* Incoming payment posting keys by their SAP attributes, no key value hard-coded:
+* customer account, credit, payment transaction
+    SELECT bschl koart shkzg xzahl FROM tbsl INTO TABLE lt_tbsl.
+    LOOP AT lt_tbsl INTO ls_tbsl.
+      IF ls_tbsl-koart = 'D' AND ls_tbsl-shkzg = 'H' AND ls_tbsl-xzahl = gc_x.
+        INSERT ls_tbsl-bschl INTO TABLE lt_pay.
+      ENDIF.
+    ENDLOOP.
+
+    SELECT kunnr bukrs belnr gjahr bschl FROM bsid INTO TABLE lt_item
+      PACKAGE SIZE 50000
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto.
+      add_cust_items( EXPORTING it_item = lt_item
+                                it_pay  = lt_pay
+                      CHANGING  ct_doc  = lt_doc ).
+    ENDSELECT.
+    SELECT kunnr bukrs belnr gjahr bschl FROM bsad INTO TABLE lt_item
+      PACKAGE SIZE 50000
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto.
+      add_cust_items( EXPORTING it_item = lt_item
+                                it_pay  = lt_pay
+                      CHANGING  ct_doc  = lt_doc ).
+    ENDSELECT.
+
+    DESCRIBE TABLE lt_doc LINES lv_cnt.
+    lv_docs = lv_cnt.
+    set_c( iv_fkey = 'Q14' iv_total = lv_docs ).
+    mv_fi_cust_ok = gc_x.
+  ENDMETHOD.
+
+  METHOD add_cust_items.
+    DATA: ls_item TYPE ty_cust_item,
+          ls_doc  TYPE ty_doc.
+
+    LOOP AT it_item INTO ls_item.
+      INSERT ls_item-kunnr INTO TABLE mt_kunnr_fi.          " duplicates are rejected
+      READ TABLE it_pay TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_item-bschl.
+      IF sy-subrc = 0.
+        ls_doc-bukrs = ls_item-bukrs.
+        ls_doc-belnr = ls_item-belnr.
+        ls_doc-gjahr = ls_item-gjahr.
+        INSERT ls_doc INTO TABLE ct_doc.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+
+* FI part of row 9: distinct vendors with a line item entered in the period
+* (BSIK open, BSAK cleared); one aggregated pass per table
+  METHOD step_fi_vend.
+    DATA: lt_lifnr TYPE STANDARD TABLE OF lifnr,
+          lv_lifnr TYPE lifnr.
+
+    CLEAR: mt_lifnr_fi, mv_fi_vend_ok.
+    SELECT DISTINCT lifnr FROM bsik INTO TABLE lt_lifnr
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto.
+    LOOP AT lt_lifnr INTO lv_lifnr.
+      INSERT lv_lifnr INTO TABLE mt_lifnr_fi.
+    ENDLOOP.
+    SELECT DISTINCT lifnr FROM bsak INTO TABLE lt_lifnr
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto.
+    LOOP AT lt_lifnr INTO lv_lifnr.
+      INSERT lv_lifnr INTO TABLE mt_lifnr_fi.
+    ENDLOOP.
+    mv_fi_vend_ok = gc_x.
+  ENDMETHOD.
+
+* Row 18 and details D19/D20: house banks (T012) and house bank accounts
+* (T012K) of the active company codes; row 18 = distinct bank country + bank key
+  METHOD step_fi_banks.
+    TYPES: BEGIN OF lty_t012,
+             bukrs TYPE t012-bukrs,
+             hbkid TYPE t012-hbkid,
+             banks TYPE t012-banks,
+             bankl TYPE t012-bankl,
+           END OF lty_t012,
+           BEGIN OF lty_t012k,
+             bukrs TYPE t012k-bukrs,
+             hbkid TYPE t012k-hbkid,
+             hktid TYPE t012k-hktid,
+           END OF lty_t012k,
+           BEGIN OF lty_bank,
+             banks TYPE t012-banks,
+             bankl TYPE t012-bankl,
+           END OF lty_bank.
+    DATA: lt_t012  TYPE STANDARD TABLE OF lty_t012,
+          ls_t012  TYPE lty_t012,
+          lt_t012k TYPE STANDARD TABLE OF lty_t012k,
+          ls_t012k TYPE lty_t012k,
+          lt_bank  TYPE HASHED TABLE OF lty_bank WITH UNIQUE KEY banks bankl,
+          ls_bank  TYPE lty_bank,
+          lv_cnt   TYPE i,
+          lv_banks TYPE ty_num,
+          lv_hbank TYPE ty_num,
+          lv_accts TYPE ty_num.
+
+    IF mv_base_ok IS INITIAL.
+      RETURN.
+    ENDIF.
+    SELECT bukrs hbkid banks bankl FROM t012 INTO TABLE lt_t012.
+    LOOP AT lt_t012 INTO ls_t012.
+      READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t012-bukrs.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+      lv_hbank = lv_hbank + 1.
+      IF ls_t012-banks IS NOT INITIAL OR ls_t012-bankl IS NOT INITIAL.
+        ls_bank-banks = ls_t012-banks.
+        ls_bank-bankl = ls_t012-bankl.
+        INSERT ls_bank INTO TABLE lt_bank.
+      ENDIF.
+    ENDLOOP.
+    DESCRIBE TABLE lt_bank LINES lv_cnt.
+    lv_banks = lv_cnt.
+
+    SELECT bukrs hbkid hktid FROM t012k INTO TABLE lt_t012k.
+    LOOP AT lt_t012k INTO ls_t012k.
+      READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t012k-bukrs.
+      IF sy-subrc = 0.
+        lv_accts = lv_accts + 1.
+      ENDIF.
+    ENDLOOP.
+
+    set_b( iv_fkey = 'Q18' iv_val = lv_banks ).
+    set_b( iv_fkey = 'D19' iv_val = lv_hbank ).
+    set_b( iv_fkey = 'D20' iv_val = lv_accts ).
+  ENDMETHOD.
+
+* Row 19: checks in the check register (PAYR) with payment date in the period,
+* not voided. VOIDR is NUMC, so "initial" is compared with a typed variable
+  METHOD step_fi_payr.
+    DATA: lv_voidr TYPE payr-voidr,
+          lv_cnt   TYPE i,
+          lv_total TYPE ty_num.
+
+    SELECT COUNT( * ) FROM payr INTO lv_cnt
+      WHERE zaldt BETWEEN mv_datfr AND mv_datto
+        AND voidr = lv_voidr.
+    lv_total = lv_cnt.
+    set_c( iv_fkey = 'Q19' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Row 20 and detail D21: payments of productive payment runs (REGUH: run date
+* in the period, no proposal run, payment document created). One aggregated
+* pass per run, paying company code and payment method used (RZAWE; REGUH has
+* no ZLSCH). Runs whose 6th run-ID character is 'P' (SAP convention: HR payroll
+* DME pre-program) are skipped, as HR is out of scope. Row 20 counts outgoing
+* payment methods (XEINZ initial) classified as bank transfer in T042Z, i.e.
+* none of the check / bill of exchange indicators set; D21 shows all methods.
+  METHOD step_fi_reguh.
+    TYPES: BEGIN OF lty_grp,
+             laufi TYPE reguh-laufi,
+             zbukr TYPE reguh-zbukr,
+             rzawe TYPE reguh-rzawe,
+             cnt   TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_t042z,
+             land1 TYPE t042z-land1,
+             zlsch TYPE t042z-zlsch,
+             xeinz TYPE t042z-xeinz,
+             xschk TYPE t042z-xschk,
+             xwech TYPE t042z-xwech,
+             xwanf TYPE t042z-xwanf,
+             xwecs TYPE t042z-xwecs,
+             xswec TYPE t042z-xswec,
+           END OF lty_t042z,
+           BEGIN OF lty_meth,
+             land1 TYPE t001-land1,
+             zlsch TYPE t042z-zlsch,
+             cnt   TYPE ty_num,
+           END OF lty_meth.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lt_t042z TYPE SORTED TABLE OF lty_t042z WITH UNIQUE KEY land1 zlsch,
+          ls_t042z TYPE lty_t042z,
+          lt_meth  TYPE SORTED TABLE OF lty_meth WITH UNIQUE KEY land1 zlsch,
+          ls_meth  TYPE lty_meth,
+          ls_t001  TYPE ty_t001,
+          lv_sub   TYPE c LENGTH 30,
+          lv_eft   TYPE ty_num,
+          lv_total TYPE ty_num.
+
+    IF mv_base_ok IS INITIAL.                 " country of the paying company code comes from T001
+      RETURN.
+    ENDIF.
+    SELECT laufi zbukr rzawe COUNT( * ) FROM reguh INTO TABLE lt_grp
+      WHERE laufd BETWEEN mv_datfr AND mv_datto
+        AND xvorl = space
+        AND vblnr <> space
+      GROUP BY laufi zbukr rzawe.
+    SELECT land1 zlsch xeinz xschk xwech xwanf xwecs xswec FROM t042z INTO TABLE lt_t042z.
+
+    LOOP AT lt_grp INTO ls_grp.
+      IF ls_grp-laufi+5(1) = 'P'.
+        CONTINUE.
+      ENDIF.
+      CLEAR: ls_meth, ls_t001.
+      READ TABLE mt_t001 INTO ls_t001 WITH TABLE KEY bukrs = ls_grp-zbukr.
+      ls_meth-land1 = ls_t001-land1.
+      ls_meth-zlsch = ls_grp-rzawe.
+      ls_meth-cnt   = ls_grp-cnt.
+      COLLECT ls_meth INTO lt_meth.
+    ENDLOOP.
+
+    LOOP AT lt_meth INTO ls_meth.
+      lv_total = lv_total + ls_meth-cnt.
+      READ TABLE lt_t042z INTO ls_t042z WITH TABLE KEY land1 = ls_meth-land1 zlsch = ls_meth-zlsch.
+      IF sy-subrc = 0
+        AND ls_t042z-xeinz IS INITIAL
+        AND ls_t042z-xschk IS INITIAL
+        AND ls_t042z-xwech IS INITIAL
+        AND ls_t042z-xwanf IS INITIAL
+        AND ls_t042z-xwecs IS INITIAL
+        AND ls_t042z-xswec IS INITIAL.
+        lv_eft = lv_eft + ls_meth-cnt.
+      ENDIF.
+      CONCATENATE ls_meth-land1 '/' ls_meth-zlsch INTO lv_sub.
+      set_c( iv_fkey = 'D21' iv_sub = lv_sub iv_total = ls_meth-cnt ).
+    ENDLOOP.
+
+    set_c( iv_fkey = 'Q20' iv_total = lv_eft ).
+    set_c( iv_fkey = 'D21' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Detail D27: FI documents entered in the period (BKPF-CPUDT), one aggregated
+* pass, split by document status (BSTAT) so that parked, noted or sample
+* documents are visible
+  METHOD step_fi_bkpf.
+    TYPES: BEGIN OF lty_grp,
+             bstat TYPE bkpf-bstat,
+             cnt   TYPE i,
+           END OF lty_grp.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lv_sub   TYPE c LENGTH 30,
+          lv_cnt   TYPE ty_num,
+          lv_total TYPE ty_num.
+
+    SELECT bstat COUNT( * ) FROM bkpf INTO TABLE lt_grp
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto
+      GROUP BY bstat.
+    LOOP AT lt_grp INTO ls_grp.
+      lv_cnt   = ls_grp-cnt.
+      lv_total = lv_total + lv_cnt.
+      lv_sub   = ls_grp-bstat.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.                           " sub key space is the header row
+      ENDIF.
+      set_c( iv_fkey = 'D27' iv_sub = lv_sub iv_total = lv_cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'D27' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Rows 7 and 9: union of the FI set with the SD set (sold-to parties of sales
+* orders) and the MM set (vendors of purchase orders). Built only if both
+* source steps succeeded; otherwise the row stays "not collected" or "error"
+  METHOD step_derv_active.
+    DATA: lt_kunnr TYPE ty_kunnr_t,
+          lv_kunnr TYPE kunnr,
+          lt_lifnr TYPE ty_lifnr_t,
+          lv_lifnr TYPE lifnr,
+          lv_cnt   TYPE i,
+          lv_val   TYPE ty_num.
+
+    IF mv_fi_cust_ok = gc_x AND mv_sd_cust_ok = gc_x.
+      lt_kunnr = mt_kunnr_fi.
+      LOOP AT mt_kunnr_sd INTO lv_kunnr.
+        INSERT lv_kunnr INTO TABLE lt_kunnr.
+      ENDLOOP.
+      DESCRIBE TABLE lt_kunnr LINES lv_cnt.
+      lv_val = lv_cnt.
+      set_b( iv_fkey = 'Q07' iv_val = lv_val ).
+    ENDIF.
+    IF mv_fi_vend_ok = gc_x AND mv_mm_vend_ok = gc_x.
+      lt_lifnr = mt_lifnr_fi.
+      LOOP AT mt_lifnr_mm INTO lv_lifnr.
+        INSERT lv_lifnr INTO TABLE lt_lifnr.
+      ENDLOOP.
+      DESCRIBE TABLE lt_lifnr LINES lv_cnt.
+      lv_val = lv_cnt.
+      set_b( iv_fkey = 'Q09' iv_val = lv_val ).
+    ENDIF.
   ENDMETHOD.
 
 ENDCLASS.
@@ -1513,9 +1883,32 @@ CLASS lcl_output IMPLEMENTATION.
     DATA: lv_mtart TYPE t134t-mtart,
           lv_mtbez TYPE t134t-mtbez,
           lv_bukrs TYPE t001-bukrs,
-          lv_butxt TYPE t001-butxt.
+          lv_butxt TYPE t001-butxt,
+          lv_land1 TYPE t042z-land1,
+          lv_zlsch TYPE t042z-zlsch,
+          lv_text1 TYPE t042z-text1,
+          lv_bstat TYPE bkpf-bstat,
+          lv_ddtxt TYPE dd07t-ddtext.
 
     CASE iv_fkey.
+      WHEN 'D21'.                                 " sub key: country/payment method
+        SPLIT iv_sub AT '/' INTO lv_land1 lv_zlsch.
+        SELECT SINGLE text1 FROM t042z INTO lv_text1
+          WHERE land1 = lv_land1
+            AND zlsch = lv_zlsch.
+        rv_text = lv_text1.
+      WHEN 'D27'.                                 " sub key: document status, '-' = normal
+        lv_bstat = iv_sub.
+        IF lv_bstat = '-'.
+          CLEAR lv_bstat.
+        ENDIF.
+        SELECT ddtext FROM dd07t UP TO 1 ROWS INTO lv_ddtxt
+          WHERE domname    = 'BSTAT'
+            AND ddlanguage = sy-langu
+            AND as4local   = 'A'
+            AND domvalue_l = lv_bstat.
+        ENDSELECT.
+        rv_text = lv_ddtxt.
       WHEN 'D01'.
         lv_bukrs = iv_sub.
         SELECT SINGLE butxt FROM t001 INTO lv_butxt

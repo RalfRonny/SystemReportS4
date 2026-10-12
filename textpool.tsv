@@ -138,7 +138,7 @@ I	L15	B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders create
 I	L16	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L18	Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes	Eindeutige Banken (Bankland + Bankschlüssel) der Hausbanken (T012) der aktiven Buchungskreise
 I	L19	C: checks in the check register (PAYR) with payment date in period, not voided / months	C: Schecks im Scheckregister (PAYR) mit Zahldatum im Zeitraum, nicht entwertet / Monate
-I	L20	C: payments of productive payment runs (REGUH) with a bank transfer payment method (T042Z) / months	C: Zahlungen produktiver Zahlläufe (REGUH) mit Zahlweg Überweisung (T042Z) / Monate
+I	L20	C: outgoing payments of productive payment runs (REGUH), method neither check nor bill of exchange (T042Z) / months	C: ausgehende Zahlungen produktiver Zahlläufe (REGUH), Zahlweg weder Scheck noch Wechsel (T042Z) / Monate
 I	L21	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L22	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L23	B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months	B: Partnervereinbarungszeilen (EDP13/EDP21) ohne log. Systeme; C: solche IDocs angelegt (EDIDC) / Monate
@@ -163,7 +163,7 @@ I	R14	Documents, not line items; no posting key hard-coded	Belege, nicht Positio
 I	R15	Contracts, scheduling agreements and RFQs excluded by BSTYP	Kontrakte, Lieferpläne und Anfragen über BSTYP ausgeschlossen
 I	R18	House banks have no creation date	Hausbanken haben kein Anlagedatum
 I	R19	Checks from payment runs and manual checks	Schecks aus Zahlläufen und manuelle Schecks
-I	R20	Manual payments outside payment runs are not included	Manuelle Zahlungen außerhalb von Zahlläufen nicht enthalten
+I	R20	Outgoing only; incl. payment with printout (F-58); HR payroll runs not included	Nur ausgehend; inkl. Zahlung mit Druck (F-58); HR-Abrechnungsläufe nicht enthalten
 I	R23	ALE IDocs (logical systems) and message types in the details	ALE-IDocs (logische Systeme) und Nachrichtentypen in den Details
 I	R24	Split by order category in the details	Aufteilung nach Auftragstyp in den Details
 I	R25	Open maintenance orders in the details	Offene Instandhaltungsaufträge in den Details
@@ -196,6 +196,8 @@ I	G02	G/L accounts	Sachkonten
 I	G03	Materials	Materialien
 I	G04	Controlling	Controlling
 I	G05	Assets	Anlagen
+I	G13	Banking	Bankverkehr
+I	G16	Financials	Finanzwesen
 I	D01	All company codes	Alle Buchungskreise
 I	E01	T001 count; per company code: 1 = active, 0 = not active	Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv
 I	D02	G/L accounts at company-code level	Sachkonten auf Buchungskreisebene
@@ -206,6 +208,14 @@ I	D05	Profit centers valid today	Heute gültige Profitcenter
 I	E05	CEPC records valid today (DATAB <= today <= DATBI)	Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI)
 I	D06	Asset sub-numbers	Anlagenunternummern
 I	E06	ANLA with sub-number other than 0000, not deactivated	ANLA mit Unternummer ungleich 0000, nicht deaktiviert
+I	D19	House banks of the active company codes	Hausbanken der aktiven Buchungskreise
+I	E19	T012 rows of the active company codes	T012-Sätze der aktiven Buchungskreise
+I	D20	House bank accounts of the active company codes	Hausbankkonten der aktiven Buchungskreise
+I	E20	T012K rows of the active company codes	T012K-Sätze der aktiven Buchungskreise
+I	D21	Payments per payment method	Zahlungen je Zahlweg
+I	E21	REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method	REGUH wie Zeile 20 (RZAWE), alle Zahlwege inkl. eingehender, je Land/Zahlweg
+I	D27	FI documents entered	Erfasste FI-Belege
+I	E27	BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)	BKPF im Zeitraum erfasst (CPUDT), je Belegstatus (BSTAT, - = normal)
 I	D80	System ID	System-ID
 I	D81	Client	Mandant
 I	D82	SAP release	SAP-Release

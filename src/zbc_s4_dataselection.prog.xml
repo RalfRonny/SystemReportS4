@@ -42,6 +42,30 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D19</KEY>
+     <ENTRY>House banks of the active company codes</ENTRY>
+     <LENGTH>39</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D20</KEY>
+     <ENTRY>House bank accounts of the active company codes</ENTRY>
+     <LENGTH>47</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D21</KEY>
+     <ENTRY>Payments per payment method</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D27</KEY>
+     <ENTRY>FI documents entered</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D80</KEY>
      <ENTRY>System ID</ENTRY>
      <LENGTH>9</LENGTH>
@@ -138,6 +162,30 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E19</KEY>
+     <ENTRY>T012 rows of the active company codes</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E20</KEY>
+     <ENTRY>T012K rows of the active company codes</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E21</KEY>
+     <ENTRY>REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method</ENTRY>
+     <LENGTH>87</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E27</KEY>
+     <ENTRY>BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)</ENTRY>
+     <LENGTH>75</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>G00</KEY>
      <ENTRY>INFO</ENTRY>
      <LENGTH>4</LENGTH>
@@ -171,6 +219,18 @@
      <KEY>G05</KEY>
      <ENTRY>Assets</ENTRY>
      <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G13</KEY>
+     <ENTRY>Banking</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G16</KEY>
+     <ENTRY>Financials</ENTRY>
+     <LENGTH>11</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -451,8 +511,8 @@
     <item>
      <ID>I</ID>
      <KEY>L20</KEY>
-     <ENTRY>C: payments of productive payment runs (REGUH) with a bank transfer payment method (T042Z) / months</ENTRY>
-     <LENGTH>99</LENGTH>
+     <ENTRY>C: outgoing payments of productive payment runs (REGUH), method neither check nor bill of exchange (T042Z) / months</ENTRY>
+     <LENGTH>115</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1117,8 +1177,8 @@
     <item>
      <ID>I</ID>
      <KEY>R20</KEY>
-     <ENTRY>Manual payments outside payment runs are not included</ENTRY>
-     <LENGTH>59</LENGTH>
+     <ENTRY>Outgoing only; incl. payment with printout (F-58); HR payroll runs not included</ENTRY>
+     <LENGTH>82</LENGTH>
     </item>
     <item>
      <ID>I</ID>
