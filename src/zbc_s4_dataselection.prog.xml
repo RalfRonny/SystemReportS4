@@ -84,9 +84,33 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D13</KEY>
+     <ENTRY>Production / process orders: open (value), created (total)</ENTRY>
+     <LENGTH>59</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D14</KEY>
+     <ENTRY>Open maintenance orders</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D15</KEY>
+     <ENTRY>Inspection lots created</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D16</KEY>
      <ENTRY>Transfer orders created</ENTRY>
      <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D18</KEY>
+     <ENTRY>Work centers</ENTRY>
+     <LENGTH>13</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -252,9 +276,33 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E13</KEY>
+     <ENTRY>AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period</ENTRY>
+     <LENGTH>111</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E14</KEY>
+     <ENTRY>AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST)</ENTRY>
+     <LENGTH>73</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E15</KEY>
+     <ENTRY>QALS with lot creation date (ENSTEHDAT) in the period</ENTRY>
+     <LENGTH>54</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>E16</KEY>
      <ENTRY>LTAK with creation date (BDATU) in the period</ENTRY>
      <LENGTH>45</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E18</KEY>
+     <ENTRY>CRHD object type A (work center) of the plants counted in row 27</ENTRY>
+     <LENGTH>64</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -333,6 +381,24 @@
      <KEY>G08</KEY>
      <ENTRY>Inventory</ENTRY>
      <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G09</KEY>
+     <ENTRY>Production</ENTRY>
+     <LENGTH>10</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G10</KEY>
+     <ENTRY>Maintenance</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G11</KEY>
+     <ENTRY>Quality</ENTRY>
+     <LENGTH>19</LENGTH>
     </item>
     <item>
      <ID>I</ID>

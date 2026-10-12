@@ -239,7 +239,7 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Purchasing | Purchasing documents per category | EKKO created in the period, grouped by BSTYP (A RFQ, F purchase order, K contract, L scheduling agreement) |
 | Purchasing | Vendor invoices (logistics invoice verification) | RBKP entered in the period (CPUDT), posted status only |
 | Inventory | Material documents | MKPF entered in the period |
-| Production | Production orders / process orders | Created in the period and open, separately for order category 10 and 40 |
+| Production | Production orders / process orders | Created in the period and open, separately for order category 10 and 40 (sub rows: value = open, total = created) |
 | Maintenance | Open maintenance orders | Order category 30, open by the status rule of row 24 |
 | Quality | Inspection lots created | QALS created in the period |
 | Warehouse | Transfer orders created | LTAK with creation date (BDATU) in the period |
@@ -475,14 +475,14 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | ANLA | ANLN2 = 0000 for main numbers, DEAKT, ERDAT |
 | VBUK | GBSTK value "C" = completely processed – resolved: VBUK has VBTYP (SD document category); LIKP-VBTYP, VBRK-VBTYP/FKSTO exist |
 | EKPO | ELIKZ / LOEKZ values for "open" – resolved: EKPO has BSTYP, ELIKZ, LOEKZ (both initial = open); RBKP-RBSTAT 5 = posted; LTAK-BDATU = creation date; EKKO-AEDAT = created on |
-| AUFK, JEST | AUTYP values 10 / 30 / 40, ERDAT, OBJNR, WERKS; JEST STAT, INACT; system status IDs for DLV, TECO, CLSD, DLFL |
+| AUFK, JEST | AUTYP values 10 / 30 / 40, ERDAT, OBJNR, WERKS; JEST STAT, INACT; system status IDs for DLV, TECO, CLSD, DLFL – resolved: DLV = I0012, TECO = I0045, CLSD = I0046, DLFL = I0076 (SAP-delivered, TJ02); status active = INACT initial |
 | TBSL | Fields for account type, debit/credit and payment-transaction flag |
 | T042Z | ~~Field for the classification "bank transfer"~~ – resolved: no own field; classification = indicators XSCHK, XWECH, XWANF, XWECS, XSWEC (all initial = bank transfer), direction XEINZ (see row 20) |
 | PAYR | ZALDT, VOIDR – resolved: VOIDR is NUMC 2, compared with a typed initial value |
 | REGUH | LAUFD, proposal indicator, payment document number, payment method, paying company code – resolved: XVORL, VBLNR, ZBUKR; payment method used is RZAWE (no ZLSCH in REGUH); LAUFI 6th character 'P' = HR payroll DME pre-program |
 | T012, T012K | BANKS, BANKL |
 | EDP21, EDIDC | Inbound partner profile lines; RCVPRT / SNDPRT |
-| QALS, CRHD | Creation date of the inspection lot; object type of work centers |
+| QALS, CRHD | Creation date of the inspection lot; object type of work centers – resolved: QALS-ENSTEHDAT (date of lot creation); CRHD-OBJTY 'A' = work center |
 | TVKO/TVKOT, TVTW/TVTWT, TSPA/TSPAT, T002 | Keys, texts, ISO language field |
 | RFCDES, TBDLS/TBDLST, CVERS | Only if the interfaces block is built |
 | INDX | Length of the ID field (≥ 12 characters) |
@@ -711,6 +711,17 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E12 | MKPF entered in the period (CPUDT) | MKPF im Zeitraum erfasst (CPUDT) |
 | D16 | Transfer orders created | Angelegte Transportaufträge |
 | E16 | LTAK with creation date (BDATU) in the period | LTAK mit Anlagedatum (BDATU) im Zeitraum |
+| G09 | Production | Produktion |
+| G10 | Maintenance | Instandhaltung |
+| G11 | Quality | Qualitätsmanagement |
+| D13 | Production / process orders: open (value), created (total) | Fertigungs-/Prozessaufträge: offen (Wert), angelegt (Summe) |
+| E13 | AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period | AUFK Auftragstyp 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST); angelegt = ERDAT im Zeitraum |
+| D14 | Open maintenance orders | Offene Instandhaltungsaufträge |
+| E14 | AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST) | AUFK Auftragstyp 30 ohne aktiven Status LIEF, TABG, ABGS, LÖVM (JEST) |
+| D15 | Inspection lots created | Angelegte Prüflose |
+| E15 | QALS with lot creation date (ENSTEHDAT) in the period | QALS mit Anlagedatum des Loses (ENSTEHDAT) im Zeitraum |
+| D18 | Work centers | Arbeitsplätze |
+| E18 | CRHD object type A (work center) of the plants counted in row 27 | CRHD Objekttyp A (Arbeitsplatz) der in Zeile 27 gezählten Werke |
 | G13 | Banking | Bankverkehr |
 | G16 | Financials | Finanzwesen |
 | D19 | House banks of the active company codes | Hausbanken der aktiven Buchungskreise |
@@ -745,7 +756,7 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
 | D27 | FI documents entered | G16 Financials | FI |
 
-Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, T042Z for D21, domain fixed values of BSTAT for D27).
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27).
 
 Row 26 (WM warehouse numbers, T320) is collected in block MM together with the transfer orders (D16).
 

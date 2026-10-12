@@ -230,16 +230,13 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'L' iv_from = 18 iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 8  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 12 iv_to = 13 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 13 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 12 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 18 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 12 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 18 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 4  CHANGING ct_ids = lt_ids ).
@@ -481,7 +478,8 @@ CLASS lcl_collector DEFINITION FINAL.
            ty_vtweg_t TYPE HASHED TABLE OF vtweg WITH UNIQUE KEY table_line,
            ty_spart_t TYPE HASHED TABLE OF spart WITH UNIQUE KEY table_line,
            ty_waers_t TYPE HASHED TABLE OF waers WITH UNIQUE KEY table_line,
-           ty_ekorg_t TYPE HASHED TABLE OF ekorg WITH UNIQUE KEY table_line.
+           ty_ekorg_t TYPE HASHED TABLE OF ekorg WITH UNIQUE KEY table_line,
+           ty_werks_t TYPE HASHED TABLE OF werks_d WITH UNIQUE KEY table_line.
     DATA: ms_res       TYPE ty_result,
           mv_datfr     TYPE d,
           mv_datto     TYPE d,
@@ -508,7 +506,13 @@ CLASS lcl_collector DEFINITION FINAL.
 * Used purchasing organizations and document currencies of the purchase
 * orders created in the period (design 9); complete if mv_mm_vend_ok is set
           mt_ekorg_used TYPE ty_ekorg_t,
-          mt_waers_mm   TYPE ty_waers_t.
+          mt_waers_mm   TYPE ty_waers_t,
+* Plants counted in row 27 (computed once by counted_plants) and plants with
+* production or process orders created in the period (plant view, design 10)
+          mt_werks_cnt   TYPE ty_werks_t,
+          mv_werks_cnt_ok TYPE ty_flag,
+          mt_werks_manuf TYPE ty_werks_t,
+          mv_pp_manuf_ok TYPE ty_flag.
     METHODS register.
     METHODS add_step
       IMPORTING iv_step  TYPE c
@@ -570,6 +574,10 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_mm_mkpf.
     METHODS step_mm_ltak.
     METHODS step_mm_t320.
+    METHODS step_pp_aufk.
+    METHODS step_pp_qals.
+    METHODS step_pp_crhd.
+    METHODS counted_plants.
     METHODS step_derv_active.
 ENDCLASS.
 
@@ -667,7 +675,11 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D10' iv_grp = 'G07' ).
     add_detail( iv_fkey = 'D11' iv_grp = 'G07' ).
     add_detail( iv_fkey = 'D12' iv_grp = 'G08' ).
+    add_detail( iv_fkey = 'D13' iv_grp = 'G09' ).
+    add_detail( iv_fkey = 'D14' iv_grp = 'G10' ).
+    add_detail( iv_fkey = 'D15' iv_grp = 'G11' ).
     add_detail( iv_fkey = 'D16' iv_grp = 'G12' ).
+    add_detail( iv_fkey = 'D18' iv_grp = 'G09' ).
     add_detail( iv_fkey = 'D19' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D20' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D21' iv_grp = 'G13' ).
@@ -700,6 +712,9 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'MM_MKPF'    iv_block = 'MM'   iv_keys = 'D12 D04' ).
     add_step( iv_step = 'MM_LTAK'    iv_block = 'MM'   iv_keys = 'D16' ).
     add_step( iv_step = 'MM_T320'    iv_block = 'MM'   iv_keys = 'Q26' ).
+    add_step( iv_step = 'PP_AUFK'    iv_block = 'PP'   iv_keys = 'Q24 Q25 D13 D14' ).
+    add_step( iv_step = 'PP_QALS'    iv_block = 'PP'   iv_keys = 'D15' ).
+    add_step( iv_step = 'PP_CRHD'    iv_block = 'PP'   iv_keys = 'D18' ).
     add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
   ENDMETHOD.
 
@@ -832,6 +847,12 @@ CLASS lcl_collector IMPLEMENTATION.
             step_mm_ltak( ).
           WHEN 'MM_T320'.
             step_mm_t320( ).
+          WHEN 'PP_AUFK'.
+            step_pp_aufk( ).
+          WHEN 'PP_QALS'.
+            step_pp_qals( ).
+          WHEN 'PP_CRHD'.
+            step_pp_crhd( ).
           WHEN 'DERV_ACTIVE'.
             step_derv_active( ).
         ENDCASE.
@@ -1745,6 +1766,167 @@ CLASS lcl_collector IMPLEMENTATION.
     set_b( iv_fkey = 'Q26' iv_val = lv_whs ).
   ENDMETHOD.
 
+* Rows 24 and 25, details D13 and D14: one pass over the production, process
+* and maintenance orders (AUFK order categories 10, 40, 30; SAP-defined) in
+* packages. Created = AUFK-ERDAT in the period. Open = none of the system
+* statuses DLV (I0012), TECO (I0045), CLSD (I0046), DLFL (I0076) active in JEST
+* (SAP-delivered status IDs, design 2 #2); JEST is read by FOR ALL ENTRIES
+* per package of order object numbers. Also collects the plants with
+* production or process orders created in the period (plant view, design 10)
+  METHOD step_pp_aufk.
+    TYPES: BEGIN OF lty_order,
+             objnr TYPE aufk-objnr,
+             autyp TYPE aufk-autyp,
+             werks TYPE aufk-werks,
+             erdat TYPE aufk-erdat,
+           END OF lty_order,
+           BEGIN OF lty_jest,
+             objnr TYPE jest-objnr,
+           END OF lty_jest,
+           BEGIN OF lty_cat,
+             autyp   TYPE aufk-autyp,
+             cnt_open TYPE ty_num,
+             cnt_new  TYPE ty_num,
+           END OF lty_cat.
+    DATA: lt_order  TYPE STANDARD TABLE OF lty_order,
+          ls_order  TYPE lty_order,
+          lt_jest   TYPE STANDARD TABLE OF lty_jest,
+          ls_jest   TYPE lty_jest,
+          lt_closed TYPE HASHED TABLE OF j_objnr WITH UNIQUE KEY table_line,
+          lt_cat    TYPE SORTED TABLE OF lty_cat WITH UNIQUE KEY autyp,
+          ls_cat    TYPE lty_cat,
+          lv_lines  TYPE i,
+          lv_sub    TYPE c LENGTH 30,
+          lv_open   TYPE ty_num,
+          lv_new    TYPE ty_num,
+          lv_open_m TYPE ty_num,
+          lv_new_m  TYPE ty_num.
+
+    CLEAR: mt_werks_manuf, mv_pp_manuf_ok.
+    SELECT objnr autyp werks erdat FROM aufk INTO TABLE lt_order
+      PACKAGE SIZE 5000
+      WHERE autyp IN ('10', '30', '40').
+      DESCRIBE TABLE lt_order LINES lv_lines.
+      CLEAR lt_closed.
+      IF lv_lines > 0.
+        SELECT objnr FROM jest INTO TABLE lt_jest
+          FOR ALL ENTRIES IN lt_order
+          WHERE objnr = lt_order-objnr
+            AND stat  IN ('I0012', 'I0045', 'I0046', 'I0076')
+            AND inact = space.
+        LOOP AT lt_jest INTO ls_jest.
+          INSERT ls_jest-objnr INTO TABLE lt_closed.
+        ENDLOOP.
+      ENDIF.
+      LOOP AT lt_order INTO ls_order.
+        CLEAR ls_cat.
+        ls_cat-autyp = ls_order-autyp.
+        READ TABLE lt_closed TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_order-objnr.
+        IF sy-subrc <> 0.
+          ls_cat-cnt_open = 1.
+        ENDIF.
+        IF ls_order-erdat BETWEEN mv_datfr AND mv_datto.
+          ls_cat-cnt_new = 1.
+          IF ls_order-autyp <> '30' AND ls_order-werks IS NOT INITIAL.
+            INSERT ls_order-werks INTO TABLE mt_werks_manuf.
+          ENDIF.
+        ENDIF.
+        COLLECT ls_cat INTO lt_cat.
+      ENDLOOP.
+    ENDSELECT.
+
+    LOOP AT lt_cat INTO ls_cat.
+      IF ls_cat-autyp = '30'.
+        lv_open_m = ls_cat-cnt_open.
+        lv_new_m  = ls_cat-cnt_new.
+      ELSE.
+        lv_open = lv_open + ls_cat-cnt_open.
+        lv_new  = lv_new + ls_cat-cnt_new.
+        lv_sub  = ls_cat-autyp.
+        set_b( iv_fkey = 'D13' iv_sub = lv_sub iv_val = ls_cat-cnt_open ).
+        set_c( iv_fkey = 'D13' iv_sub = lv_sub iv_total = ls_cat-cnt_new ).
+      ENDIF.
+    ENDLOOP.
+    set_b( iv_fkey = 'Q24' iv_val = lv_open ).
+    set_c( iv_fkey = 'Q24' iv_total = lv_new ).
+    set_b( iv_fkey = 'D13' iv_val = lv_open ).
+    set_c( iv_fkey = 'D13' iv_total = lv_new ).
+    set_c( iv_fkey = 'Q25' iv_total = lv_new_m ).
+    set_b( iv_fkey = 'D14' iv_val = lv_open_m ).
+    mv_pp_manuf_ok = gc_x.
+  ENDMETHOD.
+
+* Detail D15: inspection lots created in the period (QALS-ENSTEHDAT)
+  METHOD step_pp_qals.
+    DATA: lv_cnt   TYPE i,
+          lv_total TYPE ty_num.
+
+    SELECT COUNT( * ) FROM qals INTO lv_cnt
+      WHERE enstehdat BETWEEN mv_datfr AND mv_datto.
+    lv_total = lv_cnt.
+    set_c( iv_fkey = 'D15' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Detail D18: work centers (CRHD object type A, SAP-defined) of the plants
+* counted in row 27
+  METHOD step_pp_crhd.
+    TYPES: BEGIN OF lty_crhd,
+             werks TYPE crhd-werks,
+           END OF lty_crhd.
+    DATA: lt_crhd TYPE STANDARD TABLE OF lty_crhd,
+          ls_crhd TYPE lty_crhd,
+          lv_cnt  TYPE ty_num.
+
+    IF mv_base_ok IS INITIAL.
+      RETURN.
+    ENDIF.
+    counted_plants( ).
+    SELECT werks FROM crhd INTO TABLE lt_crhd
+      WHERE objty = 'A'.
+    LOOP AT lt_crhd INTO ls_crhd.
+      READ TABLE mt_werks_cnt TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_crhd-werks.
+      IF sy-subrc = 0.
+        lv_cnt = lv_cnt + 1.
+      ENDIF.
+    ENDLOOP.
+    set_b( iv_fkey = 'D18' iv_val = lv_cnt ).
+  ENDMETHOD.
+
+* Plants counted in row 27: plants (T001W) whose valuation area belongs to an
+* active company code (T001K). Customizing, read completely; computed once
+  METHOD counted_plants.
+    TYPES: BEGIN OF lty_t001w,
+             werks TYPE t001w-werks,
+             bwkey TYPE t001w-bwkey,
+           END OF lty_t001w,
+           BEGIN OF lty_t001k,
+             bwkey TYPE t001k-bwkey,
+             bukrs TYPE t001k-bukrs,
+           END OF lty_t001k.
+    DATA: lt_t001w TYPE STANDARD TABLE OF lty_t001w,
+          ls_t001w TYPE lty_t001w,
+          lt_t001k TYPE SORTED TABLE OF lty_t001k WITH UNIQUE KEY bwkey,
+          ls_t001k TYPE lty_t001k.
+
+    IF mv_werks_cnt_ok = gc_x.
+      RETURN.
+    ENDIF.
+    CLEAR mt_werks_cnt.
+    SELECT werks bwkey FROM t001w INTO TABLE lt_t001w.
+    SELECT bwkey bukrs FROM t001k INTO TABLE lt_t001k.
+    LOOP AT lt_t001w INTO ls_t001w.
+      READ TABLE lt_t001k INTO ls_t001k WITH TABLE KEY bwkey = ls_t001w-bwkey.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+      READ TABLE mt_bukrs_act TRANSPORTING NO FIELDS WITH TABLE KEY table_line = ls_t001k-bukrs.
+      IF sy-subrc = 0.
+        INSERT ls_t001w-werks INTO TABLE mt_werks_cnt.
+      ENDIF.
+    ENDLOOP.
+    mv_werks_cnt_ok = gc_x.
+  ENDMETHOD.
+
 * Rows 7 and 9: union of the FI set with the SD set (sold-to parties of sales
 * orders) and the MM set (vendors of purchase orders). Built only if both
 * source steps succeeded; otherwise the row stays "not collected" or "error"
@@ -1875,6 +2057,10 @@ CLASS lcl_output DEFINITION FINAL.
       RETURNING value(rv_text) TYPE string.
     METHODS domain_text
       IMPORTING iv_domain      TYPE c
+                iv_value       TYPE c
+      RETURNING value(rv_text) TYPE string.
+    METHODS rollname_text
+      IMPORTING iv_rollname    TYPE c
                 iv_value       TYPE c
       RETURNING value(rv_text) TYPE string.
     METHODS cell
@@ -2252,18 +2438,13 @@ CLASS lcl_output IMPLEMENTATION.
           lv_land1 TYPE t042z-land1,
           lv_zlsch TYPE t042z-zlsch,
           lv_text1 TYPE t042z-text1,
-          lv_domname TYPE dd04l-domname,
           lv_value TYPE c LENGTH 1.
 
     CASE iv_fkey.
       WHEN 'D10'.                                 " sub key: purchasing document category
-* The domain of data element EBSTYP is read from the dictionary, not assumed
-        SELECT SINGLE domname FROM dd04l INTO lv_domname
-          WHERE rollname = 'EBSTYP'
-            AND as4local = 'A'
-            AND as4vers  = '0000'.
-        lv_value = iv_sub.
-        rv_text = domain_text( iv_domain = lv_domname iv_value = lv_value ).
+        rv_text = rollname_text( iv_rollname = 'EBSTYP' iv_value = iv_sub ).
+      WHEN 'D13'.                                 " sub key: order category
+        rv_text = rollname_text( iv_rollname = 'AUFTYP' iv_value = iv_sub ).
       WHEN 'D07' OR 'D08' OR 'D09'.               " sub key: SD document category ("M X" = cancelled)
         lv_value = iv_sub.
         rv_text = domain_text( iv_domain = 'VBTYP' iv_value = lv_value ).
@@ -2309,6 +2490,22 @@ CLASS lcl_output IMPLEMENTATION.
         AND domvalue_l = lv_value.
     ENDSELECT.
     rv_text = lv_ddtext.
+  ENDMETHOD.
+
+* Fixed value text via a data element: its domain is read from the dictionary
+* (DD04L), not assumed
+  METHOD rollname_text.
+    DATA: lv_rollname TYPE dd04l-rollname,
+          lv_domname  TYPE dd04l-domname.
+
+    lv_rollname = iv_rollname.
+    SELECT SINGLE domname FROM dd04l INTO lv_domname
+      WHERE rollname = lv_rollname
+        AND as4local = 'A'
+        AND as4vers  = '0000'.
+    IF sy-subrc = 0.
+      rv_text = domain_text( iv_domain = lv_domname iv_value = iv_value ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD add_info.

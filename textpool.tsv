@@ -199,6 +199,9 @@ I	G05	Assets	Anlagen
 I	G06	Sales	Vertrieb
 I	G07	Purchasing	Einkauf
 I	G08	Inventory	Bestandsführung
+I	G09	Production	Produktion
+I	G10	Maintenance	Instandhaltung
+I	G11	Quality	Qualitätsmanagement
 I	G12	Warehouse	Lagerverwaltung
 I	G13	Banking	Bankverkehr
 I	G16	Financials	Finanzwesen
@@ -226,8 +229,16 @@ I	D11	Vendor invoices (logistics invoice verification)	Lieferantenrechnungen (Lo
 I	E11	RBKP entered in the period (CPUDT), status posted (RBSTAT 5)	RBKP im Zeitraum erfasst (CPUDT), Status gebucht (RBSTAT 5)
 I	D12	Material documents	Materialbelege
 I	E12	MKPF entered in the period (CPUDT)	MKPF im Zeitraum erfasst (CPUDT)
+I	D13	Production / process orders: open (value), created (total)	Fertigungs-/Prozessaufträge: offen (Wert), angelegt (Summe)
+I	E13	AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period	AUFK Auftragstyp 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST); angelegt = ERDAT im Zeitraum
+I	D14	Open maintenance orders	Offene Instandhaltungsaufträge
+I	E14	AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST)	AUFK Auftragstyp 30 ohne aktiven Status LIEF, TABG, ABGS, LÖVM (JEST)
+I	D15	Inspection lots created	Angelegte Prüflose
+I	E15	QALS with lot creation date (ENSTEHDAT) in the period	QALS mit Anlagedatum des Loses (ENSTEHDAT) im Zeitraum
 I	D16	Transfer orders created	Angelegte Transportaufträge
 I	E16	LTAK with creation date (BDATU) in the period	LTAK mit Anlagedatum (BDATU) im Zeitraum
+I	D18	Work centers	Arbeitsplätze
+I	E18	CRHD object type A (work center) of the plants counted in row 27	CRHD Objekttyp A (Arbeitsplatz) der in Zeile 27 gezählten Werke
 I	D19	House banks of the active company codes	Hausbanken der aktiven Buchungskreise
 I	E19	T012 rows of the active company codes	T012-Sätze der aktiven Buchungskreise
 I	D20	House bank accounts of the active company codes	Hausbankkonten der aktiven Buchungskreise
