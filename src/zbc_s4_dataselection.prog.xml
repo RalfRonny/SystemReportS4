@@ -30,6 +30,12 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D04</KEY>
+     <ENTRY>Materials with goods movements in the period</ENTRY>
+     <LENGTH>44</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D05</KEY>
      <ENTRY>Profit centers valid today</ENTRY>
      <LENGTH>26</LENGTH>
@@ -57,6 +63,30 @@
      <KEY>D09</KEY>
      <ENTRY>Billing documents per category</ENTRY>
      <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D10</KEY>
+     <ENTRY>Purchasing documents per category</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D11</KEY>
+     <ENTRY>Vendor invoices (logistics invoice verification)</ENTRY>
+     <LENGTH>49</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D12</KEY>
+     <ENTRY>Material documents</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D16</KEY>
+     <ENTRY>Transfer orders created</ENTRY>
+     <LENGTH>27</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -168,6 +198,12 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>E04</KEY>
+     <ENTRY>Distinct materials (MSEG) of the material documents entered in the period (MKPF-CPUDT)</ENTRY>
+     <LENGTH>86</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>E05</KEY>
      <ENTRY>CEPC records valid today (DATAB &lt;= today &lt;= DATBI)</ENTRY>
      <LENGTH>50</LENGTH>
@@ -195,6 +231,30 @@
      <KEY>E09</KEY>
      <ENTRY>VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)</ENTRY>
      <LENGTH>98</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E10</KEY>
+     <ENTRY>EKKO created in the period (AEDAT), per purchasing document category (BSTYP)</ENTRY>
+     <LENGTH>76</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E11</KEY>
+     <ENTRY>RBKP entered in the period (CPUDT), status posted (RBSTAT 5)</ENTRY>
+     <LENGTH>60</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E12</KEY>
+     <ENTRY>MKPF entered in the period (CPUDT)</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E16</KEY>
+     <ENTRY>LTAK with creation date (BDATU) in the period</ENTRY>
+     <LENGTH>45</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -261,6 +321,24 @@
      <KEY>G06</KEY>
      <ENTRY>Sales</ENTRY>
      <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G07</KEY>
+     <ENTRY>Purchasing</ENTRY>
+     <LENGTH>10</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G08</KEY>
+     <ENTRY>Inventory</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G12</KEY>
+     <ENTRY>Warehouse</ENTRY>
+     <LENGTH>15</LENGTH>
     </item>
     <item>
      <ID>I</ID>

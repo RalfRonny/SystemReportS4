@@ -197,6 +197,9 @@ I	G03	Materials	Materialien
 I	G04	Controlling	Controlling
 I	G05	Assets	Anlagen
 I	G06	Sales	Vertrieb
+I	G07	Purchasing	Einkauf
+I	G08	Inventory	Bestandsführung
+I	G12	Warehouse	Lagerverwaltung
 I	G13	Banking	Bankverkehr
 I	G16	Financials	Finanzwesen
 I	D01	All company codes	Alle Buchungskreise
@@ -205,6 +208,8 @@ I	D02	G/L accounts at company-code level	Sachkonten auf Buchungskreisebene
 I	E02	SKB1 of the active company codes without deletion flag and posting block	SKB1 der aktiven Buchungskreise ohne Löschvormerkung und Buchungssperre
 I	D03	Materials per material type	Materialien je Materialart
 I	E03	MARA without deletion flag, grouped by material type (MTART)	MARA ohne Löschvormerkung, gruppiert nach Materialart (MTART)
+I	D04	Materials with goods movements in the period	Materialien mit Warenbewegungen im Zeitraum
+I	E04	Distinct materials (MSEG) of the material documents entered in the period (MKPF-CPUDT)	Eindeutige Materialien (MSEG) der im Zeitraum erfassten Materialbelege (MKPF-CPUDT)
 I	D05	Profit centers valid today	Heute gültige Profitcenter
 I	E05	CEPC records valid today (DATAB <= today <= DATBI)	Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI)
 I	D06	Asset sub-numbers	Anlagenunternummern
@@ -215,6 +220,14 @@ I	D08	Deliveries per category	Lieferungen je Belegtyp
 I	E08	LIKP created in the period (ERDAT), per SD document category (VBTYP)	LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)
 I	D09	Billing documents per category	Fakturen je Belegtyp
 I	E09	VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)	VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO)
+I	D10	Purchasing documents per category	Einkaufsbelege je Belegtyp
+I	E10	EKKO created in the period (AEDAT), per purchasing document category (BSTYP)	EKKO im Zeitraum angelegt (AEDAT), je Einkaufsbelegtyp (BSTYP)
+I	D11	Vendor invoices (logistics invoice verification)	Lieferantenrechnungen (Logistik-Rechnungsprüfung)
+I	E11	RBKP entered in the period (CPUDT), status posted (RBSTAT 5)	RBKP im Zeitraum erfasst (CPUDT), Status gebucht (RBSTAT 5)
+I	D12	Material documents	Materialbelege
+I	E12	MKPF entered in the period (CPUDT)	MKPF im Zeitraum erfasst (CPUDT)
+I	D16	Transfer orders created	Angelegte Transportaufträge
+I	E16	LTAK with creation date (BDATU) in the period	LTAK mit Anlagedatum (BDATU) im Zeitraum
 I	D19	House banks of the active company codes	Hausbanken der aktiven Buchungskreise
 I	E19	T012 rows of the active company codes	T012-Sätze der aktiven Buchungskreise
 I	D20	House bank accounts of the active company codes	Hausbankkonten der aktiven Buchungskreise

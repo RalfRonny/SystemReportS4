@@ -297,6 +297,10 @@ msgstr "Eindeutige Kontenpläne (T001-KTOPL) der aktiven Buchungskreise"
 msgid "Distinct customers: sold-to of sales orders created in period (VBAK) or line item entered (BSID/BSAD)"
 msgstr "Eindeutige Kunden: Auftraggeber im Zeitraum angelegter Aufträge (VBAK) oder erfasster Posten (BSID/BSAD)"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E04 86, maxlen=86
+msgid "Distinct materials (MSEG) of the material documents entered in the period (MKPF-CPUDT)"
+msgstr "Eindeutige Materialien (MSEG) der im Zeitraum erfassten Materialbelege (MKPF-CPUDT)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L09 106, maxlen=106
 msgid "Distinct vendors: purchase order created in period (EKKO, BSTYP F) or line item entered (BSIK/BSAK)"
 msgstr "Eindeutige Lieferanten: im Zeitraum angelegte Bestellung (EKKO, BSTYP F) oder erfasster Posten (BSIK/BSAK)"
@@ -316,6 +320,10 @@ msgstr "Belege, nicht Positionen; kein Buchungsschlüssel fest codiert"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT Q23 17, maxlen=17
 msgid "EDI Transactions"
 msgstr "EDI-Transaktionen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E10 76, maxlen=76
+msgid "EKKO created in the period (AEDAT), per purchasing document category (BSTYP)"
+msgstr "EKKO im Zeitraum angelegt (AEDAT), je Einkaufsbelegtyp (BSTYP)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O11 12, maxlen=12
 msgid "FI documents"
@@ -398,6 +406,10 @@ msgstr "Schnittstellen (optional)"
 msgid "Interfaces and technical connections"
 msgstr "Schnittstellen und technische Verbindungen"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G08 15, maxlen=15
+msgid "Inventory"
+msgstr "Bestandsführung"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H02 8, maxlen=8
 msgid "Item"
 msgstr "Position"
@@ -409,6 +421,10 @@ msgstr "Schlüssel"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E08 68, maxlen=68
 msgid "LIKP created in the period (ERDAT), per SD document category (VBTYP)"
 msgstr "LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E16 45, maxlen=45
+msgid "LTAK with creation date (BDATU) in the period"
+msgstr "LTAK mit Anlagedatum (BDATU) im Zeitraum"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H11 8, maxlen=8
 msgid "Location"
@@ -425,6 +441,10 @@ msgstr "Anmeldesprache"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E03 61, maxlen=61
 msgid "MARA without deletion flag, grouped by material type (MTART)"
 msgstr "MARA ohne Löschvormerkung, gruppiert nach Materialart (MTART)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E12 34, maxlen=34
+msgid "MKPF entered in the period (CPUDT)"
+msgstr "MKPF im Zeitraum erfasst (CPUDT)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N12 31, maxlen=31
 msgid "Main numbers, not deactivated"
@@ -443,6 +463,7 @@ msgid "Master data"
 msgstr "Stammdaten"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O16 18, maxlen=18
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D12 18, maxlen=18
 msgid "Material documents"
 msgstr "Materialbelege"
 
@@ -453,6 +474,10 @@ msgstr "Materialien"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D03 27, maxlen=27
 msgid "Materials per material type"
 msgstr "Materialien je Materialart"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D04 44, maxlen=44
+msgid "Materials with goods movements in the period"
+msgstr "Materialien mit Warenbewegungen im Zeitraum"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT T01 5, maxlen=5
 msgid "Mode"
@@ -709,13 +734,25 @@ msgstr "Heute gültige Profitcenter"
 msgid "Purchase orders"
 msgstr "Bestellungen"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G07 10, maxlen=10
+msgid "Purchasing"
+msgstr "Einkauf"
+
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_MM, maxlen=30
 msgid "Purchasing and inventory"
 msgstr "Einkauf und Bestandsführung"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D10 33, maxlen=33
+msgid "Purchasing documents per category"
+msgstr "Einkaufsbelege je Belegtyp"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O04 24, maxlen=24
 msgid "Purchasing organizations"
 msgstr "Einkaufsorganisationen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E11 60, maxlen=60
+msgid "RBKP entered in the period (CPUDT), status posted (RBSTAT 5)"
+msgstr "RBKP im Zeitraum erfasst (CPUDT), Status gebucht (RBSTAT 5)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E21 87, maxlen=87
 msgid "REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method"
@@ -853,6 +890,10 @@ msgstr "Summe im Zeitraum"
 msgid "Transfer orders"
 msgstr "Transportaufträge"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D16 27, maxlen=27
+msgid "Transfer orders created"
+msgstr "Angelegte Transportaufträge"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H32 4, maxlen=4
 msgid "Type"
 msgstr "Typ"
@@ -890,6 +931,10 @@ msgstr "Wert"
 msgid "Vendor invoices"
 msgstr "Lieferantenrechnungen"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D11 49, maxlen=49
+msgid "Vendor invoices (logistics invoice verification)"
+msgstr "Lieferantenrechnungen (Logistik-Rechnungsprüfung)"
+
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_V4, maxlen=30
 msgid "View: Details"
 msgstr "Sicht: Details"
@@ -913,6 +958,10 @@ msgstr "Sicht: Fragebogen"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N26 29, maxlen=29
 msgid "WM warehouse numbers assigned"
 msgstr "Zugeordnete WM-Lagernummern"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G12 15, maxlen=15
+msgid "Warehouse"
+msgstr "Lagerverwaltung"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT S03 6, maxlen=6
 msgid "error"

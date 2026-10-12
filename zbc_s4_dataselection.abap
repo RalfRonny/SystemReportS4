@@ -230,15 +230,15 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'L' iv_from = 18 iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 6  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'G' iv_from = 13 iv_to = 13 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 8  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'G' iv_from = 12 iv_to = 13 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 5  iv_to = 9  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 12 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 5  iv_to = 9  CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 12 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 16 iv_to = 16 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 19 iv_to = 21 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'E' iv_from = 27 iv_to = 27 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
@@ -480,7 +480,8 @@ CLASS lcl_collector DEFINITION FINAL.
            ty_vkorg_t TYPE HASHED TABLE OF vkorg WITH UNIQUE KEY table_line,
            ty_vtweg_t TYPE HASHED TABLE OF vtweg WITH UNIQUE KEY table_line,
            ty_spart_t TYPE HASHED TABLE OF spart WITH UNIQUE KEY table_line,
-           ty_waers_t TYPE HASHED TABLE OF waers WITH UNIQUE KEY table_line.
+           ty_waers_t TYPE HASHED TABLE OF waers WITH UNIQUE KEY table_line,
+           ty_ekorg_t TYPE HASHED TABLE OF ekorg WITH UNIQUE KEY table_line.
     DATA: ms_res       TYPE ty_result,
           mv_datfr     TYPE d,
           mv_datto     TYPE d,
@@ -503,7 +504,11 @@ CLASS lcl_collector DEFINITION FINAL.
           mt_vkorg_used TYPE ty_vkorg_t,
           mt_vtweg_used TYPE ty_vtweg_t,
           mt_spart_used TYPE ty_spart_t,
-          mt_waers_sd   TYPE ty_waers_t.
+          mt_waers_sd   TYPE ty_waers_t,
+* Used purchasing organizations and document currencies of the purchase
+* orders created in the period (design 9); complete if mv_mm_vend_ok is set
+          mt_ekorg_used TYPE ty_ekorg_t,
+          mt_waers_mm   TYPE ty_waers_t.
     METHODS register.
     METHODS add_step
       IMPORTING iv_step  TYPE c
@@ -559,6 +564,12 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_sd_vbuk.
     METHODS step_sd_likp.
     METHODS step_sd_vbrk.
+    METHODS step_mm_ekko.
+    METHODS step_mm_ekpo.
+    METHODS step_mm_rbkp.
+    METHODS step_mm_mkpf.
+    METHODS step_mm_ltak.
+    METHODS step_mm_t320.
     METHODS step_derv_active.
 ENDCLASS.
 
@@ -647,11 +658,16 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D01' iv_grp = 'G01' ).
     add_detail( iv_fkey = 'D02' iv_grp = 'G02' ).
     add_detail( iv_fkey = 'D03' iv_grp = 'G03' ).
+    add_detail( iv_fkey = 'D04' iv_grp = 'G03' ).
     add_detail( iv_fkey = 'D05' iv_grp = 'G04' ).
     add_detail( iv_fkey = 'D06' iv_grp = 'G05' ).
     add_detail( iv_fkey = 'D07' iv_grp = 'G06' ).
     add_detail( iv_fkey = 'D08' iv_grp = 'G06' ).
     add_detail( iv_fkey = 'D09' iv_grp = 'G06' ).
+    add_detail( iv_fkey = 'D10' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D11' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D12' iv_grp = 'G08' ).
+    add_detail( iv_fkey = 'D16' iv_grp = 'G12' ).
     add_detail( iv_fkey = 'D19' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D20' iv_grp = 'G13' ).
     add_detail( iv_fkey = 'D21' iv_grp = 'G13' ).
@@ -678,6 +694,12 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'SD_VBUK'    iv_block = 'SD'   iv_keys = 'Q13' ).
     add_step( iv_step = 'SD_LIKP'    iv_block = 'SD'   iv_keys = 'D08' ).
     add_step( iv_step = 'SD_VBRK'    iv_block = 'SD'   iv_keys = 'D09' ).
+    add_step( iv_step = 'MM_EKKO'    iv_block = 'MM'   iv_keys = 'Q15 D10 Q09' ).
+    add_step( iv_step = 'MM_EKPO'    iv_block = 'MM'   iv_keys = 'Q15' ).
+    add_step( iv_step = 'MM_RBKP'    iv_block = 'MM'   iv_keys = 'D11' ).
+    add_step( iv_step = 'MM_MKPF'    iv_block = 'MM'   iv_keys = 'D12 D04' ).
+    add_step( iv_step = 'MM_LTAK'    iv_block = 'MM'   iv_keys = 'D16' ).
+    add_step( iv_step = 'MM_T320'    iv_block = 'MM'   iv_keys = 'Q26' ).
     add_step( iv_step = 'DERV_ACTIVE' iv_block = 'DERV' iv_keys = 'Q07 Q09' ).
   ENDMETHOD.
 
@@ -798,6 +820,18 @@ CLASS lcl_collector IMPLEMENTATION.
             step_sd_likp( ).
           WHEN 'SD_VBRK'.
             step_sd_vbrk( ).
+          WHEN 'MM_EKKO'.
+            step_mm_ekko( ).
+          WHEN 'MM_EKPO'.
+            step_mm_ekpo( ).
+          WHEN 'MM_RBKP'.
+            step_mm_rbkp( ).
+          WHEN 'MM_MKPF'.
+            step_mm_mkpf( ).
+          WHEN 'MM_LTAK'.
+            step_mm_ltak( ).
+          WHEN 'MM_T320'.
+            step_mm_t320( ).
           WHEN 'DERV_ACTIVE'.
             step_derv_active( ).
         ENDCASE.
@@ -1557,6 +1591,160 @@ CLASS lcl_collector IMPLEMENTATION.
     set_c( iv_fkey = 'D09' iv_total = lv_total ).
   ENDMETHOD.
 
+* Row 15 C, detail D10 and the MM part of row 9: one aggregated pass over the
+* purchasing documents created in the period (EKKO-AEDAT = created on).
+* Purchase orders are purchasing document category F (SAP-defined). The same
+* pass collects the purchasing organizations and document currencies of the
+* purchase orders for the organization view (design 5: one pass per table)
+  METHOD step_mm_ekko.
+    TYPES: BEGIN OF lty_grp,
+             bstyp TYPE ekko-bstyp,
+             lifnr TYPE ekko-lifnr,
+             ekorg TYPE ekko-ekorg,
+             waers TYPE ekko-waers,
+             cnt   TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_cat,
+             bstyp TYPE ekko-bstyp,
+             cnt   TYPE ty_num,
+           END OF lty_cat.
+    DATA: lt_grp    TYPE STANDARD TABLE OF lty_grp,
+          ls_grp    TYPE lty_grp,
+          lt_cat    TYPE SORTED TABLE OF lty_cat WITH UNIQUE KEY bstyp,
+          ls_cat    TYPE lty_cat,
+          lv_sub    TYPE c LENGTH 30,
+          lv_orders TYPE ty_num,
+          lv_total  TYPE ty_num.
+
+    CLEAR: mt_lifnr_mm, mt_ekorg_used, mt_waers_mm, mv_mm_vend_ok.
+    SELECT bstyp lifnr ekorg waers COUNT( * ) FROM ekko INTO TABLE lt_grp
+      PACKAGE SIZE 50000
+      WHERE aedat BETWEEN mv_datfr AND mv_datto
+      GROUP BY bstyp lifnr ekorg waers.
+      LOOP AT lt_grp INTO ls_grp.
+        ls_cat-bstyp = ls_grp-bstyp.
+        ls_cat-cnt   = ls_grp-cnt.
+        COLLECT ls_cat INTO lt_cat.
+        IF ls_grp-bstyp = 'F'.
+          IF ls_grp-lifnr IS NOT INITIAL.
+            INSERT ls_grp-lifnr INTO TABLE mt_lifnr_mm.
+          ENDIF.
+          INSERT ls_grp-ekorg INTO TABLE mt_ekorg_used.
+          INSERT ls_grp-waers INTO TABLE mt_waers_mm.
+        ENDIF.
+      ENDLOOP.
+    ENDSELECT.
+
+    LOOP AT lt_cat INTO ls_cat.
+      lv_total = lv_total + ls_cat-cnt.
+      IF ls_cat-bstyp = 'F'.
+        lv_orders = ls_cat-cnt.
+      ENDIF.
+      lv_sub = ls_cat-bstyp.
+      IF lv_sub IS INITIAL.
+        lv_sub = '-'.                           " sub key space is the header row
+      ENDIF.
+      set_c( iv_fkey = 'D10' iv_sub = lv_sub iv_total = ls_cat-cnt ).
+    ENDLOOP.
+    set_c( iv_fkey = 'Q15' iv_total = lv_orders ).
+    set_c( iv_fkey = 'D10' iv_total = lv_total ).
+    mv_mm_vend_ok = gc_x.
+  ENDMETHOD.
+
+* Row 15 B: open purchase orders today = distinct purchase orders with at least
+* one item of category F without delivery-completed and deletion indicator
+  METHOD step_mm_ekpo.
+    DATA: lv_cnt  TYPE i,
+          lv_open TYPE ty_num.
+
+    SELECT COUNT( DISTINCT ebeln ) FROM ekpo INTO lv_cnt
+      WHERE bstyp = 'F'
+        AND elikz = space
+        AND loekz = space.
+    lv_open = lv_cnt.
+    set_b( iv_fkey = 'Q15' iv_val = lv_open ).
+  ENDMETHOD.
+
+* Detail D11: vendor invoices of logistics invoice verification entered in the
+* period (RBKP-CPUDT), status posted (RBSTAT 5, SAP-defined)
+  METHOD step_mm_rbkp.
+    DATA: lv_cnt   TYPE i,
+          lv_total TYPE ty_num.
+
+    SELECT COUNT( * ) FROM rbkp INTO lv_cnt
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto
+        AND rbstat = '5'.
+    lv_total = lv_cnt.
+    set_c( iv_fkey = 'D11' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Details D12 and D04: material documents entered in the period (MKPF-CPUDT)
+* and the distinct materials of their items (MSEG by document key). One pass
+* over MKPF in packages; FOR ALL ENTRIES only with a non-empty driver and
+* removes duplicate materials per package itself
+  METHOD step_mm_mkpf.
+    TYPES: BEGIN OF lty_doc,
+             mblnr TYPE mkpf-mblnr,
+             mjahr TYPE mkpf-mjahr,
+           END OF lty_doc.
+    DATA: lt_doc   TYPE STANDARD TABLE OF lty_doc,
+          lt_matnr TYPE STANDARD TABLE OF matnr,
+          lv_matnr TYPE matnr,
+          lt_mat   TYPE HASHED TABLE OF matnr WITH UNIQUE KEY table_line,
+          lv_lines TYPE i,
+          lv_docs  TYPE ty_num,
+          lv_mats  TYPE ty_num.
+
+    SELECT mblnr mjahr FROM mkpf INTO TABLE lt_doc
+      PACKAGE SIZE 5000
+      WHERE cpudt BETWEEN mv_datfr AND mv_datto.
+      DESCRIBE TABLE lt_doc LINES lv_lines.
+      lv_docs = lv_docs + lv_lines.
+      IF lv_lines > 0.
+        SELECT matnr FROM mseg INTO TABLE lt_matnr
+          FOR ALL ENTRIES IN lt_doc
+          WHERE mblnr = lt_doc-mblnr
+            AND mjahr = lt_doc-mjahr.
+        LOOP AT lt_matnr INTO lv_matnr.
+          IF lv_matnr IS NOT INITIAL.
+            INSERT lv_matnr INTO TABLE lt_mat.
+          ENDIF.
+        ENDLOOP.
+      ENDIF.
+    ENDSELECT.
+    DESCRIBE TABLE lt_mat LINES lv_lines.
+    lv_mats = lv_lines.
+    set_c( iv_fkey = 'D12' iv_total = lv_docs ).
+    set_b( iv_fkey = 'D04' iv_val = lv_mats ).    " distinct count over the period, no average
+  ENDMETHOD.
+
+* Detail D16: WM transfer orders created in the period (LTAK-BDATU)
+  METHOD step_mm_ltak.
+    DATA: lv_cnt   TYPE i,
+          lv_total TYPE ty_num.
+
+    SELECT COUNT( * ) FROM ltak INTO lv_cnt
+      WHERE bdatu BETWEEN mv_datfr AND mv_datto.
+    lv_total = lv_cnt.
+    set_c( iv_fkey = 'D16' iv_total = lv_total ).
+  ENDMETHOD.
+
+* Row 26: distinct WM warehouse numbers assigned to a plant / storage location
+* (T320, customizing: read completely, aggregated in ABAP). Without WM: 0
+  METHOD step_mm_t320.
+    DATA: lt_lgnum TYPE STANDARD TABLE OF lgnum,
+          lv_lines TYPE i,
+          lv_whs   TYPE ty_num.
+
+    SELECT lgnum FROM t320 INTO TABLE lt_lgnum.
+    DELETE lt_lgnum WHERE table_line IS INITIAL.
+    SORT lt_lgnum.
+    DELETE ADJACENT DUPLICATES FROM lt_lgnum.
+    DESCRIBE TABLE lt_lgnum LINES lv_lines.
+    lv_whs = lv_lines.
+    set_b( iv_fkey = 'Q26' iv_val = lv_whs ).
+  ENDMETHOD.
+
 * Rows 7 and 9: union of the FI set with the SD set (sold-to parties of sales
 * orders) and the MM set (vendors of purchase orders). Built only if both
 * source steps succeeded; otherwise the row stays "not collected" or "error"
@@ -2064,9 +2252,18 @@ CLASS lcl_output IMPLEMENTATION.
           lv_land1 TYPE t042z-land1,
           lv_zlsch TYPE t042z-zlsch,
           lv_text1 TYPE t042z-text1,
+          lv_domname TYPE dd04l-domname,
           lv_value TYPE c LENGTH 1.
 
     CASE iv_fkey.
+      WHEN 'D10'.                                 " sub key: purchasing document category
+* The domain of data element EBSTYP is read from the dictionary, not assumed
+        SELECT SINGLE domname FROM dd04l INTO lv_domname
+          WHERE rollname = 'EBSTYP'
+            AND as4local = 'A'
+            AND as4vers  = '0000'.
+        lv_value = iv_sub.
+        rv_text = domain_text( iv_domain = lv_domname iv_value = lv_value ).
       WHEN 'D07' OR 'D08' OR 'D09'.               " sub key: SD document category ("M X" = cancelled)
         lv_value = iv_sub.
         rv_text = domain_text( iv_domain = 'VBTYP' iv_value = lv_value ).

@@ -230,7 +230,7 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Company codes | All company codes | T001 count; one sub row per company code with value 1 = active, 0 = not active (name from T001 at display time) |
 | G/L | G/L accounts at company-code level | SKB1 of active company codes without deletion flag and posting block |
 | Materials | Materials per material type | MARA without deletion flag, grouped by MTART, text T134T |
-| Materials | Materials with goods movements in the period | Material documents entered in the period (MKPF, CPUDT) → distinct materials of their items (MSEG via document key) |
+| Materials | Materials with goods movements in the period | Material documents entered in the period (MKPF, CPUDT) → distinct materials of their items (MSEG via document key, FOR ALL ENTRIES per MKPF package). Distinct count over the whole period, shown as value without average |
 | Controlling | Profit centers | CEPC records valid today |
 | Assets | Asset sub-numbers | ANLA with sub-number ≠ 0000, not deactivated |
 | Sales | Sales documents per category | VBAK created in the period, grouped by VBTYP (A inquiry, B quotation, C order, E scheduling agreement, G contract, H returns, I free-of-charge order) |
@@ -474,7 +474,7 @@ The report must compile unchanged on every instance. Therefore it uses only clas
 | CSKS, CEPC | DATAB, DATBI, ERSDA |
 | ANLA | ANLN2 = 0000 for main numbers, DEAKT, ERDAT |
 | VBUK | GBSTK value "C" = completely processed – resolved: VBUK has VBTYP (SD document category); LIKP-VBTYP, VBRK-VBTYP/FKSTO exist |
-| EKPO | ELIKZ / LOEKZ values for "open" |
+| EKPO | ELIKZ / LOEKZ values for "open" – resolved: EKPO has BSTYP, ELIKZ, LOEKZ (both initial = open); RBKP-RBSTAT 5 = posted; LTAK-BDATU = creation date; EKKO-AEDAT = created on |
 | AUFK, JEST | AUTYP values 10 / 30 / 40, ERDAT, OBJNR, WERKS; JEST STAT, INACT; system status IDs for DLV, TECO, CLSD, DLFL |
 | TBSL | Fields for account type, debit/credit and payment-transaction flag |
 | T042Z | ~~Field for the classification "bank transfer"~~ – resolved: no own field; classification = indicators XSCHK, XWECH, XWANF, XWECS, XSWEC (all initial = bank transfer), direction XEINZ (see row 20) |
@@ -698,6 +698,19 @@ Further Dnn/Enn/Gnn entries are added with the detail figures of section 8.2.
 | E08 | LIKP created in the period (ERDAT), per SD document category (VBTYP) | LIKP im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP) |
 | D09 | Billing documents per category | Fakturen je Belegtyp |
 | E09 | VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO) | VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO) |
+| G07 | Purchasing | Einkauf |
+| G08 | Inventory | Bestandsführung |
+| G12 | Warehouse | Lagerverwaltung |
+| D04 | Materials with goods movements in the period | Materialien mit Warenbewegungen im Zeitraum |
+| E04 | Distinct materials (MSEG) of the material documents entered in the period (MKPF-CPUDT) | Eindeutige Materialien (MSEG) der im Zeitraum erfassten Materialbelege (MKPF-CPUDT) |
+| D10 | Purchasing documents per category | Einkaufsbelege je Belegtyp |
+| E10 | EKKO created in the period (AEDAT), per purchasing document category (BSTYP) | EKKO im Zeitraum angelegt (AEDAT), je Einkaufsbelegtyp (BSTYP) |
+| D11 | Vendor invoices (logistics invoice verification) | Lieferantenrechnungen (Logistik-Rechnungsprüfung) |
+| E11 | RBKP entered in the period (CPUDT), status posted (RBSTAT 5) | RBKP im Zeitraum erfasst (CPUDT), Status gebucht (RBSTAT 5) |
+| D12 | Material documents | Materialbelege |
+| E12 | MKPF entered in the period (CPUDT) | MKPF im Zeitraum erfasst (CPUDT) |
+| D16 | Transfer orders created | Angelegte Transportaufträge |
+| E16 | LTAK with creation date (BDATU) in the period | LTAK mit Anlagedatum (BDATU) im Zeitraum |
 | G13 | Banking | Bankverkehr |
 | G16 | Financials | Finanzwesen |
 | D19 | House banks of the active company codes | Hausbanken der aktiven Buchungskreise |
@@ -732,7 +745,9 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
 | D27 | FI documents entered | G16 Financials | FI |
 
-Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, T042Z for D21, domain fixed values of BSTAT for D27).
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, T042Z for D21, domain fixed values of BSTAT for D27).
+
+Row 26 (WM warehouse numbers, T320) is collected in block MM together with the transfer orders (D16).
 
 ### C.3 INFO labels (D80–D90)
 
