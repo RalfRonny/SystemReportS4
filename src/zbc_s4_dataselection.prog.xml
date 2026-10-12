@@ -1,0 +1,1347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PROGDIR>
+    <NAME>ZBC_S4_DATASELECTION</NAME>
+    <SUBC>1</SUBC>
+    <RLOAD>E</RLOAD>
+    <FIXPT>X</FIXPT>
+    <UCCHECK>X</UCCHECK>
+   </PROGDIR>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>D01</KEY>
+     <ENTRY>All company codes</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D02</KEY>
+     <ENTRY>G/L accounts at company-code level</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D03</KEY>
+     <ENTRY>Materials per material type</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D05</KEY>
+     <ENTRY>Profit centers valid today</ENTRY>
+     <LENGTH>26</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D06</KEY>
+     <ENTRY>Asset sub-numbers</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D80</KEY>
+     <ENTRY>System ID</ENTRY>
+     <LENGTH>9</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D81</KEY>
+     <ENTRY>Client</ENTRY>
+     <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D82</KEY>
+     <ENTRY>SAP release</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D83</KEY>
+     <ENTRY>Database system</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D84</KEY>
+     <ENTRY>Logon language</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D85</KEY>
+     <ENTRY>Analysis period</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D86</KEY>
+     <ENTRY>Months</ENTRY>
+     <LENGTH>6</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D87</KEY>
+     <ENTRY>Run start</ENTRY>
+     <LENGTH>10</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D88</KEY>
+     <ENTRY>Run end</ENTRY>
+     <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D89</KEY>
+     <ENTRY>User</ENTRY>
+     <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D90</KEY>
+     <ENTRY>Result stored at</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E01</KEY>
+     <ENTRY>T001 count; per company code: 1 = active, 0 = not active</ENTRY>
+     <LENGTH>57</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E02</KEY>
+     <ENTRY>SKB1 of the active company codes without deletion flag and posting block</ENTRY>
+     <LENGTH>72</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E03</KEY>
+     <ENTRY>MARA without deletion flag, grouped by material type (MTART)</ENTRY>
+     <LENGTH>61</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E05</KEY>
+     <ENTRY>CEPC records valid today (DATAB &lt;= today &lt;= DATBI)</ENTRY>
+     <LENGTH>50</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E06</KEY>
+     <ENTRY>ANLA with sub-number other than 0000, not deactivated</ENTRY>
+     <LENGTH>53</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G00</KEY>
+     <ENTRY>INFO</ENTRY>
+     <LENGTH>4</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G01</KEY>
+     <ENTRY>Company codes</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G02</KEY>
+     <ENTRY>G/L accounts</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G03</KEY>
+     <ENTRY>Materials</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G04</KEY>
+     <ENTRY>Controlling</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>G05</KEY>
+     <ENTRY>Assets</ENTRY>
+     <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H01</KEY>
+     <ENTRY>Row</ENTRY>
+     <LENGTH>5</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H02</KEY>
+     <ENTRY>Item</ENTRY>
+     <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H03</KEY>
+     <ENTRY>Current number</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H04</KEY>
+     <ENTRY>Avg added/month</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H05</KEY>
+     <ENTRY>Basis</ENTRY>
+     <LENGTH>5</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H06</KEY>
+     <ENTRY>Total in period</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H07</KEY>
+     <ENTRY>Definition</ENTRY>
+     <LENGTH>10</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H08</KEY>
+     <ENTRY>Remark</ENTRY>
+     <LENGTH>9</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H10</KEY>
+     <ENTRY>Name of the Plant</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H11</KEY>
+     <ENTRY>Location</ENTRY>
+     <LENGTH>8</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H12</KEY>
+     <ENTRY>Approx Revenue</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H13</KEY>
+     <ENTRY>On SAP</ENTRY>
+     <LENGTH>6</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H14</KEY>
+     <ENTRY>On Legacy System</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H15</KEY>
+     <ENTRY>City</ENTRY>
+     <LENGTH>4</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H16</KEY>
+     <ENTRY>Company code</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H17</KEY>
+     <ENTRY>Counted in row 27</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H18</KEY>
+     <ENTRY>Manufacturing</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H20</KEY>
+     <ENTRY>Group</ENTRY>
+     <LENGTH>6</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H21</KEY>
+     <ENTRY>Key</ENTRY>
+     <LENGTH>9</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H22</KEY>
+     <ENTRY>Description</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H23</KEY>
+     <ENTRY>Value</ENTRY>
+     <LENGTH>5</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H24</KEY>
+     <ENTRY>Used in period</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H30</KEY>
+     <ENTRY>Object type</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H31</KEY>
+     <ENTRY>Name</ENTRY>
+     <LENGTH>4</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H32</KEY>
+     <ENTRY>Type</ENTRY>
+     <LENGTH>4</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>H33</KEY>
+     <ENTRY>IDocs in period</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>I01</KEY>
+     <ENTRY>RFC destination</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>I02</KEY>
+     <ENTRY>Logical system</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>I03</KEY>
+     <ENTRY>Partner profile</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>I04</KEY>
+     <ENTRY>Software component</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L03</KEY>
+     <ENTRY>Company codes (T001) with at least one FI document entered in the period (BKPF-CPUDT)</ENTRY>
+     <LENGTH>86</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L04</KEY>
+     <ENTRY>Distinct charts of accounts (T001-KTOPL) of the active company codes</ENTRY>
+     <LENGTH>68</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L05</KEY>
+     <ENTRY>B: G/L accounts (SKA1) of the charts of row 4, no deletion flag; C: SKA1 created (ERDAT) / months</ENTRY>
+     <LENGTH>104</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L06</KEY>
+     <ENTRY>B: customers (KNA1) without central deletion flag; C: KNA1 created (ERDAT) / months</ENTRY>
+     <LENGTH>83</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L07</KEY>
+     <ENTRY>Distinct customers: sold-to of sales orders created in period (VBAK) or line item entered (BSID/BSAD)</ENTRY>
+     <LENGTH>104</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L08</KEY>
+     <ENTRY>B: vendors (LFA1) without central deletion flag; C: LFA1 created (ERDAT) / months</ENTRY>
+     <LENGTH>86</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L09</KEY>
+     <ENTRY>Distinct vendors: purchase order created in period (EKKO, BSTYP F) or line item entered (BSIK/BSAK)</ENTRY>
+     <LENGTH>106</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L10</KEY>
+     <ENTRY>B: materials (MARA) without client-level deletion flag; C: MARA created (ERSDA) / months</ENTRY>
+     <LENGTH>96</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L11</KEY>
+     <ENTRY>B: cost centers (CSKS) valid today; C: cost centers first created in period (min. ERSDA) / months</ENTRY>
+     <LENGTH>108</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L12</KEY>
+     <ENTRY>B: main asset numbers (ANLA, sub-number 0000) not deactivated; C: created (ERDAT) / months</ENTRY>
+     <LENGTH>96</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L13</KEY>
+     <ENTRY>B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months</ENTRY>
+     <LENGTH>103</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L14</KEY>
+     <ENTRY>C: distinct FI documents (BSID/BSAD, CPUDT) with a customer credit payment line (TBSL attributes) / months</ENTRY>
+     <LENGTH>106</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L15</KEY>
+     <ENTRY>B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months</ENTRY>
+     <LENGTH>109</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L16</KEY>
+     <ENTRY>Not derivable generically from SAP standard tables</ENTRY>
+     <LENGTH>52</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L18</KEY>
+     <ENTRY>Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes</ENTRY>
+     <LENGTH>94</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L19</KEY>
+     <ENTRY>C: checks in the check register (PAYR) with payment date in period, not voided / months</ENTRY>
+     <LENGTH>87</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L20</KEY>
+     <ENTRY>C: payments of productive payment runs (REGUH) with a bank transfer payment method (T042Z) / months</ENTRY>
+     <LENGTH>99</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L21</KEY>
+     <ENTRY>Not derivable generically from SAP standard tables</ENTRY>
+     <LENGTH>52</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L22</KEY>
+     <ENTRY>Not derivable generically from SAP standard tables</ENTRY>
+     <LENGTH>52</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L23</KEY>
+     <ENTRY>B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months</ENTRY>
+     <LENGTH>104</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L24</KEY>
+     <ENTRY>B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months</ENTRY>
+     <LENGTH>112</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L25</KEY>
+     <ENTRY>C: orders of order category 30 (maintenance and service) created (AUFK-ERDAT) / months</ENTRY>
+     <LENGTH>90</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L26</KEY>
+     <ENTRY>Distinct WM warehouse numbers assigned to a plant / storage location (T320)</ENTRY>
+     <LENGTH>75</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L27</KEY>
+     <ENTRY>Plants (T001W) whose valuation area belongs to an active company code (T001K)</ENTRY>
+     <LENGTH>82</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L28</KEY>
+     <ENTRY>B: dialog users valid today, not admin-locked, logon in period; C: dialog users created (ERDAT) / months</ENTRY>
+     <LENGTH>104</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>L29</KEY>
+     <ENTRY>HR data is not read (personal data, separate authorizations)</ENTRY>
+     <LENGTH>68</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M01</KEY>
+     <ENTRY>Period start must be the first day of a month</ENTRY>
+     <LENGTH>45</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M02</KEY>
+     <ENTRY>Period end must be the last day of a month</ENTRY>
+     <LENGTH>42</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M03</KEY>
+     <ENTRY>Period must end before the current month</ENTRY>
+     <LENGTH>43</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M04</KEY>
+     <ENTRY>Period end lies before period start</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M05</KEY>
+     <ENTRY>No stored result found</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M06</KEY>
+     <ENTRY>Result stored</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M07</KEY>
+     <ENTRY>Stored result deleted</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M08</KEY>
+     <ENTRY>Figure could not be determined:</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M09</KEY>
+     <ENTRY>Stored result from</ENTRY>
+     <LENGTH>26</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M10</KEY>
+     <ENTRY>Data collection finished</ENTRY>
+     <LENGTH>24</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M11</KEY>
+     <ENTRY>Text IDs missing in logon language:</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M12</KEY>
+     <ENTRY>Runtime of block (seconds):</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M13</KEY>
+     <ENTRY>Stored result is from an older program version - please collect again</ENTRY>
+     <LENGTH>79</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N03</KEY>
+     <ENTRY>Active: FI documents in period</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N04</KEY>
+     <ENTRY>Of active company codes</ENTRY>
+     <LENGTH>26</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N05</KEY>
+     <ENTRY>Chart level, no deletion flag</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N06</KEY>
+     <ENTRY>No deletion flag; C = created/month</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N07</KEY>
+     <ENTRY>Order or FI line item in period</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N08</KEY>
+     <ENTRY>No deletion flag; C = created/month</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N09</KEY>
+     <ENTRY>PO or FI line item in period</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N10</KEY>
+     <ENTRY>No deletion flag; C = created/month</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N11</KEY>
+     <ENTRY>Valid today; C = first created/month</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N12</KEY>
+     <ENTRY>Main numbers, not deactivated</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N13</KEY>
+     <ENTRY>B = open now; C = created/month</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N14</KEY>
+     <ENTRY>Payment documents created/month</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N15</KEY>
+     <ENTRY>B = open now; C = created/month</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N16</KEY>
+     <ENTRY>Not derivable</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N18</KEY>
+     <ENTRY>Distinct banks of house banks</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N19</KEY>
+     <ENTRY>Check register, not voided</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N20</KEY>
+     <ENTRY>Payment runs, bank transfer methods</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N21</KEY>
+     <ENTRY>Not derivable</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N22</KEY>
+     <ENTRY>Not derivable</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N23</KEY>
+     <ENTRY>B = partner profiles; C = IDocs/month</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N24</KEY>
+     <ENTRY>B = open now; C = created/month</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N25</KEY>
+     <ENTRY>Created/month incl. service orders</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N26</KEY>
+     <ENTRY>WM warehouse numbers assigned</ENTRY>
+     <LENGTH>29</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N27</KEY>
+     <ENTRY>Plants of active company codes</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N28</KEY>
+     <ENTRY>Dialog users, logon in period</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>N29</KEY>
+     <ENTRY>Not read (personal data)</ENTRY>
+     <LENGTH>29</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O01</KEY>
+     <ENTRY>G5 Countries</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O02</KEY>
+     <ENTRY>G6 Languages</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O03</KEY>
+     <ENTRY>G7 Currencies</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O04</KEY>
+     <ENTRY>Purchasing organizations</ENTRY>
+     <LENGTH>24</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O05</KEY>
+     <ENTRY>Sales organizations</ENTRY>
+     <LENGTH>22</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O06</KEY>
+     <ENTRY>Distribution channels</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O07</KEY>
+     <ENTRY>Divisions</ENTRY>
+     <LENGTH>9</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O08</KEY>
+     <ENTRY>Application usage</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O11</KEY>
+     <ENTRY>FI documents</ENTRY>
+     <LENGTH>12</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O12</KEY>
+     <ENTRY>Sales orders</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O13</KEY>
+     <ENTRY>Deliveries</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O14</KEY>
+     <ENTRY>Billing documents</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O15</KEY>
+     <ENTRY>Purchase orders</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O16</KEY>
+     <ENTRY>Material documents</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O17</KEY>
+     <ENTRY>Vendor invoices</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O18</KEY>
+     <ENTRY>Production/process orders</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O19</KEY>
+     <ENTRY>Maintenance/service orders</ENTRY>
+     <LENGTH>32</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O20</KEY>
+     <ENTRY>Inspection lots</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O21</KEY>
+     <ENTRY>Transfer orders</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>O22</KEY>
+     <ENTRY>IDocs</ENTRY>
+     <LENGTH>5</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q03</KEY>
+     <ENTRY>No of Company Codes</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q04</KEY>
+     <ENTRY>No. of Chart of Accounts</ENTRY>
+     <LENGTH>24</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q05</KEY>
+     <ENTRY>No. of G/L Accounts</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q06</KEY>
+     <ENTRY>No. of Customers</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q07</KEY>
+     <ENTRY>Active Customers</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q08</KEY>
+     <ENTRY>No. of Vendors</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q09</KEY>
+     <ENTRY>Active Vendors</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q10</KEY>
+     <ENTRY>No. of Products (SKUs)</ENTRY>
+     <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q11</KEY>
+     <ENTRY>No. of Departments/Cost Centers</ENTRY>
+     <LENGTH>32</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q12</KEY>
+     <ENTRY>No. of Assets</ENTRY>
+     <LENGTH>14</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q13</KEY>
+     <ENTRY>No. of Customer Orders</ENTRY>
+     <LENGTH>22</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q14</KEY>
+     <ENTRY>No. of Customer Payments Received</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q15</KEY>
+     <ENTRY>No. of Purchase Orders</ENTRY>
+     <LENGTH>22</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q16</KEY>
+     <ENTRY>No. of P-Card Transactions</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q17</KEY>
+     <ENTRY>Banking</ENTRY>
+     <LENGTH>11</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q18</KEY>
+     <ENTRY>- No. of Banks used</ENTRY>
+     <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q19</KEY>
+     <ENTRY>- Checks Sent</ENTRY>
+     <LENGTH>20</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q20</KEY>
+     <ENTRY>- EFT</ENTRY>
+     <LENGTH>31</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q21</KEY>
+     <ENTRY>- Checks Received</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q22</KEY>
+     <ENTRY>- No. of Lock Boxes</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q23</KEY>
+     <ENTRY>EDI Transactions</ENTRY>
+     <LENGTH>17</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q24</KEY>
+     <ENTRY>No. of Production Orders</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q25</KEY>
+     <ENTRY>No. of Maintenance Orders</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q26</KEY>
+     <ENTRY>No of Warehouses</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q27</KEY>
+     <ENTRY>No of Plants/Manufacturing facilities*</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q28</KEY>
+     <ENTRY>No. of SAP Users</ENTRY>
+     <LENGTH>19</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>Q29</KEY>
+     <ENTRY>No. of Employees</ENTRY>
+     <LENGTH>18</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R03</KEY>
+     <ENTRY>All company codes in the details</ENTRY>
+     <LENGTH>34</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R04</KEY>
+     <ENTRY>Charts not assigned to an active company code are not counted</ENTRY>
+     <LENGTH>61</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R05</KEY>
+     <ENTRY>Company-code level (SKB1) in the details</ENTRY>
+     <LENGTH>40</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R06</KEY>
+     <ENTRY>No restriction by account group</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R07</KEY>
+     <ENTRY>Union of both sources built in ABAP</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R08</KEY>
+     <ENTRY>No restriction by account group</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R09</KEY>
+     <ENTRY>Union of both sources built in ABAP</ENTRY>
+     <LENGTH>35</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R10</KEY>
+     <ENTRY>Per material type and materials with goods movements in the details</ENTRY>
+     <LENGTH>67</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R11</KEY>
+     <ENTRY>New validity records of existing cost centers are not counted as additions</ENTRY>
+     <LENGTH>74</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R12</KEY>
+     <ENTRY>Sub-numbers in the details</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R13</KEY>
+     <ENTRY>Other sales document categories in the details</ENTRY>
+     <LENGTH>46</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R14</KEY>
+     <ENTRY>Documents, not line items; no posting key hard-coded</ENTRY>
+     <LENGTH>61</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R15</KEY>
+     <ENTRY>Contracts, scheduling agreements and RFQs excluded by BSTYP</ENTRY>
+     <LENGTH>61</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R18</KEY>
+     <ENTRY>House banks have no creation date</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R19</KEY>
+     <ENTRY>Checks from payment runs and manual checks</ENTRY>
+     <LENGTH>43</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R20</KEY>
+     <ENTRY>Manual payments outside payment runs are not included</ENTRY>
+     <LENGTH>59</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R23</KEY>
+     <ENTRY>ALE IDocs (logical systems) and message types in the details</ENTRY>
+     <LENGTH>64</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R24</KEY>
+     <ENTRY>Split by order category in the details</ENTRY>
+     <LENGTH>42</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R25</KEY>
+     <ENTRY>Open maintenance orders in the details</ENTRY>
+     <LENGTH>45</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R26</KEY>
+     <ENTRY>Systems without WM: 0</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R27</KEY>
+     <ENTRY>Plants have no creation date</ENTRY>
+     <LENGTH>28</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>R28</KEY>
+     <ENTRY>Not a license measurement</ENTRY>
+     <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>S01</KEY>
+     <ENTRY>N/A</ENTRY>
+     <LENGTH>3</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>S02</KEY>
+     <ENTRY>not collected</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>S03</KEY>
+     <ENTRY>error</ENTRY>
+     <LENGTH>6</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T01</KEY>
+     <ENTRY>Mode</ENTRY>
+     <LENGTH>5</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T02</KEY>
+     <ENTRY>Analysis period</ENTRY>
+     <LENGTH>15</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T03</KEY>
+     <ENTRY>Scope</ENTRY>
+     <LENGTH>6</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T04</KEY>
+     <ENTRY>Output</ENTRY>
+     <LENGTH>7</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>V01</KEY>
+     <ENTRY>Data &amp; Org Questionnaire - rows 3 to 29 (paste B:C)</ENTRY>
+     <LENGTH>51</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>V02</KEY>
+     <ENTRY>Plant table (paste F:J)</ENTRY>
+     <LENGTH>27</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>V03</KEY>
+     <ENTRY>Organization - G5 to G7 and organizational units</ENTRY>
+     <LENGTH>51</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>V04</KEY>
+     <ENTRY>Supporting figures and definitions</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>V05</KEY>
+     <ENTRY>Interfaces and technical connections</ENTRY>
+     <LENGTH>42</LENGTH>
+    </item>
+    <item>
+     <ID>R</ID>
+     <ENTRY>S/4HANA evaluation - Data &amp; Org Questionnaire figures</ENTRY>
+     <LENGTH>70</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_COLL</KEY>
+     <ENTRY>Collect data</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_DATFR</KEY>
+     <ENTRY>Period from (1st of month)</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_DATTO</KEY>
+     <ENTRY>Period to (end of month)</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_DEL</KEY>
+     <ENTRY>Delete stored result</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_FI</KEY>
+     <ENTRY>Financials</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_INTF</KEY>
+     <ENTRY>Interfaces (optional)</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_MD</KEY>
+     <ENTRY>Master data</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_MM</KEY>
+     <ENTRY>Purchasing and inventory</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_ORG</KEY>
+     <ENTRY>Organization and technical</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_PP</KEY>
+     <ENTRY>Production and maintenance</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SD</KEY>
+     <ENTRY>Sales and distribution</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_SHOW</KEY>
+     <ENTRY>Display stored result</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_STORE</KEY>
+     <ENTRY>Store result</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_V1</KEY>
+     <ENTRY>View: Questionnaire</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_V2</KEY>
+     <ENTRY>View: Plants</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_V3</KEY>
+     <ENTRY>View: Organization</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_V4</KEY>
+     <ENTRY>View: Details</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_V5</KEY>
+     <ENTRY>View: Interfaces</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+   </TPOOL>
+  </asx:values>
+ </asx:abap>
+</abapGit>

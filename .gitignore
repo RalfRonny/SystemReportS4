@@ -1,0 +1,4 @@
+# abapGit offline zips are build artifacts (git archive), never commit them
+*.zip
+.claude/settings.local.json
+__pycache__/

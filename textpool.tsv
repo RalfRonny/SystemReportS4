@@ -1,0 +1,223 @@
+ID	KEY	EN	DE
+R		S/4HANA evaluation - Data & Org Questionnaire figures	S/4HANA-Bewertung - Kennzahlen Data & Org Questionnaire
+S	P_COLL	Collect data	Daten ermitteln
+S	P_SHOW	Display stored result	Ergebnis anzeigen
+S	P_DEL	Delete stored result	Ergebnis löschen
+S	P_DATFR	Period from (1st of month)	Zeitraum von (Monatserster)
+S	P_DATTO	Period to (end of month)	Zeitraum bis (Monatsletzter)
+S	P_MD	Master data	Stammdaten
+S	P_FI	Financials	Finanzwesen
+S	P_SD	Sales and distribution	Vertrieb
+S	P_MM	Purchasing and inventory	Einkauf und Bestandsführung
+S	P_PP	Production and maintenance	Produktion und Instandhaltung
+S	P_ORG	Organization and technical	Organisation und Technik
+S	P_INTF	Interfaces (optional)	Schnittstellen (optional)
+S	P_STORE	Store result	Ergebnis speichern
+S	P_V1	View: Questionnaire	Sicht: Fragebogen
+S	P_V2	View: Plants	Sicht: Werke
+S	P_V3	View: Organization	Sicht: Organisation
+S	P_V4	View: Details	Sicht: Details
+S	P_V5	View: Interfaces	Sicht: Schnittstellen
+I	T01	Mode	Modus
+I	T02	Analysis period	Analysezeitraum
+I	T03	Scope	Umfang
+I	T04	Output	Ausgabe
+I	V01	Data & Org Questionnaire - rows 3 to 29 (paste B:C)	Fragebogen - Zeilen 3 bis 29 (Einfügen B:C)
+I	V02	Plant table (paste F:J)	Werkstabelle (Einfügen F:J)
+I	V03	Organization - G5 to G7 and organizational units	Organisation - G5 bis G7 und Organisationseinheiten
+I	V04	Supporting figures and definitions	Ergänzende Kennzahlen und Definitionen
+I	V05	Interfaces and technical connections	Schnittstellen und technische Verbindungen
+I	H01	Row	Zeile
+I	H02	Item	Position
+I	H03	Current number	Aktueller Bestand
+I	H04	Avg added/month	Ø neu pro Monat
+I	H05	Basis	Basis
+I	H06	Total in period	Summe im Zeitraum
+I	H07	Definition	Definition
+I	H08	Remark	Bemerkung
+I	H10	Name of the Plant	Werk
+I	H11	Location	Standort
+I	H12	Approx Revenue	Umsatz (ca.)
+I	H13	On SAP	Im SAP
+I	H14	On Legacy System	Im Altsystem
+I	H15	City	Ort
+I	H16	Company code	Buchungskreis
+I	H17	Counted in row 27	Gezählt in Zeile 27
+I	H18	Manufacturing	Fertigung
+I	H20	Group	Gruppe
+I	H21	Key	Schlüssel
+I	H22	Description	Bezeichnung
+I	H23	Value	Wert
+I	H24	Used in period	Im Zeitraum genutzt
+I	H30	Object type	Objekttyp
+I	H31	Name	Name
+I	H32	Type	Typ
+I	H33	IDocs in period	IDocs im Zeitraum
+I	M01	Period start must be the first day of a month	Zeitraumbeginn muss ein Monatserster sein
+I	M02	Period end must be the last day of a month	Zeitraumende muss ein Monatsletzter sein
+I	M03	Period must end before the current month	Zeitraum muss vor dem laufenden Monat enden
+I	M04	Period end lies before period start	Zeitraumende liegt vor Zeitraumbeginn
+I	M05	No stored result found	Kein gespeichertes Ergebnis vorhanden
+I	M06	Result stored	Ergebnis gespeichert
+I	M07	Stored result deleted	Gespeichertes Ergebnis gelöscht
+I	M08	Figure could not be determined:	Kennzahl nicht ermittelbar:
+I	M09	Stored result from	Gespeichertes Ergebnis vom
+I	M10	Data collection finished	Datenermittlung beendet
+I	M11	Text IDs missing in logon language:	Text-IDs fehlen in Anmeldesprache:
+I	M12	Runtime of block (seconds):	Laufzeit Block (Sekunden):
+I	M13	Stored result is from an older program version - please collect again	Gespeichertes Ergebnis stammt aus älterer Programmversion - bitte neu ermitteln
+I	S01	N/A	N/A
+I	S02	not collected	nicht ermittelt
+I	S03	error	Fehler
+I	Q03	No of Company Codes	Anzahl Buchungskreise
+I	Q04	No. of Chart of Accounts	Anzahl Kontenpläne
+I	Q05	No. of G/L Accounts	Anzahl Sachkonten
+I	Q06	No. of Customers	Anzahl Kunden
+I	Q07	Active Customers	Aktive Kunden
+I	Q08	No. of Vendors	Anzahl Lieferanten
+I	Q09	Active Vendors	Aktive Lieferanten
+I	Q10	No. of Products (SKUs)	Anzahl Materialien (SKUs)
+I	Q11	No. of Departments/Cost Centers	Anzahl Abteilungen/Kostenstellen
+I	Q12	No. of Assets	Anzahl Anlagen
+I	Q13	No. of Customer Orders	Anzahl Kundenaufträge
+I	Q14	No. of Customer Payments Received	Anzahl Zahlungseingänge Kunden
+I	Q15	No. of Purchase Orders	Anzahl Bestellungen
+I	Q16	No. of P-Card Transactions	Anzahl P-Card-Transaktionen
+I	Q17	Banking	Bankverkehr
+I	Q18	- No. of Banks used	- Anzahl genutzter Banken
+I	Q19	- Checks Sent	- Versendete Schecks
+I	Q20	- EFT	- Elektronische Zahlungen (EFT)
+I	Q21	- Checks Received	- Erhaltene Schecks
+I	Q22	- No. of Lock Boxes	- Anzahl Lockboxen
+I	Q23	EDI Transactions	EDI-Transaktionen
+I	Q24	No. of Production Orders	Anzahl Fertigungs-/Prozessaufträge
+I	Q25	No. of Maintenance Orders	Anzahl Instandhaltungsaufträge
+I	Q26	No of Warehouses	Anzahl Lagernummern
+I	Q27	No of Plants/Manufacturing facilities*	Anzahl Werke/Produktionsstandorte*
+I	Q28	No. of SAP Users	Anzahl SAP-Benutzer
+I	Q29	No. of Employees	Anzahl Mitarbeiter
+I	N03	Active: FI documents in period	Aktiv: FI-Belege im Zeitraum
+I	N04	Of active company codes	Der aktiven Buchungskreise
+I	N05	Chart level, no deletion flag	Kontenplanebene, ohne Löschvormerkung
+I	N06	No deletion flag; C = created/month	Ohne Löschvormerkung; C = neu/Monat
+I	N07	Order or FI line item in period	Auftrag oder FI-Posten im Zeitraum
+I	N08	No deletion flag; C = created/month	Ohne Löschvormerkung; C = neu/Monat
+I	N09	PO or FI line item in period	Bestellung oder FI-Posten im Zeitraum
+I	N10	No deletion flag; C = created/month	Ohne Löschvormerkung; C = neu/Monat
+I	N11	Valid today; C = first created/month	Heute gültig; C = erstmals neu/Monat
+I	N12	Main numbers, not deactivated	Hauptnummern, nicht deaktiviert
+I	N13	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N14	Payment documents created/month	Zahlungsbelege angelegt/Monat
+I	N15	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N16	Not derivable	Nicht ermittelbar
+I	N18	Distinct banks of house banks	Banken der Hausbanken (eindeutig)
+I	N19	Check register, not voided	Scheckregister, nicht entwertet
+I	N20	Payment runs, bank transfer methods	Zahllauf, Zahlwege Überweisung
+I	N21	Not derivable	Nicht ermittelbar
+I	N22	Not derivable	Nicht ermittelbar
+I	N23	B = partner profiles; C = IDocs/month	B = Partnervereinb.; C = IDocs/Monat
+I	N24	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N25	Created/month incl. service orders	Angelegt/Monat inkl. Serviceaufträge
+I	N26	WM warehouse numbers assigned	Zugeordnete WM-Lagernummern
+I	N27	Plants of active company codes	Werke aktiver Buchungskreise
+I	N28	Dialog users, logon in period	Dialogbenutzer, Anmeldung im Zeitraum
+I	N29	Not read (personal data)	Nicht gelesen (Personaldaten)
+I	L03	Company codes (T001) with at least one FI document entered in the period (BKPF-CPUDT)	Buchungskreise (T001) mit mindestens einem im Zeitraum erfassten FI-Beleg (BKPF-CPUDT)
+I	L04	Distinct charts of accounts (T001-KTOPL) of the active company codes	Eindeutige Kontenpläne (T001-KTOPL) der aktiven Buchungskreise
+I	L05	B: G/L accounts (SKA1) of the charts of row 4, no deletion flag; C: SKA1 created (ERDAT) / months	B: Sachkonten (SKA1) der Kontenpläne aus Zeile 4 ohne Löschvormerkung; C: SKA1 angelegt (ERDAT) / Monate
+I	L06	B: customers (KNA1) without central deletion flag; C: KNA1 created (ERDAT) / months	B: Kunden (KNA1) ohne zentrale Löschvormerkung; C: KNA1 angelegt (ERDAT) / Monate
+I	L07	Distinct customers: sold-to of sales orders created in period (VBAK) or line item entered (BSID/BSAD)	Eindeutige Kunden: Auftraggeber im Zeitraum angelegter Aufträge (VBAK) oder erfasster Posten (BSID/BSAD)
+I	L08	B: vendors (LFA1) without central deletion flag; C: LFA1 created (ERDAT) / months	B: Lieferanten (LFA1) ohne zentrale Löschvormerkung; C: LFA1 angelegt (ERDAT) / Monate
+I	L09	Distinct vendors: purchase order created in period (EKKO, BSTYP F) or line item entered (BSIK/BSAK)	Eindeutige Lieferanten: im Zeitraum angelegte Bestellung (EKKO, BSTYP F) oder erfasster Posten (BSIK/BSAK)
+I	L10	B: materials (MARA) without client-level deletion flag; C: MARA created (ERSDA) / months	B: Materialien (MARA) ohne Löschvormerkung auf Mandantenebene; C: MARA angelegt (ERSDA) / Monate
+I	L11	B: cost centers (CSKS) valid today; C: cost centers first created in period (min. ERSDA) / months	B: heute gültige Kostenstellen (CSKS); C: im Zeitraum erstmals angelegte Kostenstellen (min. ERSDA) / Monate
+I	L12	B: main asset numbers (ANLA, sub-number 0000) not deactivated; C: created (ERDAT) / months	B: Anlagenhauptnummern (ANLA, Unternummer 0000), nicht deaktiviert; C: angelegt (ERDAT) / Monate
+I	L13	B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months	B: offene Kundenaufträge (VBUK, VBTYP C, GBSTK ungleich C); C: angelegte Aufträge (VBAK-ERDAT) / Monate
+I	L14	C: distinct FI documents (BSID/BSAD, CPUDT) with a customer credit payment line (TBSL attributes) / months	C: eindeutige FI-Belege (BSID/BSAD, CPUDT) mit Kunden-Habenposition Zahlung (TBSL-Attribute) / Monate
+I	L15	B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months	B: offene Bestellungen (EKPO, BSTYP F, ohne ELIKZ und LOEKZ); C: angelegte Bestellungen (EKKO-AEDAT) / Monate
+I	L16	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
+I	L18	Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes	Eindeutige Banken (Bankland + Bankschlüssel) der Hausbanken (T012) der aktiven Buchungskreise
+I	L19	C: checks in the check register (PAYR) with payment date in period, not voided / months	C: Schecks im Scheckregister (PAYR) mit Zahldatum im Zeitraum, nicht entwertet / Monate
+I	L20	C: payments of productive payment runs (REGUH) with a bank transfer payment method (T042Z) / months	C: Zahlungen produktiver Zahlläufe (REGUH) mit Zahlweg Überweisung (T042Z) / Monate
+I	L21	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
+I	L22	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
+I	L23	B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months	B: Partnervereinbarungszeilen (EDP13/EDP21) ohne log. Systeme; C: solche IDocs angelegt (EDIDC) / Monate
+I	L24	B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months	B: offene Aufträge Typ 10/40 (ohne LIEF, TABG, ABGS, LÖVM); C: Aufträge Typ 10/40 angelegt (AUFK-ERDAT) / Monate
+I	L25	C: orders of order category 30 (maintenance and service) created (AUFK-ERDAT) / months	C: Aufträge mit Auftragstyp 30 (Instandhaltung und Service) angelegt (AUFK-ERDAT) / Monate
+I	L26	Distinct WM warehouse numbers assigned to a plant / storage location (T320)	Eindeutige WM-Lagernummern mit Zuordnung zu Werk / Lagerort (T320)
+I	L27	Plants (T001W) whose valuation area belongs to an active company code (T001K)	Werke (T001W), deren Bewertungskreis zu einem aktiven Buchungskreis gehört (T001K)
+I	L28	B: dialog users valid today, not admin-locked, logon in period; C: dialog users created (ERDAT) / months	B: heute gültige, nicht gesperrte Dialogbenutzer mit Anmeldung im Zeitraum; C: angelegt (ERDAT) / Monate
+I	L29	HR data is not read (personal data, separate authorizations)	HR-Daten werden nicht gelesen (Personaldaten, eigene Berechtigungen)
+I	R03	All company codes in the details	Alle Buchungskreise in den Details
+I	R04	Charts not assigned to an active company code are not counted	Kontenpläne ohne aktiven Buchungskreis werden nicht gezählt
+I	R05	Company-code level (SKB1) in the details	Buchungskreisebene (SKB1) in den Details
+I	R06	No restriction by account group	Keine Einschränkung nach Kontengruppe
+I	R07	Union of both sources built in ABAP	Vereinigung beider Quellen in ABAP
+I	R08	No restriction by account group	Keine Einschränkung nach Kontengruppe
+I	R09	Union of both sources built in ABAP	Vereinigung beider Quellen in ABAP
+I	R10	Per material type and materials with goods movements in the details	Je Materialart und Materialien mit Warenbewegungen in den Details
+I	R11	New validity records of existing cost centers are not counted as additions	Neue Gültigkeitsabschnitte bestehender Kostenstellen zählen nicht als neu
+I	R12	Sub-numbers in the details	Unternummern in den Details
+I	R13	Other sales document categories in the details	Andere Vertriebsbelegtypen in den Details
+I	R14	Documents, not line items; no posting key hard-coded	Belege, nicht Positionen; kein Buchungsschlüssel fest codiert
+I	R15	Contracts, scheduling agreements and RFQs excluded by BSTYP	Kontrakte, Lieferpläne und Anfragen über BSTYP ausgeschlossen
+I	R18	House banks have no creation date	Hausbanken haben kein Anlagedatum
+I	R19	Checks from payment runs and manual checks	Schecks aus Zahlläufen und manuelle Schecks
+I	R20	Manual payments outside payment runs are not included	Manuelle Zahlungen außerhalb von Zahlläufen nicht enthalten
+I	R23	ALE IDocs (logical systems) and message types in the details	ALE-IDocs (logische Systeme) und Nachrichtentypen in den Details
+I	R24	Split by order category in the details	Aufteilung nach Auftragstyp in den Details
+I	R25	Open maintenance orders in the details	Offene Instandhaltungsaufträge in den Details
+I	R26	Systems without WM: 0	Systeme ohne WM: 0
+I	R27	Plants have no creation date	Werke haben kein Anlagedatum
+I	R28	Not a license measurement	Keine Lizenzvermessung
+I	O01	G5 Countries	G5 Länder
+I	O02	G6 Languages	G6 Sprachen
+I	O03	G7 Currencies	G7 Währungen
+I	O04	Purchasing organizations	Einkaufsorganisationen
+I	O05	Sales organizations	Verkaufsorganisationen
+I	O06	Distribution channels	Vertriebswege
+I	O07	Divisions	Sparten
+I	O08	Application usage	Anwendungsnutzung
+I	O11	FI documents	FI-Belege
+I	O12	Sales orders	Kundenaufträge
+I	O13	Deliveries	Lieferungen
+I	O14	Billing documents	Fakturen
+I	O15	Purchase orders	Bestellungen
+I	O16	Material documents	Materialbelege
+I	O17	Vendor invoices	Lieferantenrechnungen
+I	O18	Production/process orders	Fertigungs-/Prozessaufträge
+I	O19	Maintenance/service orders	Instandhaltungs-/Serviceaufträge
+I	O20	Inspection lots	Prüflose
+I	O21	Transfer orders	Transportaufträge
+I	O22	IDocs	IDocs
+I	G00	INFO	INFO
+I	G01	Company codes	Buchungskreise
+I	G02	G/L accounts	Sachkonten
+I	G03	Materials	Materialien
+I	G04	Controlling	Controlling
+I	G05	Assets	Anlagen
+I	D01	All company codes	Alle Buchungskreise
+I	E01	T001 count; per company code: 1 = active, 0 = not active	Anzahl T001; je Buchungskreis: 1 = aktiv, 0 = nicht aktiv
+I	D02	G/L accounts at company-code level	Sachkonten auf Buchungskreisebene
+I	E02	SKB1 of the active company codes without deletion flag and posting block	SKB1 der aktiven Buchungskreise ohne Löschvormerkung und Buchungssperre
+I	D03	Materials per material type	Materialien je Materialart
+I	E03	MARA without deletion flag, grouped by material type (MTART)	MARA ohne Löschvormerkung, gruppiert nach Materialart (MTART)
+I	D05	Profit centers valid today	Heute gültige Profitcenter
+I	E05	CEPC records valid today (DATAB <= today <= DATBI)	Heute gültige CEPC-Sätze (DATAB <= heute <= DATBI)
+I	D06	Asset sub-numbers	Anlagenunternummern
+I	E06	ANLA with sub-number other than 0000, not deactivated	ANLA mit Unternummer ungleich 0000, nicht deaktiviert
+I	D80	System ID	System-ID
+I	D81	Client	Mandant
+I	D82	SAP release	SAP-Release
+I	D83	Database system	Datenbanksystem
+I	D84	Logon language	Anmeldesprache
+I	D85	Analysis period	Analysezeitraum
+I	D86	Months	Monate
+I	D87	Run start	Laufbeginn
+I	D88	Run end	Laufende
+I	D89	User	Benutzer
+I	D90	Result stored at	Ergebnis gespeichert am
+I	I01	RFC destination	RFC-Destination
+I	I02	Logical system	Logisches System
+I	I03	Partner profile	Partnervereinbarung
+I	I04	Software component	Softwarekomponente
