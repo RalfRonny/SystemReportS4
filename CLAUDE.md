@@ -34,6 +34,10 @@ To add a figure: write a `step_*` method (one pass per large table, aggregate on
 
 **Output (`lcl_output`).** Five views built from the stored result: SALV fullscreen in dialog, WRITE list into the spool in background. The result holds keys and numbers only. Texts, including sub-key texts (`sub_text`, e.g. T134T, T001), are resolved at display time in the display language. Value columns are character fields, so "N/A" and numbers share one column.
 
+## User documentation
+
+`docs/evaluation_rules.html` is the English reference of all evaluation rules for the user, published as artifact https://claude.ai/artifact/5WNEVaLeZ2TVZ1o8Vih9LX. When a figure definition changes, update it together with the design and republish it.
+
 ## Verification
 
 Without an SAP system, changes are checked by independent review against the ABAP rules, the ECC 6.0 DDIC and the design. What the real system already activated is the reliable baseline.
