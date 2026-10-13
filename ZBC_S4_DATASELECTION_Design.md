@@ -171,7 +171,7 @@ G5–G7 are one list each, because the target cells are single (merged) cells. A
 ### 6.4 View 4 – Details and definitions
 
 Columns: Group | Item | Value | Avg added/month | Total in period | Definition | Remark.
-The groups are INFO (run metadata, see 8.1) and all supporting figures (see 8.2).
+The groups are INFO (run metadata, see 8.1) and all supporting figures (see 8.2). The supporting figures are sorted by group, within a group by detail number, each header before its sub rows, so every group appears once.
 
 ### 6.5 View 5 – Interfaces (optional)
 
@@ -186,7 +186,7 @@ B = column "Current number", C = column "Average added per Month/Year". "Created
 | Row | Item | B (Current number) | C (Average added per month) | Remark |
 |---|---|---|---|---|
 | 3 | No of Company Codes | Active company codes: company codes (T001) with at least one FI document entered in the period (BKPF, CPUDT). Existence check per company code (one row is enough). | N/A | All company codes in the details. |
-| 4 | No. of Chart of Accounts | Distinct charts of accounts (T001-KTOPL) of the active company codes | N/A | SAP-delivered charts that are not assigned to an active company code are not counted. Country and group charts of accounts in the details (D28, D29). |
+| 4 | No. of Chart of Accounts | Distinct charts of accounts (T001-KTOPL) of the active company codes | N/A | SAP-delivered charts that are not assigned to an active company code are not counted. Country and group charts of accounts in the details (D28, D29); view 1 adds their number and keys to the remark of row 4 at display time, e.g. "Country charts of accounts: 4 (CAFR, CAIN, CAPL, CARO); Group charts of accounts: 1 (ICLC)". |
 | 5 | No. of G/L Accounts | G/L accounts at chart-of-accounts level (SKA1) for the charts of row 4, without deletion flag | SKA1 of the same charts created (ERDAT) ÷ months | Company-code level (SKB1) in the details. |
 | 6 | No. of Customers | Customers (KNA1) without central deletion flag (LOEVM) | KNA1 created (ERDAT) ÷ months | No restriction by account group. |
 | 7 | Active Customers | Distinct customers with a sales order created in the period (VBAK, VBTYP = C, ERDAT; sold-to party) **or** a customer line item entered in the period (BSID ∪ BSAD, CPUDT) | N/A | Union is built in ABAP. |

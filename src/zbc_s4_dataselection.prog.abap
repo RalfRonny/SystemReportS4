@@ -2973,6 +2973,8 @@ CLASS lcl_output DEFINITION FINAL.
                 iv_width TYPE i
       CHANGING  ct_cols  TYPE ty_col_t.
     METHODS build_v1.
+    METHODS coa_note
+      RETURNING value(rv_note) TYPE string.
     METHODS build_v2.
     METHODS build_v3.
     METHODS build_v4.
@@ -3166,12 +3168,68 @@ CLASS lcl_output IMPLEMENTATION.
         ls_row-defin = lcl_text=>get( lv_id ).
         CONCATENATE 'R' lv_nr INTO lv_id.
         ls_row-remark = lcl_text=>get( lv_id ).
+* Row 4: country and group charts of accounts from details D28/D29
+        IF lv_nr = 4.
+          lv_text = coa_note( ).
+          IF lv_text IS NOT INITIAL.
+            CONCATENATE ls_row-remark ';' INTO ls_row-remark.
+            CONCATENATE ls_row-remark lv_text INTO ls_row-remark SEPARATED BY space.
+          ENDIF.
+        ENDIF.
         IF ls_fig-status = gc_st_err.
           CONCATENATE ls_row-remark ls_fig-errtext INTO ls_row-remark SEPARATED BY space.
           SHIFT ls_row-remark LEFT DELETING LEADING space.
         ENDIF.
       ENDIF.
       APPEND ls_row TO mt_v1.
+    ENDDO.
+  ENDMETHOD.
+
+* "Country charts of accounts: 4 (CAFR, CAIN); Group charts of accounts: 1
+* (GRP1)" from the stored details D28/D29; empty if they were not collected
+  METHOD coa_note.
+    DATA: ls_fig  TYPE ty_fig,
+          lv_fkey TYPE ty_textid,
+          lv_cnt  TYPE ty_num,
+          lv_list TYPE string,
+          lv_part TYPE string,
+          lv_text TYPE string.
+
+    DO 2 TIMES.
+      IF sy-index = 1.
+        lv_fkey = 'D28'.
+      ELSE.
+        lv_fkey = 'D29'.
+      ENDIF.
+      CLEAR ls_fig.
+      READ TABLE ms_res-figs INTO ls_fig WITH TABLE KEY fkey = lv_fkey sub = space.
+      IF sy-subrc <> 0 OR ls_fig-status <> gc_st_ok.
+        CONTINUE.
+      ENDIF.
+      lv_cnt = ls_fig-b_val.
+      CLEAR lv_list.
+      LOOP AT ms_res-figs INTO ls_fig WHERE fkey = lv_fkey AND sub IS NOT INITIAL.
+        IF lv_list IS INITIAL.
+          lv_list = ls_fig-sub.
+        ELSE.
+          CONCATENATE lv_list ',' INTO lv_list.
+          CONCATENATE lv_list ls_fig-sub INTO lv_list SEPARATED BY space.
+        ENDIF.
+      ENDLOOP.
+      lv_text = lcl_text=>get( lv_fkey ).
+      CONCATENATE lv_text ':' INTO lv_part.
+      lv_text = num( lv_cnt ).
+      CONCATENATE lv_part lv_text INTO lv_part SEPARATED BY space.
+      IF lv_list IS NOT INITIAL.
+        CONCATENATE '(' lv_list ')' INTO lv_list.
+        CONCATENATE lv_part lv_list INTO lv_part SEPARATED BY space.
+      ENDIF.
+      IF rv_note IS INITIAL.
+        rv_note = lv_part.
+      ELSE.
+        CONCATENATE rv_note ';' INTO rv_note.
+        CONCATENATE rv_note lv_part INTO rv_note SEPARATED BY space.
+      ENDIF.
     ENDDO.
   ENDMETHOD.
 
@@ -3301,6 +3359,7 @@ CLASS lcl_output IMPLEMENTATION.
   METHOD build_v4.
     DATA: ls_row   TYPE ty_v4,
           ls_fig   TYPE ty_fig,
+          lt_det   TYPE STANDARD TABLE OF ty_fig,
           ls_block TYPE ty_block,
           ls_error TYPE ty_error,
           lv_id    TYPE ty_textid,
@@ -3370,10 +3429,15 @@ CLASS lcl_output IMPLEMENTATION.
       APPEND ls_row TO mt_v4.
     ENDLOOP.
 
+* Details grouped by their group, within a group in detail order (header
+* before its sub rows)
     LOOP AT ms_res-figs INTO ls_fig.
-      IF ls_fig-fkey(1) <> 'D'.
-        CONTINUE.
+      IF ls_fig-fkey(1) = 'D'.
+        APPEND ls_fig TO lt_det.
       ENDIF.
+    ENDLOOP.
+    SORT lt_det BY grp fkey sub.
+    LOOP AT lt_det INTO ls_fig.
       CLEAR: ls_row, lv_avg.
       ls_row-grp  = lcl_text=>get( ls_fig-grp ).
       ls_row-item = lcl_text=>get( ls_fig-fkey ).
