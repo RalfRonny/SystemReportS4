@@ -70,6 +70,7 @@ I	M12	Runtime of block (seconds):	Laufzeit Block (Sekunden):
 I	M13	Stored result is from an older program version - please collect again	Gespeichertes Ergebnis stammt aus älterer Programmversion - bitte neu ermitteln
 I	M14	local	lokal
 I	M15	group	Konzern
+I	M16	(M)	(M)
 I	S01	N/A	N/A
 I	S02	not collected	nicht ermittelt
 I	S03	error	Fehler

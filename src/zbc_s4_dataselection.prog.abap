@@ -237,7 +237,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'H' iv_from = 10 iv_to = 18 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 20 iv_to = 24 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 35 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 15 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'S' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'Q' iv_from = 3  iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'N' iv_from = 3  iv_to = 16 CHANGING ct_ids = lt_ids ).
@@ -3167,6 +3167,11 @@ CLASS lcl_output IMPLEMENTATION.
           lv_avg = ls_fig-c_total / ms_res-meta-months.     " packed result: commercial rounding
         ENDIF.
         lv_text = cell( iv_na = ls_fig-c_na iv_status = ls_fig-status iv_num = lv_avg ).
+* The average is always per month: "(M)" after the number
+        IF ls_fig-c_na IS INITIAL AND ls_fig-status = gc_st_ok.
+          lv_split = lcl_text=>get( 'M16' ).
+          CONCATENATE lv_text lv_split INTO lv_text SEPARATED BY space.
+        ENDIF.
         ls_row-val_c = lv_text.
         IF ls_fig-c_na IS INITIAL.
           lv_text = cell( iv_na = space iv_status = ls_fig-status iv_num = ls_fig-c_total ).

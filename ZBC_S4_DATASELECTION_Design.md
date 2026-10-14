@@ -181,7 +181,7 @@ Columns: Object type | Name | Type | Description | Release | SP level | IDocs in
 
 ## 7. Questionnaire figures (rows 3–29)
 
-B = column "Current number", C = column "Average added per Month/Year". "Created ÷ months" always refers to the analysis period.
+B = column "Current number", C = column "Average added per Month/Year". "Created ÷ months" always refers to the analysis period. View 1 shows the average with the suffix "(M)" (per month, text M16), e.g. "2703 (M)"; N/A, "error" and "not collected" get no suffix.
 
 | Row | Item | B (Current number) | C (Average added per month) | Remark |
 |---|---|---|---|---|

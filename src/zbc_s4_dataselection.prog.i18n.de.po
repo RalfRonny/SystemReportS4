@@ -5,6 +5,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M16 3, maxlen=3
+msgid "(M)"
+msgstr "(M)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT I05 27, maxlen=27
 msgid "(no partner profile)"
 msgstr "(keine Partnervereinbarung)"
