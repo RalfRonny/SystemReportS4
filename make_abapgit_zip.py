@@ -11,6 +11,7 @@ Two steps:
      zbc_s4_dataselection.abap  -> src/zbc_s4_dataselection.prog.abap
      textpool.tsv (EN + DE)     -> src/zbc_s4_dataselection.prog.xml (TPOOL, EN)
                                    src/zbc_s4_dataselection.prog.i18n.de.po (DE, LXE)
+                                   src/zbc_s4_dataselection.prog.i18n.es.po (ES, empty)
    The text pool is checked first: every text ID and parameter used in the
    source has a text, lengths fit (text symbol 132, selection text 30, title 70),
    and one EN text has one DE translation (the .po maps source text -> translation).
@@ -145,7 +146,11 @@ def build_prog_xml(rows):
     return "\n".join(lines) + "\n"
 
 
-def build_po_de(rows):
+def build_po(rows, lang):
+    """LXE .po for one language. lang "DE" carries the translations from the
+    TSV; any other language (e.g. "ES", listed in .abapgit.xml) is exported by
+    abapGit with empty msgstr until it is translated in SAP, so it is generated
+    the same way. References of one msgid are sorted, as SAP lists them."""
     def quote(text):
         return '"' + text.replace("\\", "\\\\").replace('"', '\\"') + '"'
 
@@ -158,7 +163,8 @@ def build_po_de(rows):
             ref = f"RPT4/{PROG}/SELECT {r['KEY']}, maxlen={MAX_LEN['S']}"
         else:
             ref = f"RPT4/{PROG}/TITLE, maxlen={MAX_LEN['R']}"
-        refs.setdefault((r["EN"], r["DE"]), []).append(ref)
+        target = r["DE"] if lang == "DE" else ""
+        refs.setdefault((r["EN"], target), []).append(ref)
 
     lines = [
         "#, fuzzy",
@@ -170,7 +176,7 @@ def build_po_de(rows):
     ]
     for (en, de), ref_list in sorted(refs.items()):
         lines.append("")
-        lines += [f"#: {ref}" for ref in ref_list]
+        lines += [f"#: {ref}" for ref in sorted(ref_list)]
         lines.append(f"msgid {quote(en)}")
         lines.append(f"msgstr {quote(de)}")
     return "\n".join(lines) + "\n"
@@ -194,7 +200,8 @@ def generate():
     files = {
         f"{stem}.abap": (abap, "utf-8"),
         f"{stem}.xml": (build_prog_xml(rows), "utf-8-sig"),   # abapGit XML carries a BOM
-        f"{stem}.i18n.de.po": (build_po_de(rows), "utf-8"),
+        f"{stem}.i18n.de.po": (build_po(rows, "DE"), "utf-8"),
+        f"{stem}.i18n.es.po": (build_po(rows, "ES"), "utf-8"),
     }
     for name, (text, encoding) in files.items():
         (ROOT / "src" / name).write_text(text, encoding=encoding, newline="\n")

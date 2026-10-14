@@ -1,0 +1,1184 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M16 3, maxlen=3
+msgid "(M)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I05 27, maxlen=27
+msgid "(no partner profile)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q21 19, maxlen=19
+msgid "- Checks Received"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q19 20, maxlen=20
+msgid "- Checks Sent"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q20 31, maxlen=31
+msgid "- EFT"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q18 25, maxlen=25
+msgid "- No. of Banks used"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q22 19, maxlen=19
+msgid "- No. of Lock Boxes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M22 13, maxlen=13
+msgid "1 to 2 years"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M23 13, maxlen=13
+msgid "2 to 5 years"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R23 64, maxlen=64
+msgid "ALE IDocs (logical systems) and message types in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D23 27, maxlen=27
+msgid "ALE IDocs (partner type LS)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E06 53, maxlen=53
+msgid "ANLA with sub-number other than 0000, not deactivated"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E13 111, maxlen=111
+msgid "AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E14 73, maxlen=73
+msgid "AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q07 16, maxlen=16
+msgid "Active Customers"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q09 18, maxlen=18
+msgid "Active Vendors"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N03 30, maxlen=30
+msgid "Active: FI documents in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D01 19, maxlen=19
+msgid "All company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R03 34, maxlen=34
+msgid "All company codes in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D85 15, maxlen=15
+#: RPT4/ZBC_S4_DATASELECTION/TEXT T02 15, maxlen=15
+msgid "Analysis period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O08 17, maxlen=17
+msgid "Application usage"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H12 14, maxlen=14
+msgid "Approx Revenue"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D06 19, maxlen=19
+msgid "Asset sub-numbers"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G05 7, maxlen=7
+msgid "Assets"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H04 15, maxlen=15
+msgid "Avg added/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N13 31, maxlen=31
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N15 31, maxlen=31
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N24 31, maxlen=31
+msgid "B = open now; C = created/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N23 37, maxlen=37
+msgid "B = partner profiles; C = IDocs/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L05 104, maxlen=104
+msgid "B: G/L accounts (SKA1) of the charts of row 4, no deletion flag; C: SKA1 created (ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L11 108, maxlen=108
+msgid "B: cost centers (CSKS) valid today; C: cost centers first created in period (min. ERSDA) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L06 83, maxlen=83
+msgid "B: customers (KNA1) without central deletion flag; C: KNA1 created (ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L28 104, maxlen=104
+msgid "B: dialog users valid today, not admin-locked, logon in period; C: dialog users created (ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L12 96, maxlen=96
+msgid "B: main asset numbers (ANLA, sub-number 0000) not deactivated; C: created (ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L10 96, maxlen=96
+msgid "B: materials (MARA) without client-level deletion flag; C: MARA created (ERSDA) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L15 109, maxlen=109
+msgid "B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L24 112, maxlen=112
+msgid "B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L13 103, maxlen=103
+msgid "B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L23 104, maxlen=104
+msgid "B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L08 86, maxlen=86
+msgid "B: vendors (LFA1) without central deletion flag; C: LFA1 created (ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E27 75, maxlen=75
+msgid "BKPF entered in the period (CPUDT), per document status (BSTAT, - = normal)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G13 11, maxlen=11
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q17 11, maxlen=11
+msgid "Banking"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H05 5, maxlen=5
+msgid "Basis"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O14 17, maxlen=17
+msgid "Billing documents"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D09 30, maxlen=30
+msgid "Billing documents per category"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L19 87, maxlen=87
+msgid "C: checks in the check register (PAYR) with payment date in period, not voided / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L14 106, maxlen=106
+msgid "C: distinct FI documents (BSID/BSAD, CPUDT) with a customer credit payment line (TBSL attributes) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L25 90, maxlen=90
+msgid "C: orders of order category 30 (maintenance and service) created (AUFK-ERDAT) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L20 115, maxlen=115
+msgid "C: outgoing payments of productive payment runs (REGUH), method neither check nor bill of exchange (T042Z) / months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E05 50, maxlen=50
+msgid "CEPC records valid today (DATAB <= today <= DATBI)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E18 64, maxlen=64
+msgid "CRHD object type A (work center) of the plants counted in row 27"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N05 37, maxlen=37
+msgid "Chart level, no deletion flag"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R04 61, maxlen=61
+msgid "Charts not assigned to an active company code are not counted"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N19 31, maxlen=31
+msgid "Check register, not voided"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R19 43, maxlen=43
+msgid "Checks from payment runs and manual checks"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H15 4, maxlen=4
+msgid "City"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D81 7, maxlen=7
+msgid "Client"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_COLL, maxlen=30
+msgid "Collect data"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H16 13, maxlen=13
+msgid "Company code"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G01 14, maxlen=14
+msgid "Company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L03 86, maxlen=86
+msgid "Company codes (T001) with at least one FI document entered in the period (BKPF-CPUDT)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R05 40, maxlen=40
+msgid "Company-code level (SKB1) in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R15 61, maxlen=61
+msgid "Contracts, scheduling agreements and RFQs excluded by BSTYP"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G04 11, maxlen=11
+msgid "Controlling"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H17 19, maxlen=19
+msgid "Counted in row 27"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D28 26, maxlen=26
+msgid "Country charts of accounts"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N25 36, maxlen=36
+msgid "Created/month incl. service orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H03 17, maxlen=17
+msgid "Current number"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT V01 51, maxlen=51
+msgid "Data & Org Questionnaire - rows 3 to 29 (paste B:C)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M10 24, maxlen=24
+msgid "Data collection finished"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D83 15, maxlen=15
+msgid "Database system"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H07 10, maxlen=10
+msgid "Definition"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_DEL, maxlen=30
+msgid "Delete stored result"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O13 11, maxlen=11
+msgid "Deliveries"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D08 23, maxlen=23
+msgid "Deliveries per category"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H22 11, maxlen=11
+msgid "Description"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N28 37, maxlen=37
+msgid "Dialog users, logon in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_SHOW, maxlen=30
+msgid "Display stored result"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L26 75, maxlen=75
+msgid "Distinct WM warehouse numbers assigned to a plant / storage location (T320)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L18 94, maxlen=94
+msgid "Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N18 33, maxlen=33
+msgid "Distinct banks of house banks"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L04 68, maxlen=68
+msgid "Distinct charts of accounts (T001-KTOPL) of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L07 104, maxlen=104
+msgid "Distinct customers: sold-to of sales orders created in period (VBAK) or line item entered (BSID/BSAD)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E04 86, maxlen=86
+msgid "Distinct materials (MSEG) of the material documents entered in the period (MKPF-CPUDT)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L09 106, maxlen=106
+msgid "Distinct vendors: purchase order created in period (EKKO, BSTYP F) or line item entered (BSIK/BSAK)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O06 21, maxlen=21
+msgid "Distribution channels"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O07 9, maxlen=9
+msgid "Divisions"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R14 61, maxlen=61
+msgid "Documents, not line items; no posting key hard-coded"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G14 3, maxlen=3
+msgid "EDI"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q23 17, maxlen=17
+msgid "EDI Transactions"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E22 101, maxlen=101
+msgid "EDIDC created in the period (CREDAT); sub key direction/partner type, 1 = outbound, 2 = inbound"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E24 80, maxlen=80
+msgid "EDIDC created in the period per message type, the 10 largest; header = all IDocs"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E23 66, maxlen=66
+msgid "EDIDC created in the period whose partner is a logical system"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E10 76, maxlen=76
+msgid "EKKO created in the period (AEDAT), per purchasing document category (BSTYP)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O11 12, maxlen=12
+msgid "FI documents"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D27 20, maxlen=20
+msgid "FI documents entered"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M08 31, maxlen=31
+msgid "Figure could not be determined:"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M19 44, maxlen=44
+msgid "Final invoice posted, not delivery-completed"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_FI, maxlen=30
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G16 11, maxlen=11
+msgid "Financials"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G02 12, maxlen=12
+msgid "G/L accounts"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D02 34, maxlen=34
+msgid "G/L accounts at company-code level"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O01 12, maxlen=12
+msgid "G5 Countries"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O02 12, maxlen=12
+msgid "G6 Languages"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O03 13, maxlen=13
+msgid "G7 Currencies"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M20 46, maxlen=46
+msgid "Goods receipt expected, not delivery-completed"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H20 6, maxlen=6
+msgid "Group"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D29 24, maxlen=24
+msgid "Group charts of accounts"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L29 68, maxlen=68
+msgid "HR data is not read (personal data, separate authorizations)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D20 47, maxlen=47
+msgid "House bank accounts of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R18 33, maxlen=33
+msgid "House banks have no creation date"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D19 39, maxlen=39
+msgid "House banks of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O22 5, maxlen=5
+msgid "IDocs"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H33 17, maxlen=17
+msgid "IDocs in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D22 36, maxlen=36
+msgid "IDocs per direction and partner type"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G00 4, maxlen=4
+msgid "INFO"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O20 15, maxlen=15
+msgid "Inspection lots"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D15 23, maxlen=23
+msgid "Inspection lots created"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_INTF, maxlen=30
+msgid "Interfaces (optional)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT V05 42, maxlen=42
+msgid "Interfaces and technical connections"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G08 15, maxlen=15
+msgid "Inventory"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H02 8, maxlen=8
+msgid "Item"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H21 9, maxlen=9
+msgid "Key"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E08 68, maxlen=68
+msgid "LIKP created in the period (ERDAT), per SD document category (VBTYP)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E16 45, maxlen=45
+msgid "LTAK with creation date (BDATU) in the period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H11 8, maxlen=8
+msgid "Location"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I02 16, maxlen=16
+msgid "Logical system"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D84 14, maxlen=14
+msgid "Logon language"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E03 61, maxlen=61
+msgid "MARA without deletion flag, grouped by material type (MTART)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E12 34, maxlen=34
+msgid "MKPF entered in the period (CPUDT)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N12 31, maxlen=31
+msgid "Main numbers, not deactivated"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G10 14, maxlen=14
+msgid "Maintenance"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O19 32, maxlen=32
+msgid "Maintenance/service orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H18 13, maxlen=13
+msgid "Manufacturing"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_MD, maxlen=30
+msgid "Master data"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D12 18, maxlen=18
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O16 18, maxlen=18
+msgid "Material documents"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G03 11, maxlen=11
+msgid "Materials"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D03 27, maxlen=27
+msgid "Materials per material type"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D04 44, maxlen=44
+msgid "Materials with goods movements in the period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT T01 5, maxlen=5
+msgid "Mode"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D86 6, maxlen=6
+msgid "Months"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT S01 3, maxlen=3
+msgid "N/A"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H31 4, maxlen=4
+msgid "Name"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H10 17, maxlen=17
+msgid "Name of the Plant"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R11 74, maxlen=74
+msgid "New validity records of existing cost centers are not counted as additions"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N06 35, maxlen=35
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N08 35, maxlen=35
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N10 35, maxlen=35
+msgid "No deletion flag; C = created/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M18 26, maxlen=26
+msgid "No goods receipt expected"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q03 21, maxlen=21
+msgid "No of Company Codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q27 38, maxlen=38
+msgid "No of Plants/Manufacturing facilities*"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q26 19, maxlen=19
+msgid "No of Warehouses"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R06 37, maxlen=37
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R08 37, maxlen=37
+msgid "No restriction by account group"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M05 37, maxlen=37
+msgid "No stored result found"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q12 14, maxlen=14
+msgid "No. of Assets"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q04 24, maxlen=24
+msgid "No. of Chart of Accounts"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q13 22, maxlen=22
+msgid "No. of Customer Orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q14 33, maxlen=33
+msgid "No. of Customer Payments Received"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q06 16, maxlen=16
+msgid "No. of Customers"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q11 32, maxlen=32
+msgid "No. of Departments/Cost Centers"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q29 18, maxlen=18
+msgid "No. of Employees"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q05 19, maxlen=19
+msgid "No. of G/L Accounts"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q25 30, maxlen=30
+msgid "No. of Maintenance Orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q16 27, maxlen=27
+msgid "No. of P-Card Transactions"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q24 34, maxlen=34
+msgid "No. of Production Orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q10 25, maxlen=25
+msgid "No. of Products (SKUs)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q15 22, maxlen=22
+msgid "No. of Purchase Orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q28 19, maxlen=19
+msgid "No. of SAP Users"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT Q08 18, maxlen=18
+msgid "No. of Vendors"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R28 25, maxlen=25
+msgid "Not a license measurement"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N16 17, maxlen=17
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N21 17, maxlen=17
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N22 17, maxlen=17
+msgid "Not derivable"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L16 52, maxlen=52
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L21 52, maxlen=52
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L22 52, maxlen=52
+msgid "Not derivable generically from SAP standard tables"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N29 29, maxlen=29
+msgid "Not read (personal data)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H30 11, maxlen=11
+msgid "Object type"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N04 26, maxlen=26
+msgid "Of active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H14 16, maxlen=16
+msgid "On Legacy System"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H13 6, maxlen=6
+msgid "On SAP"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D32 45, maxlen=45
+msgid "Open PO items by closing pattern"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D33 40, maxlen=40
+msgid "Open PO items by item category"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D34 53, maxlen=53
+msgid "Open POs without activity since period start"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E33 59, maxlen=59
+msgid "Open items of row 15 per item category (EKPO-PSTYP)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E32 72, maxlen=72
+msgid "Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D14 30, maxlen=30
+msgid "Open maintenance orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R25 45, maxlen=45
+msgid "Open maintenance orders in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D30 30, maxlen=30
+msgid "Open purchase orders by age"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D31 36, maxlen=36
+msgid "Open purchase orders by company code"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N07 34, maxlen=34
+msgid "Order or FI line item in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT V03 51, maxlen=51
+msgid "Organization - G5 to G7 and organizational units"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_ORG, maxlen=30
+msgid "Organization and technical"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R13 46, maxlen=46
+msgid "Other sales document categories in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R20 82, maxlen=82
+msgid "Outgoing only; incl. payment with printout (F-58); HR payroll runs not included"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT T04 7, maxlen=7
+msgid "Output"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N09 37, maxlen=37
+msgid "PO or FI line item in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E30 65, maxlen=65
+msgid "POs of row 15 by creation date (EKKO-AEDAT) before today"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E34 102, maxlen=102
+msgid "POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E31 55, maxlen=55
+msgid "POs of row 15 per company code (EKKO-BUKRS)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I03 19, maxlen=19
+msgid "Partner profile"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N14 31, maxlen=31
+msgid "Payment documents created/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N20 35, maxlen=35
+msgid "Payment runs, bank transfer methods"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D21 27, maxlen=27
+msgid "Payments per payment method"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R10 67, maxlen=67
+msgid "Per material type and materials with goods movements in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M04 37, maxlen=37
+msgid "Period end lies before period start"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M02 42, maxlen=42
+msgid "Period end must be the last day of a month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_DATFR, maxlen=30
+msgid "Period from (1st of month)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M03 43, maxlen=43
+msgid "Period must end before the current month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M01 45, maxlen=45
+msgid "Period start must be the first day of a month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_DATTO, maxlen=30
+msgid "Period to (end of month)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT V02 27, maxlen=27
+msgid "Plant table (paste F:J)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L27 82, maxlen=82
+msgid "Plants (T001W) whose valuation area belongs to an active company code (T001K)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R27 28, maxlen=28
+msgid "Plants have no creation date"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N27 30, maxlen=30
+msgid "Plants of active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G09 10, maxlen=10
+msgid "Production"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D13 59, maxlen=59
+msgid "Production / process orders: open (value), created (total)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_PP, maxlen=30
+msgid "Production and maintenance"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O18 27, maxlen=27
+msgid "Production/process orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D05 26, maxlen=26
+msgid "Profit centers valid today"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O15 15, maxlen=15
+msgid "Purchase orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G07 10, maxlen=10
+msgid "Purchasing"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_MM, maxlen=30
+msgid "Purchasing and inventory"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D10 33, maxlen=33
+msgid "Purchasing documents per category"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O04 24, maxlen=24
+msgid "Purchasing organizations"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E15 54, maxlen=54
+msgid "QALS with lot creation date (ENSTEHDAT) in the period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G11 19, maxlen=19
+msgid "Quality"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E11 60, maxlen=60
+msgid "RBKP entered in the period (CPUDT), status posted (RBSTAT 5)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E21 87, maxlen=87
+msgid "REGUH as row 20 (RZAWE), all payment methods incl. incoming, per country/payment method"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I01 15, maxlen=15
+msgid "RFC destination"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H34 7, maxlen=7
+msgid "Release"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H08 9, maxlen=9
+msgid "Remark"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M06 20, maxlen=20
+msgid "Result stored"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D90 23, maxlen=23
+msgid "Result stored at"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H01 5, maxlen=5
+msgid "Row"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D88 8, maxlen=8
+msgid "Run end"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D87 10, maxlen=10
+msgid "Run start"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M12 27, maxlen=27
+msgid "Runtime of block (seconds):"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TITLE, maxlen=70
+msgid "S/4HANA evaluation - Data & Org Questionnaire figures"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D82 11, maxlen=11
+msgid "SAP release"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E02 72, maxlen=72
+msgid "SKB1 of the active company codes without deletion flag and posting block"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H35 8, maxlen=8
+msgid "SP level"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G06 8, maxlen=8
+msgid "Sales"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_SD, maxlen=30
+msgid "Sales and distribution"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D07 28, maxlen=28
+msgid "Sales documents per category"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O12 14, maxlen=14
+msgid "Sales orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O05 22, maxlen=22
+msgid "Sales organizations"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT T03 6, maxlen=6
+msgid "Scope"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT I04 18, maxlen=18
+msgid "Software component"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R24 42, maxlen=42
+msgid "Split by order category in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D17 17, maxlen=17
+msgid "Storage locations"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_STORE, maxlen=30
+msgid "Store result"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M07 31, maxlen=31
+msgid "Stored result deleted"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M09 26, maxlen=26
+msgid "Stored result from"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M13 79, maxlen=79
+msgid "Stored result is from an older program version - please collect again"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R12 27, maxlen=27
+msgid "Sub-numbers in the details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT V04 38, maxlen=38
+msgid "Supporting figures and definitions"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D80 9, maxlen=9
+msgid "System ID"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R26 21, maxlen=21
+msgid "Systems without WM: 0"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E01 57, maxlen=57
+msgid "T001 count; per company code: 1 = active, 0 = not active"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E28 97, maxlen=97
+msgid "T001-KTOP2 of the active company codes; per chart: SKA1 without deletion flag, created (ERDAT)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E17 37, maxlen=37
+msgid "T001L of the plants counted in row 27"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E29 98, maxlen=98
+msgid "T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E19 37, maxlen=37
+msgid "T012 rows of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E20 38, maxlen=38
+msgid "T012K rows of the active company codes"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M11 35, maxlen=35
+msgid "Text IDs missing in logon language:"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D24 23, maxlen=23
+msgid "Top 10 message types"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H06 17, maxlen=17
+msgid "Total in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O21 17, maxlen=17
+msgid "Transfer orders"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D16 27, maxlen=27
+msgid "Transfer orders created"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H32 4, maxlen=4
+msgid "Type"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E25 56, maxlen=56
+msgid "USR02 valid today (GLTGV/GLTGB), per user type (USTYP)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E26 74, maxlen=74
+msgid "USTYP A, valid today, not locked by an administrator (UFLAG 0 or 128)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R07 35, maxlen=35
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R09 35, maxlen=35
+msgid "Union of both sources built in ABAP"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H24 19, maxlen=19
+msgid "Used in period"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D89 8, maxlen=8
+msgid "User"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G15 8, maxlen=8
+msgid "Users"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D25 38, maxlen=38
+msgid "Users per user type (valid today)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E07 68, maxlen=68
+msgid "VBAK created in the period (ERDAT), per SD document category (VBTYP)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E09 98, maxlen=98
+msgid "VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D26 51, maxlen=51
+msgid "Valid dialog users regardless of logon"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N11 36, maxlen=36
+msgid "Valid today; C = first created/month"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT H23 5, maxlen=5
+msgid "Value"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT O17 21, maxlen=21
+msgid "Vendor invoices"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D11 49, maxlen=49
+msgid "Vendor invoices (logistics invoice verification)"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_V4, maxlen=30
+msgid "View: Details"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_V5, maxlen=30
+msgid "View: Interfaces"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_V3, maxlen=30
+msgid "View: Organization"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_V2, maxlen=30
+msgid "View: Plants"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/SELECT P_V1, maxlen=30
+msgid "View: Questionnaire"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N26 29, maxlen=29
+msgid "WM warehouse numbers assigned"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT G12 15, maxlen=15
+msgid "Warehouse"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D18 13, maxlen=13
+msgid "Work centers"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT S03 6, maxlen=6
+msgid "error"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M15 7, maxlen=7
+msgid "group"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M21 16, maxlen=16
+msgid "less than 1 year"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M14 5, maxlen=5
+msgid "local"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M24 17, maxlen=17
+msgid "more than 5 years"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT S02 15, maxlen=15
+msgid "not collected"
+msgstr ""
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M17 4, maxlen=4
+msgid "prod"
+msgstr ""
