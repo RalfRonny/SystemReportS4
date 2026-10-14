@@ -68,6 +68,8 @@ I	M10	Data collection finished	Datenermittlung beendet
 I	M11	Text IDs missing in logon language:	Text-IDs fehlen in Anmeldesprache:
 I	M12	Runtime of block (seconds):	Laufzeit Block (Sekunden):
 I	M13	Stored result is from an older program version - please collect again	Gespeichertes Ergebnis stammt aus älterer Programmversion - bitte neu ermitteln
+I	M14	local	lokal
+I	M15	group	Konzern
 I	S01	N/A	N/A
 I	S02	not collected	nicht ermittelt
 I	S03	error	Fehler

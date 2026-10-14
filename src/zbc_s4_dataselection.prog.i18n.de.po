@@ -1095,6 +1095,14 @@ msgstr "Arbeitsplätze"
 msgid "error"
 msgstr "Fehler"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M15 7, maxlen=7
+msgid "group"
+msgstr "Konzern"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M14 5, maxlen=5
+msgid "local"
+msgstr "lokal"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT S02 15, maxlen=15
 msgid "not collected"
 msgstr "nicht ermittelt"

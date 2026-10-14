@@ -237,7 +237,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'H' iv_from = 10 iv_to = 18 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 20 iv_to = 24 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 35 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 13 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 15 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'S' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'Q' iv_from = 3  iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'N' iv_from = 3  iv_to = 16 CHANGING ct_ids = lt_ids ).
@@ -2908,7 +2908,7 @@ CLASS lcl_output DEFINITION FINAL.
     TYPES: BEGIN OF ty_v1,
              row    TYPE c LENGTH 3,
              item   TYPE c LENGTH 60,
-             val_b  TYPE c LENGTH 20,
+             val_b  TYPE c LENGTH 40,
              val_c  TYPE c LENGTH 20,
              basis  TYPE c LENGTH 60,
              total  TYPE c LENGTH 20,
@@ -2975,6 +2975,8 @@ CLASS lcl_output DEFINITION FINAL.
     METHODS build_v1.
     METHODS coa_note
       RETURNING value(rv_note) TYPE string.
+    METHODS coa_split
+      RETURNING value(rv_split) TYPE string.
     METHODS build_v2.
     METHODS build_v3.
     METHODS build_v4.
@@ -3068,7 +3070,7 @@ CLASS lcl_output IMPLEMENTATION.
         ev_title = 'V01'.
         add_col( EXPORTING iv_fname = 'ROW'    iv_head = 'H01' iv_width = 3   CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'ITEM'   iv_head = 'H02' iv_width = 40  CHANGING ct_cols = et_cols ).
-        add_col( EXPORTING iv_fname = 'VAL_B'  iv_head = 'H03' iv_width = 15  CHANGING ct_cols = et_cols ).
+        add_col( EXPORTING iv_fname = 'VAL_B'  iv_head = 'H03' iv_width = 25  CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'VAL_C'  iv_head = 'H04' iv_width = 15  CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'BASIS'  iv_head = 'H05' iv_width = 40  CHANGING ct_cols = et_cols ).
         add_col( EXPORTING iv_fname = 'TOTAL'  iv_head = 'H06' iv_width = 15  CHANGING ct_cols = et_cols ).
@@ -3138,6 +3140,7 @@ CLASS lcl_output IMPLEMENTATION.
           lv_nr   TYPE n LENGTH 2,
           lv_id   TYPE ty_textid,
           lv_text TYPE string,
+          lv_split TYPE string,
           lv_avg  TYPE ty_num.
 
     CLEAR mt_v1.
@@ -3152,6 +3155,13 @@ CLASS lcl_output IMPLEMENTATION.
       IF lv_nr <> 17.
         READ TABLE ms_res-figs INTO ls_fig WITH TABLE KEY fkey = lv_id sub = space.
         lv_text = cell( iv_na = ls_fig-b_na iv_status = ls_fig-status iv_num = ls_fig-b_val ).
+* Row 4: "1 (4 local, 1 group)" with the country and group charts of D28/D29
+        IF lv_nr = 4 AND ls_fig-status = gc_st_ok.
+          lv_split = coa_split( ).
+          IF lv_split IS NOT INITIAL.
+            CONCATENATE lv_text lv_split INTO lv_text SEPARATED BY space.
+          ENDIF.
+        ENDIF.
         ls_row-val_b = lv_text.
         IF ms_res-meta-months > 0.
           lv_avg = ls_fig-c_total / ms_res-meta-months.     " packed result: commercial rounding
@@ -3183,6 +3193,33 @@ CLASS lcl_output IMPLEMENTATION.
       ENDIF.
       APPEND ls_row TO mt_v1.
     ENDDO.
+  ENDMETHOD.
+
+* "(4 local, 1 group)": number of country (D28) and group charts (D29); empty
+* unless both were collected
+  METHOD coa_split.
+    DATA: ls_fig   TYPE ty_fig,
+          lv_local TYPE string,
+          lv_group TYPE string,
+          lv_word  TYPE string.
+
+    READ TABLE ms_res-figs INTO ls_fig WITH TABLE KEY fkey = 'D28' sub = space.
+    IF sy-subrc <> 0 OR ls_fig-status <> gc_st_ok.
+      RETURN.
+    ENDIF.
+    lv_local = num( ls_fig-b_val ).
+    READ TABLE ms_res-figs INTO ls_fig WITH TABLE KEY fkey = 'D29' sub = space.
+    IF sy-subrc <> 0 OR ls_fig-status <> gc_st_ok.
+      RETURN.
+    ENDIF.
+    lv_group = num( ls_fig-b_val ).
+    lv_word = lcl_text=>get( 'M14' ).
+    CONCATENATE '(' lv_local INTO rv_split.
+    CONCATENATE rv_split lv_word INTO rv_split SEPARATED BY space.
+    CONCATENATE rv_split ',' INTO rv_split.
+    lv_word = lcl_text=>get( 'M15' ).
+    CONCATENATE rv_split lv_group lv_word INTO rv_split SEPARATED BY space.
+    CONCATENATE rv_split ')' INTO rv_split.
   ENDMETHOD.
 
 * "Country charts of accounts: 4 (CAFR, CAIN); Group charts of accounts: 1
