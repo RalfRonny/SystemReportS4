@@ -238,6 +238,11 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Sales | Billing documents per category | VBRK created in the period, grouped by VBTYP; cancelled documents (FKSTO) separately (sub key "<VBTYP> X") |
 | Purchasing | Purchasing documents per category | EKKO created in the period, grouped by BSTYP (A RFQ, F purchase order, K contract, L scheduling agreement) |
 | Purchasing | Vendor invoices (logistics invoice verification) | RBKP entered in the period (CPUDT), posted status only |
+| Purchasing | Open purchase orders by age (D30) | POs of row 15 by creation date EKKO-AEDAT before today: < 1, 1–2, 2–5, > 5 years (same day 1, 2, 5 years ago); header = POs of row 15 |
+| Purchasing | Open purchase orders by company code (D31) | POs of row 15 per EKKO-BUKRS, text T001 |
+| Purchasing | Open PO items by closing pattern (D32) | Open items of row 15 (EKPO, BSTYP F, no ELIKZ, no LOEKZ): 1 no goods receipt expected (WEPOS empty; ELIKZ is never set automatically), 2 final invoice posted (EREKZ) but not delivery-completed, 3 goods receipt expected and not delivery-completed |
+| Purchasing | Open PO items by item category (D33) | Open items of row 15 per EKPO-PSTYP, text T163Y |
+| Purchasing | Open POs without activity since period start (D34) | POs of row 15 created before the period start without any PO history posting (EKBE, BUDAT) on or after the period start. EKBE is read per block of 5,000 POs (FOR ALL ENTRIES, key prefix EBELN); separate step MM_POHIST so its runtime and failures stay separate |
 | Inventory | Material documents | MKPF entered in the period |
 | Production | Production orders / process orders | Created in the period and open, separately for order category 10 and 40 (sub rows: value = open, total = created) |
 | Maintenance | Open maintenance orders | Order category 30, open by the status rule of row 24 |
@@ -784,8 +789,9 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D25–D26 | Users per user type / valid dialog users regardless of logon | G15 Users | ORG |
 | D27 | FI documents entered | G16 Financials | FI |
 | D28–D29 | Country charts of accounts / group charts of accounts | G02 G/L | MD |
+| D30–D34 | Open POs by age / by company code / items by closing pattern / items by item category / POs without activity | G07 Purchasing | MM |
 
-Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27, T004T for D28 and D29).
+Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27, T004T for D28 and D29, text IDs M21–M24 for the age buckets of D30, T001 for D31, M18–M20 for the closing patterns of D32, T163Y for D33).
 
 Row 26 (WM warehouse numbers, T320) is collected in block MM together with the transfer orders (D16).
 

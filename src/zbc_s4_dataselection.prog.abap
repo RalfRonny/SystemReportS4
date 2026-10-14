@@ -237,7 +237,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'H' iv_from = 10 iv_to = 18 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 20 iv_to = 24 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 35 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 17 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 24 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'S' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'Q' iv_from = 3  iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'N' iv_from = 3  iv_to = 16 CHANGING ct_ids = lt_ids ).
@@ -247,8 +247,8 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 29 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 29 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 34 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 34 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 5  CHANGING ct_ids = lt_ids ).
 
@@ -493,7 +493,13 @@ CLASS lcl_collector DEFINITION FINAL.
            ty_spart_t TYPE HASHED TABLE OF spart WITH UNIQUE KEY table_line,
            ty_waers_t TYPE HASHED TABLE OF waers WITH UNIQUE KEY table_line,
            ty_ekorg_t TYPE HASHED TABLE OF ekorg WITH UNIQUE KEY table_line,
-           ty_werks_t TYPE HASHED TABLE OF werks_d WITH UNIQUE KEY table_line.
+           ty_werks_t TYPE HASHED TABLE OF werks_d WITH UNIQUE KEY table_line,
+           BEGIN OF ty_openpo,
+             ebeln TYPE ekko-ebeln,
+             aedat TYPE ekko-aedat,
+           END OF ty_openpo,
+           ty_openpo_t TYPE HASHED TABLE OF ty_openpo WITH UNIQUE KEY ebeln,
+           ty_ebeln_t  TYPE STANDARD TABLE OF ebeln WITH DEFAULT KEY.
     DATA: ms_res       TYPE ty_result,
           mv_datfr     TYPE d,
           mv_datto     TYPE d,
@@ -526,7 +532,10 @@ CLASS lcl_collector DEFINITION FINAL.
           mt_werks_cnt   TYPE ty_werks_t,
           mv_werks_cnt_ok TYPE ty_flag,
           mt_werks_manuf TYPE ty_werks_t,
-          mv_pp_manuf_ok TYPE ty_flag.
+          mv_pp_manuf_ok TYPE ty_flag,
+* Open purchase orders of row 15 with their creation date (details D30-D34)
+          mt_openpo      TYPE ty_openpo_t,
+          mv_openpo_ok   TYPE ty_flag.
     METHODS register.
     METHODS add_step
       IMPORTING iv_step  TYPE c
@@ -588,6 +597,8 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_sd_vbrk.
     METHODS step_mm_ekko.
     METHODS step_mm_ekpo.
+    METHODS step_mm_openpo.
+    METHODS step_mm_pohist.
     METHODS step_mm_rbkp.
     METHODS step_mm_mkpf.
     METHODS step_mm_ltak.
@@ -729,6 +740,11 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D27' iv_grp = 'G16' ).
     add_detail( iv_fkey = 'D28' iv_grp = 'G02' ).
     add_detail( iv_fkey = 'D29' iv_grp = 'G02' ).
+    add_detail( iv_fkey = 'D30' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D31' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D32' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D33' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D34' iv_grp = 'G07' ).
 
 * Collection steps. One step per pass over a table (design 5); the keys are
 * the figures the step feeds. If the step fails, all of them show "error".
@@ -754,6 +770,8 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'SD_VBRK'    iv_block = 'SD'   iv_keys = 'D09' ).
     add_step( iv_step = 'MM_EKKO'    iv_block = 'MM'   iv_keys = 'Q15 D10 Q09' ).
     add_step( iv_step = 'MM_EKPO'    iv_block = 'MM'   iv_keys = 'Q15' ).
+    add_step( iv_step = 'MM_OPENPO'  iv_block = 'MM'   iv_keys = 'D30 D31 D32 D33' ).
+    add_step( iv_step = 'MM_POHIST'  iv_block = 'MM'   iv_keys = 'D34' ).
     add_step( iv_step = 'MM_RBKP'    iv_block = 'MM'   iv_keys = 'D11' ).
     add_step( iv_step = 'MM_MKPF'    iv_block = 'MM'   iv_keys = 'D12 D04' ).
     add_step( iv_step = 'MM_LTAK'    iv_block = 'MM'   iv_keys = 'D16' ).
@@ -899,6 +917,10 @@ CLASS lcl_collector IMPLEMENTATION.
             step_mm_ekko( ).
           WHEN 'MM_EKPO'.
             step_mm_ekpo( ).
+          WHEN 'MM_OPENPO'.
+            step_mm_openpo( ).
+          WHEN 'MM_POHIST'.
+            step_mm_pohist( ).
           WHEN 'MM_RBKP'.
             step_mm_rbkp( ).
           WHEN 'MM_MKPF'.
@@ -1836,6 +1858,195 @@ CLASS lcl_collector IMPLEMENTATION.
         AND loekz = space.
     lv_open = lv_cnt.
     set_b( iv_fkey = 'Q15' iv_val = lv_open ).
+  ENDMETHOD.
+
+* Details D30-D33: analysis of the open purchase orders of row 15 (same item
+* rule). Items are aggregated on the database per PO, GR indicator, final
+* invoice indicator and item category:
+* - D32 closing pattern per item: 1 no goods receipt expected (WEPOS empty, so
+*   the delivery-completed flag is never set automatically), 2 final invoice
+*   posted (EREKZ) but not delivery-completed, 3 goods receipt expected and not
+*   delivery-completed
+* - D33 items per item category (PSTYP)
+* - D30 POs by age (EKKO-AEDAT before today: < 1, 1-2, 2-5, > 5 years) and
+*   D31 POs per company code, from EKKO in blocks of 5,000 POs
+  METHOD step_mm_openpo.
+    TYPES: BEGIN OF lty_grp,
+             ebeln TYPE ekpo-ebeln,
+             wepos TYPE ekpo-wepos,
+             erekz TYPE ekpo-erekz,
+             pstyp TYPE ekpo-pstyp,
+             cnt   TYPE i,
+           END OF lty_grp,
+           BEGIN OF lty_sub,
+             sub TYPE c LENGTH 10,
+             cnt TYPE ty_num,
+           END OF lty_sub,
+           BEGIN OF lty_ekko,
+             ebeln TYPE ekko-ebeln,
+             bukrs TYPE ekko-bukrs,
+             aedat TYPE ekko-aedat,
+           END OF lty_ekko.
+    DATA: lt_grp   TYPE STANDARD TABLE OF lty_grp,
+          ls_grp   TYPE lty_grp,
+          lt_pat   TYPE SORTED TABLE OF lty_sub WITH UNIQUE KEY sub,
+          lt_typ   TYPE SORTED TABLE OF lty_sub WITH UNIQUE KEY sub,
+          lt_age   TYPE SORTED TABLE OF lty_sub WITH UNIQUE KEY sub,
+          lt_cc    TYPE SORTED TABLE OF lty_sub WITH UNIQUE KEY sub,
+          ls_sub   TYPE lty_sub,
+          lt_ebeln TYPE ty_ebeln_t,
+          lt_block TYPE ty_ebeln_t,
+          lv_ebeln TYPE ebeln,
+          lt_ekko  TYPE STANDARD TABLE OF lty_ekko,
+          ls_ekko  TYPE lty_ekko,
+          ls_open  TYPE ty_openpo,
+          lv_d1    TYPE d,
+          lv_d2    TYPE d,
+          lv_d5    TYPE d,
+          lv_items TYPE ty_num,
+          lv_pos   TYPE ty_num,
+          lv_lines TYPE i.
+
+    CLEAR: mt_openpo, mv_openpo_ok.
+    SELECT ebeln wepos erekz pstyp COUNT( * ) FROM ekpo INTO TABLE lt_grp
+      PACKAGE SIZE 50000
+      WHERE bstyp = 'F'
+        AND elikz = space
+        AND loekz = space
+      GROUP BY ebeln wepos erekz pstyp.
+      LOOP AT lt_grp INTO ls_grp.
+        CLEAR ls_sub.
+        IF ls_grp-wepos IS INITIAL.
+          ls_sub-sub = '1'.
+        ELSEIF ls_grp-erekz IS NOT INITIAL.
+          ls_sub-sub = '2'.
+        ELSE.
+          ls_sub-sub = '3'.
+        ENDIF.
+        ls_sub-cnt = ls_grp-cnt.
+        COLLECT ls_sub INTO lt_pat.
+        CLEAR ls_sub.
+        ls_sub-sub = ls_grp-pstyp.
+        IF ls_sub-sub IS INITIAL.
+          ls_sub-sub = '-'.                     " sub key space is the header row
+        ENDIF.
+        ls_sub-cnt = ls_grp-cnt.
+        COLLECT ls_sub INTO lt_typ.
+        lv_items = lv_items + ls_grp-cnt.
+        CLEAR ls_open.
+        ls_open-ebeln = ls_grp-ebeln.
+        INSERT ls_open INTO TABLE mt_openpo.
+      ENDLOOP.
+    ENDSELECT.
+
+* Age limits: the same day 1, 2 and 5 years ago (compared as dates)
+    lv_d1 = sy-datum.
+    lv_d1(4) = lv_d1(4) - 1.
+    lv_d2 = sy-datum.
+    lv_d2(4) = lv_d2(4) - 2.
+    lv_d5 = sy-datum.
+    lv_d5(4) = lv_d5(4) - 5.
+
+    LOOP AT mt_openpo INTO ls_open.
+      APPEND ls_open-ebeln TO lt_ebeln.
+    ENDLOOP.
+    SORT lt_ebeln.
+    DESCRIBE TABLE lt_ebeln LINES lv_lines.
+    WHILE lv_lines > 0.
+      CLEAR lt_block.
+      LOOP AT lt_ebeln INTO lv_ebeln FROM 1 TO 5000.
+        APPEND lv_ebeln TO lt_block.
+      ENDLOOP.
+      DELETE lt_ebeln FROM 1 TO 5000.
+      DESCRIBE TABLE lt_ebeln LINES lv_lines.
+      SELECT ebeln bukrs aedat FROM ekko INTO TABLE lt_ekko
+        FOR ALL ENTRIES IN lt_block
+        WHERE ebeln = lt_block-table_line.
+      LOOP AT lt_ekko INTO ls_ekko.
+        CLEAR ls_sub.
+        IF ls_ekko-aedat >= lv_d1.
+          ls_sub-sub = '1'.
+        ELSEIF ls_ekko-aedat >= lv_d2.
+          ls_sub-sub = '2'.
+        ELSEIF ls_ekko-aedat >= lv_d5.
+          ls_sub-sub = '3'.
+        ELSE.
+          ls_sub-sub = '4'.
+        ENDIF.
+        ls_sub-cnt = 1.
+        COLLECT ls_sub INTO lt_age.
+        CLEAR ls_sub.
+        ls_sub-sub = ls_ekko-bukrs.
+        IF ls_sub-sub IS INITIAL.
+          ls_sub-sub = '-'.
+        ENDIF.
+        ls_sub-cnt = 1.
+        COLLECT ls_sub INTO lt_cc.
+        ls_open-ebeln = ls_ekko-ebeln.
+        ls_open-aedat = ls_ekko-aedat.
+        MODIFY TABLE mt_openpo FROM ls_open.
+      ENDLOOP.
+    ENDWHILE.
+
+    DESCRIBE TABLE mt_openpo LINES lv_lines.
+    lv_pos = lv_lines.
+    LOOP AT lt_age INTO ls_sub.
+      set_b( iv_fkey = 'D30' iv_sub = ls_sub-sub iv_val = ls_sub-cnt ).
+    ENDLOOP.
+    set_b( iv_fkey = 'D30' iv_val = lv_pos ).
+    LOOP AT lt_cc INTO ls_sub.
+      set_b( iv_fkey = 'D31' iv_sub = ls_sub-sub iv_val = ls_sub-cnt ).
+    ENDLOOP.
+    set_b( iv_fkey = 'D31' iv_val = lv_pos ).
+    LOOP AT lt_pat INTO ls_sub.
+      set_b( iv_fkey = 'D32' iv_sub = ls_sub-sub iv_val = ls_sub-cnt ).
+    ENDLOOP.
+    set_b( iv_fkey = 'D32' iv_val = lv_items ).
+    LOOP AT lt_typ INTO ls_sub.
+      set_b( iv_fkey = 'D33' iv_sub = ls_sub-sub iv_val = ls_sub-cnt ).
+    ENDLOOP.
+    set_b( iv_fkey = 'D33' iv_val = lv_items ).
+    mv_openpo_ok = gc_x.
+  ENDMETHOD.
+
+* Detail D34: open purchase orders of row 15 created before the period start
+* without any PO history posting (EKBE: goods receipts, invoices, ...) with a
+* posting date on or after the period start. Read in blocks of 5,000 POs;
+* FOR ALL ENTRIES returns each PO with recent history once
+  METHOD step_mm_pohist.
+    DATA: lt_ebeln  TYPE ty_ebeln_t,
+          lt_block  TYPE ty_ebeln_t,
+          lt_active TYPE ty_ebeln_t,
+          lv_ebeln  TYPE ebeln,
+          ls_open   TYPE ty_openpo,
+          lv_lines  TYPE i,
+          lv_act    TYPE i,
+          lv_dead   TYPE ty_num.
+
+    IF mv_openpo_ok IS INITIAL.
+      RETURN.
+    ENDIF.
+    LOOP AT mt_openpo INTO ls_open WHERE aedat < mv_datfr.
+      APPEND ls_open-ebeln TO lt_ebeln.
+    ENDLOOP.
+    SORT lt_ebeln.
+    DESCRIBE TABLE lt_ebeln LINES lv_lines.
+    lv_dead = lv_lines.
+    WHILE lv_lines > 0.
+      CLEAR lt_block.
+      LOOP AT lt_ebeln INTO lv_ebeln FROM 1 TO 5000.
+        APPEND lv_ebeln TO lt_block.
+      ENDLOOP.
+      DELETE lt_ebeln FROM 1 TO 5000.
+      DESCRIBE TABLE lt_ebeln LINES lv_lines.
+      SELECT ebeln FROM ekbe INTO TABLE lt_active
+        FOR ALL ENTRIES IN lt_block
+        WHERE ebeln = lt_block-table_line
+          AND budat >= mv_datfr.
+      DESCRIBE TABLE lt_active LINES lv_act.
+      lv_dead = lv_dead - lv_act.
+    ENDWHILE.
+    set_b( iv_fkey = 'D34' iv_val = lv_dead ).
   ENDMETHOD.
 
 * Detail D11: vendor invoices of logistics invoice verification entered in the
@@ -3653,6 +3864,9 @@ CLASS lcl_output IMPLEMENTATION.
           lv_text1 TYPE t042z-text1,
           lv_ktopl TYPE t004t-ktopl,
           lv_ktplt TYPE t004t-ktplt,
+          lv_pstyp TYPE t163y-pstyp,
+          lv_ptext TYPE t163y-ptext,
+          lv_id    TYPE ty_textid,
           lv_value TYPE c LENGTH 1.
 
     CASE iv_fkey.
@@ -3674,7 +3888,35 @@ CLASS lcl_output IMPLEMENTATION.
       WHEN 'D27'.                                 " sub key: document status
         lv_value = iv_sub.
         rv_text = domain_text( iv_domain = 'BSTAT' iv_value = lv_value ).
-      WHEN 'D01'.
+      WHEN 'D30'.                                 " sub key: age bucket 1-4
+        CASE iv_sub.
+          WHEN '1'.
+            lv_id = 'M21'.
+          WHEN '2'.
+            lv_id = 'M22'.
+          WHEN '3'.
+            lv_id = 'M23'.
+          WHEN OTHERS.
+            lv_id = 'M24'.
+        ENDCASE.
+        rv_text = lcl_text=>get( lv_id ).
+      WHEN 'D32'.                                 " sub key: closing pattern 1-3
+        CASE iv_sub.
+          WHEN '1'.
+            lv_id = 'M18'.
+          WHEN '2'.
+            lv_id = 'M19'.
+          WHEN OTHERS.
+            lv_id = 'M20'.
+        ENDCASE.
+        rv_text = lcl_text=>get( lv_id ).
+      WHEN 'D33'.                                 " sub key: item category
+        lv_pstyp = iv_sub.
+        SELECT SINGLE ptext FROM t163y INTO lv_ptext
+          WHERE spras = sy-langu
+            AND pstyp = lv_pstyp.
+        rv_text = lv_ptext.
+      WHEN 'D01' OR 'D31'.                        " sub key: company code
         lv_bukrs = iv_sub.
         SELECT SINGLE butxt FROM t001 INTO lv_butxt
           WHERE bukrs = lv_bukrs.

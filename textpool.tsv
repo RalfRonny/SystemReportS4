@@ -72,6 +72,13 @@ I	M14	local	lokal
 I	M15	group	Konzern
 I	M16	(M)	(M)
 I	M17	prod	prod
+I	M18	No goods receipt expected	Kein Wareneingang erwartet
+I	M19	Final invoice posted, not delivery-completed	Endrechnung gebucht, nicht endgeliefert
+I	M20	Goods receipt expected, not delivery-completed	Wareneingang erwartet, nicht endgeliefert
+I	M21	less than 1 year	unter 1 Jahr
+I	M22	1 to 2 years	1 bis 2 Jahre
+I	M23	2 to 5 years	2 bis 5 Jahre
+I	M24	more than 5 years	über 5 Jahre
 I	S01	N/A	N/A
 I	S02	not collected	nicht ermittelt
 I	S03	error	Fehler
@@ -271,6 +278,16 @@ I	D28	Country charts of accounts	Landeskontenpläne
 I	E28	T001-KTOP2 of the active company codes; per chart: SKA1 without deletion flag, created (ERDAT)	T001-KTOP2 der aktiven Buchungskreise; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)
 I	D29	Group charts of accounts	Konzernkontenpläne
 I	E29	T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)	T004-KKTPL der Kontenpläne aus Zeile 4; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)
+I	D30	Open purchase orders by age	Offene Bestellungen nach Alter
+I	E30	POs of row 15 by creation date (EKKO-AEDAT) before today	Bestellungen aus Zeile 15 nach Anlagedatum (EKKO-AEDAT) vor heute
+I	D31	Open purchase orders by company code	Offene Bestellungen je Buchungskreis
+I	E31	POs of row 15 per company code (EKKO-BUKRS)	Bestellungen aus Zeile 15 je Buchungskreis (EKKO-BUKRS)
+I	D32	Open PO items by closing pattern	Offene Bestellpositionen nach Abschlussmuster
+I	E32	Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)	Offene Positionen aus Zeile 15: WE erwartet (WEPOS), Endrechnung (EREKZ)
+I	D33	Open PO items by item category	Offene Bestellpositionen je Positionstyp
+I	E33	Open items of row 15 per item category (EKPO-PSTYP)	Offene Positionen aus Zeile 15 je Positionstyp (EKPO-PSTYP)
+I	D34	Open POs without activity since period start	Offene Bestellungen ohne Bewegung seit Zeitraumbeginn
+I	E34	POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start	Bestellungen aus Zeile 15, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn
 I	D80	System ID	System-ID
 I	D81	Client	Mandant
 I	D82	SAP release	SAP-Release

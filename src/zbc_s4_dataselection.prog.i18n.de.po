@@ -33,6 +33,14 @@ msgstr "- Anzahl genutzter Banken"
 msgid "- No. of Lock Boxes"
 msgstr "- Anzahl Lockboxen"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M22 13, maxlen=13
+msgid "1 to 2 years"
+msgstr "1 bis 2 Jahre"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M23 13, maxlen=13
+msgid "2 to 5 years"
+msgstr "2 bis 5 Jahre"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R23 64, maxlen=64
 msgid "ALE IDocs (logical systems) and message types in the details"
 msgstr "ALE-IDocs (logische Systeme) und Nachrichtentypen in den Details"
@@ -381,6 +389,10 @@ msgstr "Erfasste FI-Belege"
 msgid "Figure could not be determined:"
 msgstr "Kennzahl nicht ermittelbar:"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M19 44, maxlen=44
+msgid "Final invoice posted, not delivery-completed"
+msgstr "Endrechnung gebucht, nicht endgeliefert"
+
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_FI, maxlen=30
 #: RPT4/ZBC_S4_DATASELECTION/TEXT G16 11, maxlen=11
 msgid "Financials"
@@ -405,6 +417,10 @@ msgstr "G6 Sprachen"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT O03 13, maxlen=13
 msgid "G7 Currencies"
 msgstr "G7 Währungen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M20 46, maxlen=46
+msgid "Goods receipt expected, not delivery-completed"
+msgstr "Wareneingang erwartet, nicht endgeliefert"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT H20 6, maxlen=6
 msgid "Group"
@@ -569,6 +585,10 @@ msgstr "Neue Gültigkeitsabschnitte bestehender Kostenstellen zählen nicht als 
 msgid "No deletion flag; C = created/month"
 msgstr "Ohne Löschvormerkung; C = neu/Monat"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M18 26, maxlen=26
+msgid "No goods receipt expected"
+msgstr "Kein Wareneingang erwartet"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT Q03 21, maxlen=21
 msgid "No of Company Codes"
 msgstr "Anzahl Buchungskreise"
@@ -686,6 +706,26 @@ msgstr "Im Altsystem"
 msgid "On SAP"
 msgstr "Im SAP"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D32 45, maxlen=45
+msgid "Open PO items by closing pattern"
+msgstr "Offene Bestellpositionen nach Abschlussmuster"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D33 40, maxlen=40
+msgid "Open PO items by item category"
+msgstr "Offene Bestellpositionen je Positionstyp"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D34 53, maxlen=53
+msgid "Open POs without activity since period start"
+msgstr "Offene Bestellungen ohne Bewegung seit Zeitraumbeginn"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E33 59, maxlen=59
+msgid "Open items of row 15 per item category (EKPO-PSTYP)"
+msgstr "Offene Positionen aus Zeile 15 je Positionstyp (EKPO-PSTYP)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E32 72, maxlen=72
+msgid "Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)"
+msgstr "Offene Positionen aus Zeile 15: WE erwartet (WEPOS), Endrechnung (EREKZ)"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D14 30, maxlen=30
 msgid "Open maintenance orders"
 msgstr "Offene Instandhaltungsaufträge"
@@ -693,6 +733,14 @@ msgstr "Offene Instandhaltungsaufträge"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R25 45, maxlen=45
 msgid "Open maintenance orders in the details"
 msgstr "Offene Instandhaltungsaufträge in den Details"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D30 30, maxlen=30
+msgid "Open purchase orders by age"
+msgstr "Offene Bestellungen nach Alter"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D31 36, maxlen=36
+msgid "Open purchase orders by company code"
+msgstr "Offene Bestellungen je Buchungskreis"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N07 34, maxlen=34
 msgid "Order or FI line item in period"
@@ -721,6 +769,18 @@ msgstr "Ausgabe"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N09 37, maxlen=37
 msgid "PO or FI line item in period"
 msgstr "Bestellung oder FI-Posten im Zeitraum"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E30 65, maxlen=65
+msgid "POs of row 15 by creation date (EKKO-AEDAT) before today"
+msgstr "Bestellungen aus Zeile 15 nach Anlagedatum (EKKO-AEDAT) vor heute"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E34 102, maxlen=102
+msgid "POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start"
+msgstr "Bestellungen aus Zeile 15, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E31 55, maxlen=55
+msgid "POs of row 15 per company code (EKKO-BUKRS)"
+msgstr "Bestellungen aus Zeile 15 je Buchungskreis (EKKO-BUKRS)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT I03 19, maxlen=19
 msgid "Partner profile"
@@ -1103,9 +1163,17 @@ msgstr "Fehler"
 msgid "group"
 msgstr "Konzern"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M21 16, maxlen=16
+msgid "less than 1 year"
+msgstr "unter 1 Jahr"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT M14 5, maxlen=5
 msgid "local"
 msgstr "lokal"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT M24 17, maxlen=17
+msgid "more than 5 years"
+msgstr "über 5 Jahre"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT S02 15, maxlen=15
 msgid "not collected"

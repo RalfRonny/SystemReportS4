@@ -186,6 +186,36 @@
     </item>
     <item>
      <ID>I</ID>
+     <KEY>D30</KEY>
+     <ENTRY>Open purchase orders by age</ENTRY>
+     <LENGTH>30</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D31</KEY>
+     <ENTRY>Open purchase orders by company code</ENTRY>
+     <LENGTH>36</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D32</KEY>
+     <ENTRY>Open PO items by closing pattern</ENTRY>
+     <LENGTH>45</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D33</KEY>
+     <ENTRY>Open PO items by item category</ENTRY>
+     <LENGTH>40</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D34</KEY>
+     <ENTRY>Open POs without activity since period start</ENTRY>
+     <LENGTH>53</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
      <KEY>D80</KEY>
      <ENTRY>System ID</ENTRY>
      <LENGTH>9</LENGTH>
@@ -423,6 +453,36 @@
      <KEY>E29</KEY>
      <ENTRY>T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)</ENTRY>
      <LENGTH>98</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E30</KEY>
+     <ENTRY>POs of row 15 by creation date (EKKO-AEDAT) before today</ENTRY>
+     <LENGTH>65</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E31</KEY>
+     <ENTRY>POs of row 15 per company code (EKKO-BUKRS)</ENTRY>
+     <LENGTH>55</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E32</KEY>
+     <ENTRY>Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)</ENTRY>
+     <LENGTH>72</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E33</KEY>
+     <ENTRY>Open items of row 15 per item category (EKPO-PSTYP)</ENTRY>
+     <LENGTH>59</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E34</KEY>
+     <ENTRY>POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start</ENTRY>
+     <LENGTH>102</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -981,6 +1041,48 @@
      <KEY>M17</KEY>
      <ENTRY>prod</ENTRY>
      <LENGTH>4</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M18</KEY>
+     <ENTRY>No goods receipt expected</ENTRY>
+     <LENGTH>26</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M19</KEY>
+     <ENTRY>Final invoice posted, not delivery-completed</ENTRY>
+     <LENGTH>44</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M20</KEY>
+     <ENTRY>Goods receipt expected, not delivery-completed</ENTRY>
+     <LENGTH>46</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M21</KEY>
+     <ENTRY>less than 1 year</ENTRY>
+     <LENGTH>16</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M22</KEY>
+     <ENTRY>1 to 2 years</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M23</KEY>
+     <ENTRY>2 to 5 years</ENTRY>
+     <LENGTH>13</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>M24</KEY>
+     <ENTRY>more than 5 years</ENTRY>
+     <LENGTH>17</LENGTH>
     </item>
     <item>
      <ID>I</ID>
