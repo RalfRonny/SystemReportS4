@@ -3164,7 +3164,7 @@ CLASS lcl_output IMPLEMENTATION.
             CONCATENATE lv_text lv_split INTO lv_text SEPARATED BY space.
           ENDIF.
         ENDIF.
-* Row 27: "227 (12 production)" with the manufacturing plants of view 2
+* Row 27: "227 (12 prod)" with the manufacturing plants of view 2
         IF lv_nr = 27 AND ls_fig-status = gc_st_ok.
           lv_split = plant_split( ).
           IF lv_split IS NOT INITIAL.
@@ -3236,7 +3236,7 @@ CLASS lcl_output IMPLEMENTATION.
     CONCATENATE rv_split ')' INTO rv_split.
   ENDMETHOD.
 
-* "(12 production)": counted plants with production or process orders created
+* "(12 prod)": counted plants with production or process orders created
 * in the period (plant view, design 10). Empty unless the order pass of block
 * PP ran without error, because "manufacturing" is only known then
   METHOD plant_split.

@@ -979,8 +979,8 @@
     <item>
      <ID>I</ID>
      <KEY>M17</KEY>
-     <ENTRY>production</ENTRY>
-     <LENGTH>10</LENGTH>
+     <ENTRY>prod</ENTRY>
+     <LENGTH>4</LENGTH>
     </item>
     <item>
      <ID>I</ID>
