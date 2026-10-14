@@ -237,7 +237,7 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'H' iv_from = 10 iv_to = 18 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 20 iv_to = 24 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'H' iv_from = 30 iv_to = 35 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 16 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'M' iv_from = 1  iv_to = 17 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'S' iv_from = 1  iv_to = 3  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'Q' iv_from = 3  iv_to = 29 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'N' iv_from = 3  iv_to = 16 CHANGING ct_ids = lt_ids ).
@@ -2977,6 +2977,8 @@ CLASS lcl_output DEFINITION FINAL.
       RETURNING value(rv_note) TYPE string.
     METHODS coa_split
       RETURNING value(rv_split) TYPE string.
+    METHODS plant_split
+      RETURNING value(rv_split) TYPE string.
     METHODS build_v2.
     METHODS build_v3.
     METHODS build_v4.
@@ -3162,6 +3164,13 @@ CLASS lcl_output IMPLEMENTATION.
             CONCATENATE lv_text lv_split INTO lv_text SEPARATED BY space.
           ENDIF.
         ENDIF.
+* Row 27: "227 (12 production)" with the manufacturing plants of view 2
+        IF lv_nr = 27 AND ls_fig-status = gc_st_ok.
+          lv_split = plant_split( ).
+          IF lv_split IS NOT INITIAL.
+            CONCATENATE lv_text lv_split INTO lv_text SEPARATED BY space.
+          ENDIF.
+        ENDIF.
         ls_row-val_b = lv_text.
         IF ms_res-meta-months > 0.
           lv_avg = ls_fig-c_total / ms_res-meta-months.     " packed result: commercial rounding
@@ -3224,6 +3233,34 @@ CLASS lcl_output IMPLEMENTATION.
     CONCATENATE rv_split ',' INTO rv_split.
     lv_word = lcl_text=>get( 'M15' ).
     CONCATENATE rv_split lv_group lv_word INTO rv_split SEPARATED BY space.
+    CONCATENATE rv_split ')' INTO rv_split.
+  ENDMETHOD.
+
+* "(12 production)": counted plants with production or process orders created
+* in the period (plant view, design 10). Empty unless the order pass of block
+* PP ran without error, because "manufacturing" is only known then
+  METHOD plant_split.
+    DATA: ls_block TYPE ty_block,
+          ls_plant TYPE ty_plant,
+          lv_num   TYPE ty_num,
+          lv_cnt   TYPE string,
+          lv_word  TYPE string.
+
+    READ TABLE ms_res-blocks INTO ls_block WITH KEY block = 'PP'.
+    IF sy-subrc <> 0 OR ls_block-active IS INITIAL.
+      RETURN.
+    ENDIF.
+    READ TABLE ms_res-errors TRANSPORTING NO FIELDS WITH KEY step = 'PP_AUFK'.
+    IF sy-subrc = 0.
+      RETURN.
+    ENDIF.
+    LOOP AT ms_res-plants INTO ls_plant WHERE counted = gc_x AND manuf = gc_x.
+      lv_num = lv_num + 1.
+    ENDLOOP.
+    lv_cnt  = num( lv_num ).
+    lv_word = lcl_text=>get( 'M17' ).
+    CONCATENATE '(' lv_cnt INTO rv_split.
+    CONCATENATE rv_split lv_word INTO rv_split SEPARATED BY space.
     CONCATENATE rv_split ')' INTO rv_split.
   ENDMETHOD.
 
