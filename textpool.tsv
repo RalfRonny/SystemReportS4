@@ -119,9 +119,9 @@ I	N09	PO or FI line item in period	Bestellung oder FI-Posten im Zeitraum
 I	N10	No deletion flag; C = created/month	Ohne Löschvormerkung; C = neu/Monat
 I	N11	Valid today; C = first created/month	Heute gültig; C = erstmals neu/Monat
 I	N12	Main numbers, not deactivated	Hauptnummern, nicht deaktiviert
-I	N13	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N13	B = open, created in period; C = created/month	B = offen, im Zeitraum angelegt; C = angelegt/Monat
 I	N14	Payment documents created/month	Zahlungsbelege angelegt/Monat
-I	N15	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N15	B = open, created in period; C = created/month	B = offen, im Zeitraum angelegt; C = angelegt/Monat
 I	N16	Not derivable	Nicht ermittelbar
 I	N18	Distinct banks of house banks	Banken der Hausbanken (eindeutig)
 I	N19	Check register, not voided	Scheckregister, nicht entwertet
@@ -129,7 +129,7 @@ I	N20	Payment runs, bank transfer methods	Zahllauf, Zahlwege Überweisung
 I	N21	Not derivable	Nicht ermittelbar
 I	N22	Not derivable	Nicht ermittelbar
 I	N23	B = partner profiles; C = IDocs/month	B = Partnervereinb.; C = IDocs/Monat
-I	N24	B = open now; C = created/month	B = offen; C = angelegt/Monat
+I	N24	B = open, created in period; C = created/month	B = offen, im Zeitraum angelegt; C = angelegt/Monat
 I	N25	Created/month incl. service orders	Angelegt/Monat inkl. Serviceaufträge
 I	N26	WM warehouse numbers assigned	Zugeordnete WM-Lagernummern
 I	N27	Plants of active company codes	Werke aktiver Buchungskreise
@@ -145,9 +145,9 @@ I	L09	Distinct vendors: purchase order created in period (EKKO, BSTYP F) or line
 I	L10	B: materials (MARA) without client-level deletion flag; C: MARA created (ERSDA) / months	B: Materialien (MARA) ohne Löschvormerkung auf Mandantenebene; C: MARA angelegt (ERSDA) / Monate
 I	L11	B: cost centers (CSKS) valid today; C: cost centers first created in period (min. ERSDA) / months	B: heute gültige Kostenstellen (CSKS); C: im Zeitraum erstmals angelegte Kostenstellen (min. ERSDA) / Monate
 I	L12	B: main asset numbers (ANLA, sub-number 0000) not deactivated; C: created (ERDAT) / months	B: Anlagenhauptnummern (ANLA, Unternummer 0000), nicht deaktiviert; C: angelegt (ERDAT) / Monate
-I	L13	B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months	B: offene Kundenaufträge (VBUK, VBTYP C, GBSTK ungleich C); C: angelegte Aufträge (VBAK-ERDAT) / Monate
+I	L13	B: sales orders created in period (VBAK, VBTYP C) still open (VBUK-GBSTK not C); C: created / months	B: im Zeitraum angelegte Kundenaufträge (VBAK, VBTYP C), noch offen (VBUK-GBSTK ungleich C); C: angelegt / Monate
 I	L14	C: distinct FI documents (BSID/BSAD, CPUDT) with a customer credit payment line (TBSL attributes) / months	C: eindeutige FI-Belege (BSID/BSAD, CPUDT) mit Kunden-Habenposition Zahlung (TBSL-Attribute) / Monate
-I	L15	B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months	B: offene Bestellungen (EKPO, BSTYP F, ohne ELIKZ und LOEKZ); C: angelegte Bestellungen (EKKO-AEDAT) / Monate
+I	L15	B: POs created in period (EKKO-AEDAT) with an open item (EKPO BSTYP F, no ELIKZ/LOEKZ); C: created / months	B: im Zeitraum angelegte Bestellungen (EKKO-AEDAT) mit offener Position (EKPO BSTYP F, ohne ELIKZ/LOEKZ); C: angelegt / Monate
 I	L16	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L18	Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes	Eindeutige Banken (Bankland + Bankschlüssel) der Hausbanken (T012) der aktiven Buchungskreise
 I	L19	C: checks in the check register (PAYR) with payment date in period, not voided / months	C: Schecks im Scheckregister (PAYR) mit Zahldatum im Zeitraum, nicht entwertet / Monate
@@ -155,7 +155,7 @@ I	L20	C: outgoing payments of productive payment runs (REGUH), method neither ch
 I	L21	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L22	Not derivable generically from SAP standard tables	Aus SAP-Standardtabellen nicht generisch ermittelbar
 I	L23	B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months	B: Partnervereinbarungszeilen (EDP13/EDP21) ohne log. Systeme; C: solche IDocs angelegt (EDIDC) / Monate
-I	L24	B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months	B: offene Aufträge Typ 10/40 (ohne LIEF, TABG, ABGS, LÖVM); C: Aufträge Typ 10/40 angelegt (AUFK-ERDAT) / Monate
+I	L24	B: orders cat. 10/40 created in period, open (no DLV, TECO, CLSD, DLFL); C: created (AUFK-ERDAT) / months	B: im Zeitraum angelegte Aufträge Typ 10/40, offen (ohne LIEF, TABG, ABGS, LÖVM); C: angelegt (AUFK-ERDAT) / Monate
 I	L25	C: orders of order category 30 (maintenance and service) created (AUFK-ERDAT) / months	C: Aufträge mit Auftragstyp 30 (Instandhaltung und Service) angelegt (AUFK-ERDAT) / Monate
 I	L26	Distinct WM warehouse numbers assigned to a plant / storage location (T320)	Eindeutige WM-Lagernummern mit Zuordnung zu Werk / Lagerort (T320)
 I	L27	Plants (T001W) whose valuation area belongs to an active company code (T001K)	Werke (T001W), deren Bewertungskreis zu einem aktiven Buchungskreis gehört (T001K)
@@ -171,14 +171,14 @@ I	R09	Union of both sources built in ABAP	Vereinigung beider Quellen in ABAP
 I	R10	Per material type and materials with goods movements in the details	Je Materialart und Materialien mit Warenbewegungen in den Details
 I	R11	New validity records of existing cost centers are not counted as additions	Neue Gültigkeitsabschnitte bestehender Kostenstellen zählen nicht als neu
 I	R12	Sub-numbers in the details	Unternummern in den Details
-I	R13	Other sales document categories in the details	Andere Vertriebsbelegtypen in den Details
+I	R13	All open orders regardless of age (D35) and other categories in the details	Alle offenen Aufträge unabhängig vom Alter (D35) und andere Belegtypen in den Details
 I	R14	Documents, not line items; no posting key hard-coded	Belege, nicht Positionen; kein Buchungsschlüssel fest codiert
-I	R15	Contracts, scheduling agreements and RFQs excluded by BSTYP	Kontrakte, Lieferpläne und Anfragen über BSTYP ausgeschlossen
+I	R15	All open POs regardless of age in the details (D30-D34); contracts etc. excluded by BSTYP	Alle offenen Bestellungen unabhängig vom Alter in den Details (D30-D34); Kontrakte usw. über BSTYP ausgeschlossen
 I	R18	House banks have no creation date	Hausbanken haben kein Anlagedatum
 I	R19	Checks from payment runs and manual checks	Schecks aus Zahlläufen und manuelle Schecks
 I	R20	Outgoing only; incl. payment with printout (F-58); HR payroll runs not included	Nur ausgehend; inkl. Zahlung mit Druck (F-58); HR-Abrechnungsläufe nicht enthalten
 I	R23	ALE IDocs (logical systems) and message types in the details	ALE-IDocs (logische Systeme) und Nachrichtentypen in den Details
-I	R24	Split by order category in the details	Aufteilung nach Auftragstyp in den Details
+I	R24	All open orders regardless of age, per order category in the details	Alle offenen Aufträge unabhängig vom Alter, je Auftragstyp in den Details
 I	R25	Open maintenance orders in the details	Offene Instandhaltungsaufträge in den Details
 I	R26	Systems without WM: 0	Systeme ohne WM: 0
 I	R27	Plants have no creation date	Werke haben kein Anlagedatum
@@ -244,8 +244,8 @@ I	D11	Vendor invoices (logistics invoice verification)	Lieferantenrechnungen (Lo
 I	E11	RBKP entered in the period (CPUDT), status posted (RBSTAT 5)	RBKP im Zeitraum erfasst (CPUDT), Status gebucht (RBSTAT 5)
 I	D12	Material documents	Materialbelege
 I	E12	MKPF entered in the period (CPUDT)	MKPF im Zeitraum erfasst (CPUDT)
-I	D13	Production / process orders: open (value), created (total)	Fertigungs-/Prozessaufträge: offen (Wert), angelegt (Summe)
-I	E13	AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period	AUFK Auftragstyp 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST); angelegt = ERDAT im Zeitraum
+I	D13	Production / process orders: all open (value), created (total)	Fertigungs-/Prozessaufträge: alle offen (Wert), angelegt (Summe)
+I	E13	AUFK cat. 10/40; open = no active DLV, TECO, CLSD, DLFL (JEST), any creation date; created = ERDAT in period	AUFK Typ 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST), beliebiges Anlagedatum; angelegt = ERDAT im Zeitraum
 I	D14	Open maintenance orders	Offene Instandhaltungsaufträge
 I	E14	AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST)	AUFK Auftragstyp 30 ohne aktiven Status LIEF, TABG, ABGS, LÖVM (JEST)
 I	D15	Inspection lots created	Angelegte Prüflose
@@ -279,15 +279,17 @@ I	E28	T001-KTOP2 of the active company codes; per chart: SKA1 without deletion f
 I	D29	Group charts of accounts	Konzernkontenpläne
 I	E29	T004-KKTPL of the charts of row 4; per chart: SKA1 without deletion flag, created (ERDAT)	T004-KKTPL der Kontenpläne aus Zeile 4; je Kontenplan: SKA1 ohne Löschvormerkung, angelegt (ERDAT)
 I	D30	Open purchase orders by age	Offene Bestellungen nach Alter
-I	E30	POs of row 15 by creation date (EKKO-AEDAT) before today	Bestellungen aus Zeile 15 nach Anlagedatum (EKKO-AEDAT) vor heute
+I	E30	All open POs (rule of row 15, any creation date) by EKKO-AEDAT before today	Alle offenen Bestellungen (Regel Zeile 15, beliebiges Anlagedatum) nach EKKO-AEDAT vor heute
 I	D31	Open purchase orders by company code	Offene Bestellungen je Buchungskreis
-I	E31	POs of row 15 per company code (EKKO-BUKRS)	Bestellungen aus Zeile 15 je Buchungskreis (EKKO-BUKRS)
+I	E31	All open POs (rule of row 15, any creation date) per company code (EKKO-BUKRS)	Alle offenen Bestellungen (Regel Zeile 15, beliebiges Anlagedatum) je Buchungskreis (EKKO-BUKRS)
 I	D32	Open PO items by closing pattern	Offene Bestellpositionen nach Abschlussmuster
-I	E32	Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)	Offene Positionen aus Zeile 15: WE erwartet (WEPOS), Endrechnung (EREKZ)
+I	E32	All open PO items (any creation date): GR expected (WEPOS), final invoice (EREKZ)	Alle offenen Bestellpositionen (beliebiges Anlagedatum): WE erwartet (WEPOS), Endrechnung (EREKZ)
 I	D33	Open PO items by item category	Offene Bestellpositionen je Positionstyp
-I	E33	Open items of row 15 per item category (EKPO-PSTYP)	Offene Positionen aus Zeile 15 je Positionstyp (EKPO-PSTYP)
+I	E33	All open PO items (any creation date) per item category (EKPO-PSTYP)	Alle offenen Bestellpositionen (beliebiges Anlagedatum) je Positionstyp (EKPO-PSTYP)
 I	D34	Open POs without activity since period start	Offene Bestellungen ohne Bewegung seit Zeitraumbeginn
-I	E34	POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start	Bestellungen aus Zeile 15, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn
+I	E34	Open POs created before the period, no PO history (EKBE-BUDAT) since its start	Offene Bestellungen, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn
+I	D35	All open sales orders regardless of creation date	Alle offenen Kundenaufträge unabhängig vom Anlagedatum
+I	E35	VBUK with VBTYP C and overall status GBSTK not C, any creation date	VBUK mit VBTYP C und Gesamtstatus GBSTK ungleich C, beliebiges Anlagedatum
 I	D80	System ID	System-ID
 I	D81	Client	Mandant
 I	D82	SAP release	SAP-Release

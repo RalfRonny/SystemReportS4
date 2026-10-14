@@ -247,8 +247,8 @@ CLASS lcl_text IMPLEMENTATION.
     add_range( EXPORTING iv_prefix = 'O' iv_from = 1  iv_to = 8  CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'O' iv_from = 11 iv_to = 22 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'G' iv_from = 0  iv_to = 16 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 34 CHANGING ct_ids = lt_ids ).
-    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 34 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'D' iv_from = 1  iv_to = 35 CHANGING ct_ids = lt_ids ).
+    add_range( EXPORTING iv_prefix = 'E' iv_from = 1  iv_to = 35 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'D' iv_from = 80 iv_to = 90 CHANGING ct_ids = lt_ids ).
     add_range( EXPORTING iv_prefix = 'I' iv_from = 1  iv_to = 5  CHANGING ct_ids = lt_ids ).
 
@@ -596,7 +596,6 @@ CLASS lcl_collector DEFINITION FINAL.
     METHODS step_sd_likp.
     METHODS step_sd_vbrk.
     METHODS step_mm_ekko.
-    METHODS step_mm_ekpo.
     METHODS step_mm_openpo.
     METHODS step_mm_pohist.
     METHODS step_mm_rbkp.
@@ -745,6 +744,7 @@ CLASS lcl_collector IMPLEMENTATION.
     add_detail( iv_fkey = 'D32' iv_grp = 'G07' ).
     add_detail( iv_fkey = 'D33' iv_grp = 'G07' ).
     add_detail( iv_fkey = 'D34' iv_grp = 'G07' ).
+    add_detail( iv_fkey = 'D35' iv_grp = 'G06' ).
 
 * Collection steps. One step per pass over a table (design 5); the keys are
 * the figures the step feeds. If the step fails, all of them show "error".
@@ -765,12 +765,11 @@ CLASS lcl_collector IMPLEMENTATION.
     add_step( iv_step = 'FI_REGUH'   iv_block = 'FI'   iv_keys = 'Q20 D21' ).
     add_step( iv_step = 'FI_BKPF'    iv_block = 'FI'   iv_keys = 'D27' ).
     add_step( iv_step = 'SD_VBAK'    iv_block = 'SD'   iv_keys = 'Q13 D07 Q07' ).
-    add_step( iv_step = 'SD_VBUK'    iv_block = 'SD'   iv_keys = 'Q13' ).
+    add_step( iv_step = 'SD_VBUK'    iv_block = 'SD'   iv_keys = 'Q13 D35' ).
     add_step( iv_step = 'SD_LIKP'    iv_block = 'SD'   iv_keys = 'D08' ).
     add_step( iv_step = 'SD_VBRK'    iv_block = 'SD'   iv_keys = 'D09' ).
     add_step( iv_step = 'MM_EKKO'    iv_block = 'MM'   iv_keys = 'Q15 D10 Q09' ).
-    add_step( iv_step = 'MM_EKPO'    iv_block = 'MM'   iv_keys = 'Q15' ).
-    add_step( iv_step = 'MM_OPENPO'  iv_block = 'MM'   iv_keys = 'D30 D31 D32 D33' ).
+    add_step( iv_step = 'MM_OPENPO'  iv_block = 'MM'   iv_keys = 'Q15 D30 D31 D32 D33' ).
     add_step( iv_step = 'MM_POHIST'  iv_block = 'MM'   iv_keys = 'D34' ).
     add_step( iv_step = 'MM_RBKP'    iv_block = 'MM'   iv_keys = 'D11' ).
     add_step( iv_step = 'MM_MKPF'    iv_block = 'MM'   iv_keys = 'D12 D04' ).
@@ -915,8 +914,6 @@ CLASS lcl_collector IMPLEMENTATION.
             step_sd_vbrk( ).
           WHEN 'MM_EKKO'.
             step_mm_ekko( ).
-          WHEN 'MM_EKPO'.
-            step_mm_ekpo( ).
           WHEN 'MM_OPENPO'.
             step_mm_openpo( ).
           WHEN 'MM_POHIST'.
@@ -1712,17 +1709,47 @@ CLASS lcl_collector IMPLEMENTATION.
     mv_sd_cust_ok = gc_x.
   ENDMETHOD.
 
-* Row 13 B: open sales orders today, from the header status table: SD document
-* category C and overall processing status not C (completely processed)
+* Row 13 B: open sales orders created in the period: sales orders (VBAK, SD
+* document category C) with ERDAT in the period whose overall processing
+* status (VBUK-GBSTK) is not C (completely processed); VBUK is read per block
+* of 5,000 orders. Detail D35: all open sales orders regardless of their
+* creation date (VBUK, category C, GBSTK not C)
   METHOD step_sd_vbuk.
-    DATA: lv_cnt  TYPE i,
-          lv_open TYPE ty_num.
+    DATA: lt_vbeln TYPE STANDARD TABLE OF vbeln,
+          lt_block TYPE STANDARD TABLE OF vbeln,
+          lt_open  TYPE STANDARD TABLE OF vbeln,
+          lv_vbeln TYPE vbeln,
+          lv_lines TYPE i,
+          lv_cnt   TYPE i,
+          lv_open  TYPE ty_num,
+          lv_all   TYPE ty_num.
+
+    SELECT vbeln FROM vbak INTO TABLE lt_vbeln
+      WHERE erdat BETWEEN mv_datfr AND mv_datto
+        AND vbtyp = 'C'.
+    SORT lt_vbeln.
+    DESCRIBE TABLE lt_vbeln LINES lv_lines.
+    WHILE lv_lines > 0.
+      CLEAR lt_block.
+      LOOP AT lt_vbeln INTO lv_vbeln FROM 1 TO 5000.
+        APPEND lv_vbeln TO lt_block.
+      ENDLOOP.
+      DELETE lt_vbeln FROM 1 TO 5000.
+      DESCRIBE TABLE lt_vbeln LINES lv_lines.
+      SELECT vbeln FROM vbuk INTO TABLE lt_open
+        FOR ALL ENTRIES IN lt_block
+        WHERE vbeln = lt_block-table_line
+          AND gbstk <> 'C'.
+      DESCRIBE TABLE lt_open LINES lv_cnt.
+      lv_open = lv_open + lv_cnt.
+    ENDWHILE.
+    set_b( iv_fkey = 'Q13' iv_val = lv_open ).
 
     SELECT COUNT( * ) FROM vbuk INTO lv_cnt
       WHERE vbtyp = 'C'
         AND gbstk <> 'C'.
-    lv_open = lv_cnt.
-    set_b( iv_fkey = 'Q13' iv_val = lv_open ).
+    lv_all = lv_cnt.
+    set_b( iv_fkey = 'D35' iv_val = lv_all ).
   ENDMETHOD.
 
 * Detail D08: deliveries created in the period (LIKP-ERDAT) per SD document
@@ -1846,23 +1873,12 @@ CLASS lcl_collector IMPLEMENTATION.
     mv_mm_vend_ok = gc_x.
   ENDMETHOD.
 
-* Row 15 B: open purchase orders today = distinct purchase orders with at least
-* one item of category F without delivery-completed and deletion indicator
-  METHOD step_mm_ekpo.
-    DATA: lv_cnt  TYPE i,
-          lv_open TYPE ty_num.
-
-    SELECT COUNT( DISTINCT ebeln ) FROM ekpo INTO lv_cnt
-      WHERE bstyp = 'F'
-        AND elikz = space
-        AND loekz = space.
-    lv_open = lv_cnt.
-    set_b( iv_fkey = 'Q15' iv_val = lv_open ).
-  ENDMETHOD.
-
-* Details D30-D33: analysis of the open purchase orders of row 15 (same item
-* rule). Items are aggregated on the database per PO, GR indicator, final
-* invoice indicator and item category:
+* Row 15 B and details D30-D33. Open item: EKPO with BSTYP F, without
+* delivery-completed (ELIKZ) and deletion indicator (LOEKZ); a PO is open if it
+* has at least one open item. Row 15 B = open POs created in the period
+* (EKKO-AEDAT); D30-D33 analyse ALL open POs regardless of their age. Items
+* are aggregated on the database per PO, GR indicator, final invoice indicator
+* and item category:
 * - D32 closing pattern per item: 1 no goods receipt expected (WEPOS empty, so
 *   the delivery-completed flag is never set automatically), 2 final invoice
 *   posted (EREKZ) but not delivery-completed, 3 goods receipt expected and not
@@ -1905,6 +1921,7 @@ CLASS lcl_collector IMPLEMENTATION.
           lv_d5    TYPE d,
           lv_items TYPE ty_num,
           lv_pos   TYPE ty_num,
+          lv_new   TYPE ty_num,
           lv_lines TYPE i.
 
     CLEAR: mt_openpo, mv_openpo_ok.
@@ -1982,6 +1999,9 @@ CLASS lcl_collector IMPLEMENTATION.
         ENDIF.
         ls_sub-cnt = 1.
         COLLECT ls_sub INTO lt_cc.
+        IF ls_ekko-aedat BETWEEN mv_datfr AND mv_datto.
+          lv_new = lv_new + 1.
+        ENDIF.
         ls_open-ebeln = ls_ekko-ebeln.
         ls_open-aedat = ls_ekko-aedat.
         MODIFY TABLE mt_openpo FROM ls_open.
@@ -2006,10 +2026,11 @@ CLASS lcl_collector IMPLEMENTATION.
       set_b( iv_fkey = 'D33' iv_sub = ls_sub-sub iv_val = ls_sub-cnt ).
     ENDLOOP.
     set_b( iv_fkey = 'D33' iv_val = lv_items ).
+    set_b( iv_fkey = 'Q15' iv_val = lv_new ).
     mv_openpo_ok = gc_x.
   ENDMETHOD.
 
-* Detail D34: open purchase orders of row 15 created before the period start
+* Detail D34: open purchase orders (rule of row 15) created before the period start
 * without any PO history posting (EKBE: goods receipts, invoices, ...) with a
 * posting date on or after the period start. Read in blocks of 5,000 POs;
 * FOR ALL ENTRIES returns each PO with recent history once
@@ -2129,7 +2150,8 @@ CLASS lcl_collector IMPLEMENTATION.
     set_b( iv_fkey = 'Q26' iv_val = lv_whs ).
   ENDMETHOD.
 
-* Rows 24 and 25, details D13 and D14: one pass over the production, process
+* Rows 24 and 25, details D13 and D14 (row 24 B = open orders created in the
+* period; D13 = all open orders and created orders): one pass over the production, process
 * and maintenance orders (AUFK order categories 10, 40, 30; SAP-defined) in
 * packages. Created = AUFK-ERDAT in the period. Open = none of the system
 * statuses DLV (I0012), TECO (I0045), CLSD (I0046), DLFL (I0076) active in JEST
@@ -2150,6 +2172,7 @@ CLASS lcl_collector IMPLEMENTATION.
              autyp   TYPE aufk-autyp,
              cnt_open TYPE ty_num,
              cnt_new  TYPE ty_num,
+             cnt_opnw TYPE ty_num,       " open and created in the period
            END OF lty_cat.
     DATA: lt_order  TYPE STANDARD TABLE OF lty_order,
           ls_order  TYPE lty_order,
@@ -2161,6 +2184,7 @@ CLASS lcl_collector IMPLEMENTATION.
           lv_lines  TYPE i,
           lv_sub    TYPE c LENGTH 30,
           lv_open   TYPE ty_num,
+          lv_opnw   TYPE ty_num,
           lv_new    TYPE ty_num,
           lv_open_m TYPE ty_num,
           lv_new_m  TYPE ty_num.
@@ -2190,6 +2214,7 @@ CLASS lcl_collector IMPLEMENTATION.
         ENDIF.
         IF ls_order-erdat BETWEEN mv_datfr AND mv_datto.
           ls_cat-cnt_new = 1.
+          ls_cat-cnt_opnw = ls_cat-cnt_open.
           IF ls_order-autyp <> '30' AND ls_order-werks IS NOT INITIAL.
             INSERT ls_order-werks INTO TABLE mt_werks_manuf.
           ENDIF.
@@ -2204,13 +2229,14 @@ CLASS lcl_collector IMPLEMENTATION.
         lv_new_m  = ls_cat-cnt_new.
       ELSE.
         lv_open = lv_open + ls_cat-cnt_open.
+        lv_opnw = lv_opnw + ls_cat-cnt_opnw.
         lv_new  = lv_new + ls_cat-cnt_new.
         lv_sub  = ls_cat-autyp.
         set_b( iv_fkey = 'D13' iv_sub = lv_sub iv_val = ls_cat-cnt_open ).
         set_c( iv_fkey = 'D13' iv_sub = lv_sub iv_total = ls_cat-cnt_new ).
       ENDIF.
     ENDLOOP.
-    set_b( iv_fkey = 'Q24' iv_val = lv_open ).
+    set_b( iv_fkey = 'Q24' iv_val = lv_opnw ).
     set_c( iv_fkey = 'Q24' iv_total = lv_new ).
     set_b( iv_fkey = 'D13' iv_val = lv_open ).
     set_c( iv_fkey = 'D13' iv_total = lv_new ).

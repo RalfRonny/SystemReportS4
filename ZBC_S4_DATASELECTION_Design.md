@@ -49,7 +49,7 @@
 | Months | Number of calendar months in the analysis period, derived from the dates. |
 | Created in period | Creation or entry date of the record within the analysis period. |
 | Average added per month (column C) | Created in period ÷ months, rounded commercially to a whole number. |
-| Current number (column B) | Stock figure on the run date. For master data this is the current count. For documents it is the number currently **open**. For pure flow figures, which have no stock, it is "N/A". |
+| Current number (column B) | Stock figure on the run date. For master data this is the current count. For documents (rows 13, 15, 24) it is the number currently **open** among the documents created in the period; old open documents are shown in the details. For pure flow figures, which have no stock, it is "N/A". |
 | Total in period | Created in period (absolute). Shown as an extra column so that small averages (rounded to 0) stay visible. |
 | Active company code | Company code with at least one FI document entered in the period. Charts of accounts, banks, plants and countries are derived from the active company codes. Unused and sample company codes are therefore excluded. |
 | N/A | Output literally as "N/A" in the cells the questionnaire answers with N/A by design, and where a figure cannot be derived generically. |
@@ -195,9 +195,9 @@ B = column "Current number", C = column "Average added per Month/Year". "Created
 | 10 | No. of Products (SKUs) | Materials (MARA) without client-level deletion flag (LVORM) | MARA created (ERSDA) ÷ months | Distribution per material type and materials with goods movements in the details. |
 | 11 | No. of Departments/Cost Centers | Cost centers (CSKS) with a validity record valid today (DATAB ≤ today ≤ DATBI) | Cost centers whose **first** creation date (earliest ERSDA over all validity records) lies in the period ÷ months | New validity records of existing cost centers are not counted as additions. Profit centers in the details. |
 | 12 | No. of Assets | Main asset numbers (ANLA, sub-number 0000) that are not deactivated (DEAKT initial) | Main asset numbers created (ERDAT) ÷ months | Sub-numbers in the details. |
-| 13 | No. of Customer Orders | **Open** sales orders: sales document status (VBUK) with VBTYP = C and overall status GBSTK ≠ C (not completely processed) | Sales orders (VBAK, VBTYP = C) created (ERDAT) ÷ months | Other sales document categories (inquiries, quotations, contracts, scheduling agreements, returns, free-of-charge orders) in the details. |
+| 13 | No. of Customer Orders | **Open** sales orders **created in the period**: sales orders (VBAK, VBTYP = C, ERDAT in the period) whose overall status (VBUK-GBSTK) is ≠ C (not completely processed); VBUK read per block of 5,000 orders | Sales orders (VBAK, VBTYP = C) created (ERDAT) ÷ months | All open sales orders regardless of creation date in the details (D35), as well as the other sales document categories (inquiries, quotations, contracts, scheduling agreements, returns, free-of-charge orders). |
 | 14 | No. of Customer Payments Received | N/A (flow figure without stock) | Distinct FI documents (BUKRS, BELNR, GJAHR) entered in the period (BSID ∪ BSAD, CPUDT) with a line item whose posting key is defined as customer / credit / payment transaction (TBSL attributes) ÷ months | Documents, not line items. No posting key value is hard-coded. |
-| 15 | No. of Purchase Orders | **Open** purchase orders: distinct EBELN in EKPO with BSTYP = F, without delivery-completed indicator (ELIKZ) and without deletion indicator (LOEKZ) | Purchase orders (EKKO, BSTYP = F) created (AEDAT) ÷ months | Contracts, scheduling agreements and RFQs are excluded by BSTYP. Other categories in the details. |
+| 15 | No. of Purchase Orders | **Open** purchase orders **created in the period**: purchase orders with EKKO-AEDAT in the period that have at least one open item (EKPO with BSTYP = F, without delivery-completed indicator ELIKZ and without deletion indicator LOEKZ) | Purchase orders (EKKO, BSTYP = F) created (AEDAT) ÷ months | Contracts, scheduling agreements and RFQs are excluded by BSTYP. All open POs regardless of age are analysed in the details (D30–D34). |
 | 16 | No. of P-Card Transactions | N/A | N/A | Not derivable generically. |
 | 17 | Banking | – | – | Header row, left empty. |
 | 18 | – No. of Banks used | Distinct banks (bank country + bank key) of the house banks (T012) of the active company codes | N/A | House banks have no creation date. House bank and account counts in the details. |
@@ -206,7 +206,7 @@ B = column "Current number", C = column "Average added per Month/Year". "Created
 | 21 | – Checks Received | N/A | N/A | Not derivable generically. |
 | 22 | – No. of Lock Boxes | N/A | N/A | Not derivable generically. |
 | 23 | EDI Transactions | Configured EDI message flows with business partners: partner profile message lines outbound (EDP13) and inbound (EDP21) for all partner types except logical systems (LS) | IDocs created (EDIDC, CREDAT) in the period whose partner is not a logical system ÷ months. Partner = receiver for outbound, sender for inbound | ALE IDocs (logical systems), direction split and top message types in the details. |
-| 24 | No. of Production Orders | **Open** production and process orders: orders (AUFK) with order category 10 or 40 that have none of the system statuses DLV, TECO, CLSD, DLFL | Production and process orders created (ERDAT) ÷ months | Split by order category in the details. |
+| 24 | No. of Production Orders | **Open** production and process orders **created in the period**: orders (AUFK) with order category 10 or 40, ERDAT in the period, that have none of the system statuses DLV, TECO, CLSD, DLFL | Production and process orders created (ERDAT) ÷ months | All open orders regardless of age, per order category, in the details (D13). |
 | 25 | No. of Maintenance Orders | N/A | Orders with order category 30 created (ERDAT) ÷ months | Order category 30 includes service orders. Open maintenance orders in the details. |
 | 26 | No of Warehouses | WM warehouse numbers assigned to a plant / storage location (distinct LGNUM in T320) | N/A | Systems without WM: 0. Storage locations in the details. |
 | 27 | No of Plants/Manufacturing facilities* | Plants (T001W) whose valuation area belongs to an active company code (T001K). Shown as "n (p prod)", e.g. "227 (12 prod)", with p = counted plants marked "manufacturing" in the plant view; only the number if block PP was skipped or its order pass failed (text M17) | N/A | Plants have no creation date. Manufacturing plants (orders in period) in the plant view. |
@@ -233,18 +233,19 @@ System ID, client, SAP release, database system, logon language of the run, anal
 | Materials | Materials with goods movements in the period | Material documents entered in the period (MKPF, CPUDT) → distinct materials of their items (MSEG via document key, FOR ALL ENTRIES per MKPF package). Distinct count over the whole period, shown as value without average |
 | Controlling | Profit centers | CEPC records valid today |
 | Assets | Asset sub-numbers | ANLA with sub-number ≠ 0000, not deactivated |
+| Sales | All open sales orders regardless of creation date (D35) | VBUK with VBTYP C and GBSTK ≠ C (the former rule of row 13 B) |
 | Sales | Sales documents per category | VBAK created in the period, grouped by VBTYP (A inquiry, B quotation, C order, E scheduling agreement, G contract, H returns, I free-of-charge order) |
 | Sales | Deliveries per category | LIKP created in the period, grouped by VBTYP (J outbound delivery, T returns delivery, 7 inbound delivery) |
 | Sales | Billing documents per category | VBRK created in the period, grouped by VBTYP; cancelled documents (FKSTO) separately (sub key "<VBTYP> X") |
 | Purchasing | Purchasing documents per category | EKKO created in the period, grouped by BSTYP (A RFQ, F purchase order, K contract, L scheduling agreement) |
 | Purchasing | Vendor invoices (logistics invoice verification) | RBKP entered in the period (CPUDT), posted status only |
-| Purchasing | Open purchase orders by age (D30) | POs of row 15 by creation date EKKO-AEDAT before today: < 1, 1–2, 2–5, > 5 years (same day 1, 2, 5 years ago); header = POs of row 15 |
-| Purchasing | Open purchase orders by company code (D31) | POs of row 15 per EKKO-BUKRS, text T001 |
-| Purchasing | Open PO items by closing pattern (D32) | Open items of row 15 (EKPO, BSTYP F, no ELIKZ, no LOEKZ): 1 no goods receipt expected (WEPOS empty; ELIKZ is never set automatically), 2 final invoice posted (EREKZ) but not delivery-completed, 3 goods receipt expected and not delivery-completed |
-| Purchasing | Open PO items by item category (D33) | Open items of row 15 per EKPO-PSTYP, text T163Y |
-| Purchasing | Open POs without activity since period start (D34) | POs of row 15 created before the period start without any PO history posting (EKBE, BUDAT) on or after the period start. EKBE is read per block of 5,000 POs (FOR ALL ENTRIES, key prefix EBELN); separate step MM_POHIST so its runtime and failures stay separate |
+| Purchasing | Open purchase orders by age (D30) | All open POs (rule of row 15, any creation date) by creation date EKKO-AEDAT before today: < 1, 1–2, 2–5, > 5 years (same day 1, 2, 5 years ago); header = POs of row 15 |
+| Purchasing | Open purchase orders by company code (D31) | All open POs per EKKO-BUKRS, text T001 |
+| Purchasing | Open PO items by closing pattern (D32) | All open items, any creation date (EKPO, BSTYP F, no ELIKZ, no LOEKZ): 1 no goods receipt expected (WEPOS empty; ELIKZ is never set automatically), 2 final invoice posted (EREKZ) but not delivery-completed, 3 goods receipt expected and not delivery-completed |
+| Purchasing | Open PO items by item category (D33) | All open items per EKPO-PSTYP, text T163Y |
+| Purchasing | Open POs without activity since period start (D34) | Open POs created before the period start without any PO history posting (EKBE, BUDAT) on or after the period start. EKBE is read per block of 5,000 POs (FOR ALL ENTRIES, key prefix EBELN); separate step MM_POHIST so its runtime and failures stay separate |
 | Inventory | Material documents | MKPF entered in the period |
-| Production | Production orders / process orders | Created in the period and open, separately for order category 10 and 40 (sub rows: value = open, total = created) |
+| Production | Production orders / process orders | All open orders regardless of creation date (value) and orders created in the period (total), separately for order category 10 and 40 |
 | Maintenance | Open maintenance orders | Order category 30, open by the status rule of row 24 |
 | Quality | Inspection lots created | QALS created in the period |
 | Warehouse | Transfer orders created | LTAK with creation date (BDATU) in the period |
@@ -790,6 +791,7 @@ Detail numbering follows the order of section 8.2; IDs are fixed so that later b
 | D27 | FI documents entered | G16 Financials | FI |
 | D28–D29 | Country charts of accounts / group charts of accounts | G02 G/L | MD |
 | D30–D34 | Open POs by age / by company code / items by closing pattern / items by item category / POs without activity | G07 Purchasing | MM |
+| D35 | All open sales orders regardless of creation date | G06 Sales | SD |
 
 Sub rows (e.g. one per material type) carry the key; its text is read at display time (T001 for D01, T134T for D03, domain fixed values of VBTYP for D07–D09, of the domain of data element EBSTYP (looked up in DD04L) for D10, of data element AUFTYP for D13, T042Z for D21, domain fixed values of BSTAT for D27, T004T for D28 and D29, text IDs M21–M24 for the age buckets of D30, T001 for D31, M18–M20 for the closing patterns of D32, T163Y for D33).
 

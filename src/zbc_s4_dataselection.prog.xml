@@ -85,8 +85,8 @@
     <item>
      <ID>I</ID>
      <KEY>D13</KEY>
-     <ENTRY>Production / process orders: open (value), created (total)</ENTRY>
-     <LENGTH>59</LENGTH>
+     <ENTRY>Production / process orders: all open (value), created (total)</ENTRY>
+     <LENGTH>64</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -213,6 +213,12 @@
      <KEY>D34</KEY>
      <ENTRY>Open POs without activity since period start</ENTRY>
      <LENGTH>53</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>D35</KEY>
+     <ENTRY>All open sales orders regardless of creation date</ENTRY>
+     <LENGTH>54</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -355,8 +361,8 @@
     <item>
      <ID>I</ID>
      <KEY>E13</KEY>
-     <ENTRY>AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period</ENTRY>
-     <LENGTH>111</LENGTH>
+     <ENTRY>AUFK cat. 10/40; open = no active DLV, TECO, CLSD, DLFL (JEST), any creation date; created = ERDAT in period</ENTRY>
+     <LENGTH>127</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -457,32 +463,38 @@
     <item>
      <ID>I</ID>
      <KEY>E30</KEY>
-     <ENTRY>POs of row 15 by creation date (EKKO-AEDAT) before today</ENTRY>
-     <LENGTH>65</LENGTH>
+     <ENTRY>All open POs (rule of row 15, any creation date) by EKKO-AEDAT before today</ENTRY>
+     <LENGTH>92</LENGTH>
     </item>
     <item>
      <ID>I</ID>
      <KEY>E31</KEY>
-     <ENTRY>POs of row 15 per company code (EKKO-BUKRS)</ENTRY>
-     <LENGTH>55</LENGTH>
+     <ENTRY>All open POs (rule of row 15, any creation date) per company code (EKKO-BUKRS)</ENTRY>
+     <LENGTH>96</LENGTH>
     </item>
     <item>
      <ID>I</ID>
      <KEY>E32</KEY>
-     <ENTRY>Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)</ENTRY>
-     <LENGTH>72</LENGTH>
+     <ENTRY>All open PO items (any creation date): GR expected (WEPOS), final invoice (EREKZ)</ENTRY>
+     <LENGTH>97</LENGTH>
     </item>
     <item>
      <ID>I</ID>
      <KEY>E33</KEY>
-     <ENTRY>Open items of row 15 per item category (EKPO-PSTYP)</ENTRY>
-     <LENGTH>59</LENGTH>
+     <ENTRY>All open PO items (any creation date) per item category (EKPO-PSTYP)</ENTRY>
+     <LENGTH>84</LENGTH>
     </item>
     <item>
      <ID>I</ID>
      <KEY>E34</KEY>
-     <ENTRY>POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start</ENTRY>
-     <LENGTH>102</LENGTH>
+     <ENTRY>Open POs created before the period, no PO history (EKBE-BUDAT) since its start</ENTRY>
+     <LENGTH>96</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>E35</KEY>
+     <ENTRY>VBUK with VBTYP C and overall status GBSTK not C, any creation date</ENTRY>
+     <LENGTH>74</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -847,8 +859,8 @@
     <item>
      <ID>I</ID>
      <KEY>L13</KEY>
-     <ENTRY>B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months</ENTRY>
-     <LENGTH>103</LENGTH>
+     <ENTRY>B: sales orders created in period (VBAK, VBTYP C) still open (VBUK-GBSTK not C); C: created / months</ENTRY>
+     <LENGTH>113</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -859,8 +871,8 @@
     <item>
      <ID>I</ID>
      <KEY>L15</KEY>
-     <ENTRY>B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months</ENTRY>
-     <LENGTH>109</LENGTH>
+     <ENTRY>B: POs created in period (EKKO-AEDAT) with an open item (EKPO BSTYP F, no ELIKZ/LOEKZ); C: created / months</ENTRY>
+     <LENGTH>126</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -907,8 +919,8 @@
     <item>
      <ID>I</ID>
      <KEY>L24</KEY>
-     <ENTRY>B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months</ENTRY>
-     <LENGTH>112</LENGTH>
+     <ENTRY>B: orders cat. 10/40 created in period, open (no DLV, TECO, CLSD, DLFL); C: created (AUFK-ERDAT) / months</ENTRY>
+     <LENGTH>115</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1147,8 +1159,8 @@
     <item>
      <ID>I</ID>
      <KEY>N13</KEY>
-     <ENTRY>B = open now; C = created/month</ENTRY>
-     <LENGTH>31</LENGTH>
+     <ENTRY>B = open, created in period; C = created/month</ENTRY>
+     <LENGTH>51</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1159,8 +1171,8 @@
     <item>
      <ID>I</ID>
      <KEY>N15</KEY>
-     <ENTRY>B = open now; C = created/month</ENTRY>
-     <LENGTH>31</LENGTH>
+     <ENTRY>B = open, created in period; C = created/month</ENTRY>
+     <LENGTH>51</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1207,8 +1219,8 @@
     <item>
      <ID>I</ID>
      <KEY>N24</KEY>
-     <ENTRY>B = open now; C = created/month</ENTRY>
-     <LENGTH>31</LENGTH>
+     <ENTRY>B = open, created in period; C = created/month</ENTRY>
+     <LENGTH>51</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1585,8 +1597,8 @@
     <item>
      <ID>I</ID>
      <KEY>R13</KEY>
-     <ENTRY>Other sales document categories in the details</ENTRY>
-     <LENGTH>46</LENGTH>
+     <ENTRY>All open orders regardless of age (D35) and other categories in the details</ENTRY>
+     <LENGTH>85</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1597,8 +1609,8 @@
     <item>
      <ID>I</ID>
      <KEY>R15</KEY>
-     <ENTRY>Contracts, scheduling agreements and RFQs excluded by BSTYP</ENTRY>
-     <LENGTH>61</LENGTH>
+     <ENTRY>All open POs regardless of age in the details (D30-D34); contracts etc. excluded by BSTYP</ENTRY>
+     <LENGTH>113</LENGTH>
     </item>
     <item>
      <ID>I</ID>
@@ -1627,8 +1639,8 @@
     <item>
      <ID>I</ID>
      <KEY>R24</KEY>
-     <ENTRY>Split by order category in the details</ENTRY>
-     <LENGTH>42</LENGTH>
+     <ENTRY>All open orders regardless of age, per order category in the details</ENTRY>
+     <LENGTH>73</LENGTH>
     </item>
     <item>
      <ID>I</ID>

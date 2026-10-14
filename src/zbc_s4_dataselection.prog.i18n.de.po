@@ -53,9 +53,9 @@ msgstr "ALE-IDocs (Partnerart LS)"
 msgid "ANLA with sub-number other than 0000, not deactivated"
 msgstr "ANLA mit Unternummer ungleich 0000, nicht deaktiviert"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E13 111, maxlen=111
-msgid "AUFK order category 10/40; open = no active status DLV, TECO, CLSD, DLFL (JEST); created = ERDAT in period"
-msgstr "AUFK Auftragstyp 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST); angelegt = ERDAT im Zeitraum"
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E13 127, maxlen=127
+msgid "AUFK cat. 10/40; open = no active DLV, TECO, CLSD, DLFL (JEST), any creation date; created = ERDAT in period"
+msgstr "AUFK Typ 10/40; offen = kein aktiver Status LIEF, TABG, ABGS, LÖVM (JEST), beliebiges Anlagedatum; angelegt = ERDAT im Zeitraum"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E14 73, maxlen=73
 msgid "AUFK order category 30 without active status DLV, TECO, CLSD, DLFL (JEST)"
@@ -80,6 +80,38 @@ msgstr "Alle Buchungskreise"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R03 34, maxlen=34
 msgid "All company codes in the details"
 msgstr "Alle Buchungskreise in den Details"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E33 84, maxlen=84
+msgid "All open PO items (any creation date) per item category (EKPO-PSTYP)"
+msgstr "Alle offenen Bestellpositionen (beliebiges Anlagedatum) je Positionstyp (EKPO-PSTYP)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E32 97, maxlen=97
+msgid "All open PO items (any creation date): GR expected (WEPOS), final invoice (EREKZ)"
+msgstr "Alle offenen Bestellpositionen (beliebiges Anlagedatum): WE erwartet (WEPOS), Endrechnung (EREKZ)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E30 92, maxlen=92
+msgid "All open POs (rule of row 15, any creation date) by EKKO-AEDAT before today"
+msgstr "Alle offenen Bestellungen (Regel Zeile 15, beliebiges Anlagedatum) nach EKKO-AEDAT vor heute"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E31 96, maxlen=96
+msgid "All open POs (rule of row 15, any creation date) per company code (EKKO-BUKRS)"
+msgstr "Alle offenen Bestellungen (Regel Zeile 15, beliebiges Anlagedatum) je Buchungskreis (EKKO-BUKRS)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R15 113, maxlen=113
+msgid "All open POs regardless of age in the details (D30-D34); contracts etc. excluded by BSTYP"
+msgstr "Alle offenen Bestellungen unabhängig vom Alter in den Details (D30-D34); Kontrakte usw. über BSTYP ausgeschlossen"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R13 85, maxlen=85
+msgid "All open orders regardless of age (D35) and other categories in the details"
+msgstr "Alle offenen Aufträge unabhängig vom Alter (D35) und andere Belegtypen in den Details"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT R24 73, maxlen=73
+msgid "All open orders regardless of age, per order category in the details"
+msgstr "Alle offenen Aufträge unabhängig vom Alter, je Auftragstyp in den Details"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D35 54, maxlen=54
+msgid "All open sales orders regardless of creation date"
+msgstr "Alle offenen Kundenaufträge unabhängig vom Anlagedatum"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D85 15, maxlen=15
 #: RPT4/ZBC_S4_DATASELECTION/TEXT T02 15, maxlen=15
@@ -106,11 +138,11 @@ msgstr "Anlagen"
 msgid "Avg added/month"
 msgstr "Ø neu pro Monat"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT N13 31, maxlen=31
-#: RPT4/ZBC_S4_DATASELECTION/TEXT N15 31, maxlen=31
-#: RPT4/ZBC_S4_DATASELECTION/TEXT N24 31, maxlen=31
-msgid "B = open now; C = created/month"
-msgstr "B = offen; C = angelegt/Monat"
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N13 51, maxlen=51
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N15 51, maxlen=51
+#: RPT4/ZBC_S4_DATASELECTION/TEXT N24 51, maxlen=51
+msgid "B = open, created in period; C = created/month"
+msgstr "B = offen, im Zeitraum angelegt; C = angelegt/Monat"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N23 37, maxlen=37
 msgid "B = partner profiles; C = IDocs/month"
@@ -119,6 +151,10 @@ msgstr "B = Partnervereinb.; C = IDocs/Monat"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L05 104, maxlen=104
 msgid "B: G/L accounts (SKA1) of the charts of row 4, no deletion flag; C: SKA1 created (ERDAT) / months"
 msgstr "B: Sachkonten (SKA1) der Kontenpläne aus Zeile 4 ohne Löschvormerkung; C: SKA1 angelegt (ERDAT) / Monate"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L15 126, maxlen=126
+msgid "B: POs created in period (EKKO-AEDAT) with an open item (EKPO BSTYP F, no ELIKZ/LOEKZ); C: created / months"
+msgstr "B: im Zeitraum angelegte Bestellungen (EKKO-AEDAT) mit offener Position (EKPO BSTYP F, ohne ELIKZ/LOEKZ); C: angelegt / Monate"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L11 108, maxlen=108
 msgid "B: cost centers (CSKS) valid today; C: cost centers first created in period (min. ERSDA) / months"
@@ -140,21 +176,17 @@ msgstr "B: Anlagenhauptnummern (ANLA, Unternummer 0000), nicht deaktiviert; C: a
 msgid "B: materials (MARA) without client-level deletion flag; C: MARA created (ERSDA) / months"
 msgstr "B: Materialien (MARA) ohne Löschvormerkung auf Mandantenebene; C: MARA angelegt (ERSDA) / Monate"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT L15 109, maxlen=109
-msgid "B: open POs (EKPO, BSTYP F, no ELIKZ, no LOEKZ); C: purchase orders created (EKKO-AEDAT) / months"
-msgstr "B: offene Bestellungen (EKPO, BSTYP F, ohne ELIKZ und LOEKZ); C: angelegte Bestellungen (EKKO-AEDAT) / Monate"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT L24 112, maxlen=112
-msgid "B: open orders cat. 10/40 (no DLV, TECO, CLSD, DLFL); C: orders cat. 10/40 created (AUFK-ERDAT) / months"
-msgstr "B: offene Aufträge Typ 10/40 (ohne LIEF, TABG, ABGS, LÖVM); C: Aufträge Typ 10/40 angelegt (AUFK-ERDAT) / Monate"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT L13 103, maxlen=103
-msgid "B: open sales orders (VBUK, VBTYP C, GBSTK not C); C: sales orders created (VBAK-ERDAT) / months"
-msgstr "B: offene Kundenaufträge (VBUK, VBTYP C, GBSTK ungleich C); C: angelegte Aufträge (VBAK-ERDAT) / Monate"
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L24 115, maxlen=115
+msgid "B: orders cat. 10/40 created in period, open (no DLV, TECO, CLSD, DLFL); C: created (AUFK-ERDAT) / months"
+msgstr "B: im Zeitraum angelegte Aufträge Typ 10/40, offen (ohne LIEF, TABG, ABGS, LÖVM); C: angelegt (AUFK-ERDAT) / Monate"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L23 104, maxlen=104
 msgid "B: partner profile lines (EDP13/EDP21) except logical systems; C: such IDocs created (EDIDC) / months"
 msgstr "B: Partnervereinbarungszeilen (EDP13/EDP21) ohne log. Systeme; C: solche IDocs angelegt (EDIDC) / Monate"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT L13 113, maxlen=113
+msgid "B: sales orders created in period (VBAK, VBTYP C) still open (VBUK-GBSTK not C); C: created / months"
+msgstr "B: im Zeitraum angelegte Kundenaufträge (VBAK, VBTYP C), noch offen (VBUK-GBSTK ungleich C); C: angelegt / Monate"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT L08 86, maxlen=86
 msgid "B: vendors (LFA1) without central deletion flag; C: LFA1 created (ERDAT) / months"
@@ -248,10 +280,6 @@ msgstr "Buchungskreise (T001) mit mindestens einem im Zeitraum erfassten FI-Bele
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R05 40, maxlen=40
 msgid "Company-code level (SKB1) in the details"
 msgstr "Buchungskreisebene (SKB1) in den Details"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT R15 61, maxlen=61
-msgid "Contracts, scheduling agreements and RFQs excluded by BSTYP"
-msgstr "Kontrakte, Lieferpläne und Anfragen über BSTYP ausgeschlossen"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT G04 11, maxlen=11
 msgid "Controlling"
@@ -714,17 +742,13 @@ msgstr "Offene Bestellpositionen nach Abschlussmuster"
 msgid "Open PO items by item category"
 msgstr "Offene Bestellpositionen je Positionstyp"
 
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E34 96, maxlen=96
+msgid "Open POs created before the period, no PO history (EKBE-BUDAT) since its start"
+msgstr "Offene Bestellungen, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn"
+
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D34 53, maxlen=53
 msgid "Open POs without activity since period start"
 msgstr "Offene Bestellungen ohne Bewegung seit Zeitraumbeginn"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E33 59, maxlen=59
-msgid "Open items of row 15 per item category (EKPO-PSTYP)"
-msgstr "Offene Positionen aus Zeile 15 je Positionstyp (EKPO-PSTYP)"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E32 72, maxlen=72
-msgid "Open items of row 15: GR expected (WEPOS), final invoice (EREKZ)"
-msgstr "Offene Positionen aus Zeile 15: WE erwartet (WEPOS), Endrechnung (EREKZ)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D14 30, maxlen=30
 msgid "Open maintenance orders"
@@ -754,10 +778,6 @@ msgstr "Organisation - G5 bis G7 und Organisationseinheiten"
 msgid "Organization and technical"
 msgstr "Organisation und Technik"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT R13 46, maxlen=46
-msgid "Other sales document categories in the details"
-msgstr "Andere Vertriebsbelegtypen in den Details"
-
 #: RPT4/ZBC_S4_DATASELECTION/TEXT R20 82, maxlen=82
 msgid "Outgoing only; incl. payment with printout (F-58); HR payroll runs not included"
 msgstr "Nur ausgehend; inkl. Zahlung mit Druck (F-58); HR-Abrechnungsläufe nicht enthalten"
@@ -769,18 +789,6 @@ msgstr "Ausgabe"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT N09 37, maxlen=37
 msgid "PO or FI line item in period"
 msgstr "Bestellung oder FI-Posten im Zeitraum"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E30 65, maxlen=65
-msgid "POs of row 15 by creation date (EKKO-AEDAT) before today"
-msgstr "Bestellungen aus Zeile 15 nach Anlagedatum (EKKO-AEDAT) vor heute"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E34 102, maxlen=102
-msgid "POs of row 15 created before the period, no PO history (EKBE-BUDAT) since its start"
-msgstr "Bestellungen aus Zeile 15, vor dem Zeitraum angelegt, ohne Bestellentwicklung (EKBE-BUDAT) seit Beginn"
-
-#: RPT4/ZBC_S4_DATASELECTION/TEXT E31 55, maxlen=55
-msgid "POs of row 15 per company code (EKKO-BUKRS)"
-msgstr "Bestellungen aus Zeile 15 je Buchungskreis (EKKO-BUKRS)"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT I03 19, maxlen=19
 msgid "Partner profile"
@@ -846,9 +854,9 @@ msgstr "Werke aktiver Buchungskreise"
 msgid "Production"
 msgstr "Produktion"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT D13 59, maxlen=59
-msgid "Production / process orders: open (value), created (total)"
-msgstr "Fertigungs-/Prozessaufträge: offen (Wert), angelegt (Summe)"
+#: RPT4/ZBC_S4_DATASELECTION/TEXT D13 64, maxlen=64
+msgid "Production / process orders: all open (value), created (total)"
+msgstr "Fertigungs-/Prozessaufträge: alle offen (Wert), angelegt (Summe)"
 
 #: RPT4/ZBC_S4_DATASELECTION/SELECT P_PP, maxlen=30
 msgid "Production and maintenance"
@@ -978,10 +986,6 @@ msgstr "Umfang"
 msgid "Software component"
 msgstr "Softwarekomponente"
 
-#: RPT4/ZBC_S4_DATASELECTION/TEXT R24 42, maxlen=42
-msgid "Split by order category in the details"
-msgstr "Aufteilung nach Auftragstyp in den Details"
-
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D17 17, maxlen=17
 msgid "Storage locations"
 msgstr "Lagerorte"
@@ -1102,6 +1106,10 @@ msgstr "VBAK im Zeitraum angelegt (ERDAT), je Vertriebsbelegtyp (VBTYP)"
 #: RPT4/ZBC_S4_DATASELECTION/TEXT E09 98, maxlen=98
 msgid "VBRK created in the period (ERDAT), per category (VBTYP); X after the category = cancelled (FKSTO)"
 msgstr "VBRK im Zeitraum angelegt (ERDAT), je Belegtyp (VBTYP); X nach dem Belegtyp = storniert (FKSTO)"
+
+#: RPT4/ZBC_S4_DATASELECTION/TEXT E35 74, maxlen=74
+msgid "VBUK with VBTYP C and overall status GBSTK not C, any creation date"
+msgstr "VBUK mit VBTYP C und Gesamtstatus GBSTK ungleich C, beliebiges Anlagedatum"
 
 #: RPT4/ZBC_S4_DATASELECTION/TEXT D26 51, maxlen=51
 msgid "Valid dialog users regardless of logon"
